@@ -1,4 +1,4 @@
-const CACHE_NAME = "taller-walter-v176";
+const CACHE_NAME = "taller-walter-v187";
 
 // Archivos que se guardan offline
 const FILES_TO_CACHE = [
