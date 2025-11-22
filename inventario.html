@@ -33,9 +33,11 @@
 ============================ */
 body{
   margin:0;
-  background:url("img/portada_celular.png") no-repeat center/cover fixed;
-  font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--ink);
+  background-image: url("img/portada_celular.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; /* evita el bug */
   min-height: 100vh;
   overflow-x: hidden;
 }

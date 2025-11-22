@@ -33,13 +33,15 @@
     }
 
     body{
-      margin:0;
-      background:url("img/portada_celular.png") no-repeat center/cover fixed;
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-      color:var(--ink);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+  margin:0;
+  background-image: url("img/portada_celular.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; /* evita el bug */
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
     /* TOPBAR */
     .topbar{
