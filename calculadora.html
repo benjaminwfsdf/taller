@@ -187,6 +187,33 @@
         padding: 16px;
       }
     }
+    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  min-height: 100dvh; /* 👈 corrige bug de Safari */
+  overflow-x: hidden;
+  background-color: #000; /* evita blancos */
+}
+
+/* El fondo real se genera aquí */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: inherit;    /* usa tu fondo ya definido */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
+
   </style>
 </head>
 <body>
