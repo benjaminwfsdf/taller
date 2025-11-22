@@ -288,6 +288,58 @@ body::before {
   z-index: -1;
   pointer-events: none;
 }
+/* ============================
+   🔥 FORZAR TEXTO BLANCO GLOBAL
+   ============================ */
+body,
+body * {
+  color: white !important;
+}
+
+/* ============================
+   🔥 EXCEPCIONES:
+   Elementos que SÍ deben tener texto oscuro
+   cuando su fondo es blanco
+   ============================ */
+.btn,
+.btn *,
+.btn:hover,
+input,
+input *,
+select,
+select *,
+table th,
+.badge.ok,
+.badge.off {
+  color: black !important;
+}
+
+/* Placeholder blanco para inputs */
+input::placeholder,
+select::placeholder {
+  color: #ddd !important;
+}
+
+/* Mantener blanco en headers, títulos y textos importantes */
+.header,
+.title,
+.card h2,
+.card h1,
+.card h3,
+.frame h1,
+.frame h2 {
+  color: white !important;
+}
+
+/* Los badges de estado deben mantener sus colores */
+.badge.ok {
+  background: #163016 !important;
+  color: #a8f0a9 !important;
+}
+.badge.off {
+  background: #301616 !important;
+  color: #f0a8a8 !important;
+}
 
   </style>
 </head>

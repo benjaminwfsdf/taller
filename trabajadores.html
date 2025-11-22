@@ -211,7 +211,7 @@ body{
       color:white;
       font-size:13px;
       margin-top:22px;
-      text-shadow:0 2px 6px black;
+      text-shadow:0 2px 6px rgb(255, 255, 255);
       padding: 0 10px;
     }
 
@@ -263,6 +263,27 @@ body::before {
   background-repeat: no-repeat;
   z-index: -1;
   pointer-events: none;
+}
+/* Forzar texto blanco en la lista cuando está vacía */
+#listaTrabajadores p {
+  color: white !important;
+  opacity: 0.9;
+}
+
+/* Forzar texto blanco en los datos de cada trabajador */
+.worker-info {
+  color: white !important;
+}
+
+/* Ajuste del mensaje "No hay trabajadores registrados" */
+#listaTrabajadores p {
+  color: white !important;
+  opacity: 0.8;
+}
+
+/* Titulos y textos dentro del card de trabajadores */
+.worker-card {
+  color: white !important;
 }
 
   </style>

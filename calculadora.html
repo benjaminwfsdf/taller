@@ -6,16 +6,15 @@
   <title>🧮 Calculadora de Ganancia | Walter Uriol</title>
   <meta name="theme-color" content="#000000">
 
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json">
 
   <style>
     :root{
-      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand:#d40000;
       --brand-dark:#9b0000;
-      --blue:#1d3053;           /* AZUL */
+      --blue:#1d3053;
       --blue-dark:#1d3053;
-      --ink:#ffffff;            /* TEXTO BLANCO */
+      --ink:#ffffff;
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
@@ -25,16 +24,49 @@
       box-sizing: border-box;
     }
 
-   body{
-  margin:0;
-  background-image: url("img/portada_celular.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: scroll; /* evita el bug */
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+    /* === Fondo completo === */
+    body{
+      margin:0;
+      background-image: url("img/portada_celular.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-attachment: scroll;
+      position: relative;
+      min-height: 100dvh;
+      background-color: #000;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: inherit;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* === CENTRADO GLOBAL === */
+    .center-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 30px;
+      padding-bottom: 40px;
+    }
+
+    @media (max-width: 480px) {
+      .center-wrap {
+        padding-top: 20px;
+      }
+    }
 
     .topbar{
       background:#1d3053;
@@ -94,7 +126,6 @@
       color:#fff;
       font-size: clamp(1rem, 3vw, 1.1rem);
       margin-bottom:15px;
-      box-sizing:border-box;
     }
 
     input:focus{
@@ -109,12 +140,11 @@
       border-radius:8px;
       background:white;
       color:black;
-      font-weight:bold;
+      font-weight:900;
       font-size: clamp(1rem, 3vw, 1.1rem);
       cursor:pointer;
       transition:.25s;
       border:3px solid var(--brand);
-      font-weight:900;
       margin-bottom:10px;
     }
 
@@ -142,6 +172,7 @@
       padding:14px;
       line-height:1.6;
       border:2px solid rgba(255,255,255,0.1);
+      color:white;
     }
 
     .resultado strong{
@@ -149,7 +180,7 @@
     }
 
     .footer{
-      margin-top:auto;
+      margin-top:20px;
       text-align:center;
       color:white;
       font-size:13px;
@@ -158,65 +189,11 @@
       width: 100%;
     }
 
-    /* Mejoras para móviles */
-    @media (max-width: 480px) {
-      body {
-        padding: 12px;
-      }
-      
-      .card {
-        padding: 20px;
-        margin-top: 20px;
-      }
-      
-      input, button {
-        padding: 16px;
-      }
-      
-      .resultado {
-        padding: 12px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      h1 {
-        padding: 14px 20px;
-      }
-      
-      .card {
-        padding: 16px;
-      }
-    }
-    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
-  overflow-x: hidden;
-  background-color: #000; /* evita blancos */
-}
-
-/* El fondo real se genera aquí */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
-
   </style>
 </head>
 <body>
+
+<div class="center-wrap">
 
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
@@ -237,46 +214,42 @@ body::before {
 
   <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
 
-  <!-- Scripts para PWA -->
-  <script>
-    // Registrar el Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-          });
-      });
-    }
-  </script>
+</div>
 
-  <script>
-    function calcular(){
-      const costo=parseFloat(document.getElementById("costo").value);
-      const gan=parseFloat(document.getElementById("ganancia").value);
-      const res=document.getElementById("resultado");
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('SW registrado:', reg.scope))
+        .catch(err => console.log('Error SW:', err));
+    });
+  }
+</script>
 
-      if(isNaN(costo)||isNaN(gan)){
-        res.innerHTML="⚠️ Ingresa ambos valores correctamente.";
-        res.style.color="#ff4444";
-        return;
-      }
+<script>
+function calcular(){
+  const costo = parseFloat(document.getElementById("costo").value);
+  const gan = parseFloat(document.getElementById("ganancia").value);
+  const res = document.getElementById("resultado");
 
-      const venta=costo*(1+gan/100);
-      const utilidad=venta-costo;
-      const margen=(utilidad/venta)*100;
+  if(isNaN(costo) || isNaN(gan)){
+    res.innerHTML = "⚠️ Ingresa ambos valores correctamente.";
+    res.style.color = "#ff4444";
+    return;
+  }
 
-      res.style.color="#fff";
-      res.innerHTML=`
-        💵 <strong>Precio de venta sugerido:</strong> $${venta.toLocaleString("es-CL")}<br>
-        📈 <strong>Utilidad bruta:</strong> $${utilidad.toLocaleString("es-CL")}<br>
-        🧮 <strong>Margen real sobre venta:</strong> ${margen.toFixed(1)}%
-      `;
-    }
-  </script>
+  const venta = costo*(1+gan/100);
+  const utilidad = venta-costo;
+  const margen = (utilidad/venta)*100;
+
+  res.style.color = "#fff";
+  res.innerHTML = `
+    💵 <strong>Precio de venta sugerido:</strong> $${venta.toLocaleString("es-CL")}<br>
+    📈 <strong>Utilidad bruta:</strong> $${utilidad.toLocaleString("es-CL")}<br>
+    🧮 <strong>Margen real sobre venta:</strong> ${margen.toFixed(1)}%
+  `;
+}
+</script>
 
 </body>
 </html>

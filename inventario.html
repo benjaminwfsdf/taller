@@ -309,6 +309,65 @@ body::before {
   z-index: -1;
   pointer-events: none;
 }
+/* ============================
+   🔥 FORZAR TEXTO BLANCO GLOBAL
+   ============================ */
+body,
+body * {
+  color: white !important;
+}
+
+/* ============================
+   🔥 EXCEPCIONES NECESARIAS
+   ============================ */
+
+/* Botones con fondo blanco → texto negro */
+.btn,
+.btn *,
+.btn-back,
+.btn-back * {
+  color: black !important;
+}
+
+/* Inputs y su texto (para que se lean bien sobre fondo blanco/transparente) */
+input,
+input *,
+input::placeholder {
+  color: white !important;
+}
+
+/* Titulares y headers siguen siendo blancos (por si algo los sobreescribe) */
+.header,
+.header *,
+.card h2,
+.card h1,
+.card h3 {
+  color: white !important;
+}
+
+/* La tabla tiene filas oscuras, así que mantenemos texto blanco */
+table,
+table *,
+td,
+td * {
+  color: white !important;
+}
+
+/* Encabezados de tabla debe mantener texto blanco */
+th,
+th * {
+  color: white !important;
+}
+
+/* Badges deben conservar sus colores originales */
+.badge.ok {
+  background: #163016 !important;
+  color: #a8f0a9 !important;
+}
+.badge.off {
+  background: #301616 !important;
+  color: #f0a8a8 !important;
+}
 
 </style>
 </head>

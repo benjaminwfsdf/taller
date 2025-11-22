@@ -253,6 +253,50 @@ body::before {
   z-index: -1;
   pointer-events: none;
 }
+/* ============================
+   🔥 FORZAR TEXTO BLANCO GLOBAL
+   ============================ */
+body,
+body * {
+  color: white !important;
+}
+
+/* ============================
+   🔥 EXCEPCIONES (fondo blanco → texto negro)
+   ============================ */
+.btn,
+.btn *,
+.btn-link,
+.btn-link *,
+input,
+input *,
+select,
+select *,
+option {
+  color: black !important;
+}
+
+/* Placeholders blancos */
+input::placeholder,
+select::placeholder {
+  color: #ddd !important;
+}
+
+/* Títulos siempre blancos */
+.header,
+.header *,
+.card h1,
+.card h2,
+.card h3,
+label,
+.status {
+  color: white !important;
+}
+
+/* Mensajes de estado (OK/error) mantienen sus colores */
+#mensaje {
+  color: white !important; /* negro NO */
+}
 
   </style>
 </head>
@@ -334,7 +378,7 @@ body::before {
           body: JSON.stringify({ patente, estado, detalle_estado: "" })
         });
         mensajeEl.style.color = "#3ddc97";
-        mensajeEl.textContent = "✅ Estado enviado. (El backend actualiza y envía WhatsApp).";
+        mensajeEl.textContent = "✅ Estado enviado.";
         document.getElementById("patente").value = "";
         document.getElementById("estado").value = "REPARACIÓN";
       } catch (e) {

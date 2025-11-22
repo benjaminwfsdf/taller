@@ -236,6 +236,52 @@ body::before {
   z-index: -1;
   pointer-events: none;
 }
+/* ============================
+   🔥 FORZAR TEXTO BLANCO GLOBAL
+   ============================ */
+body,
+body * {
+  color: white !important;
+}
+
+/* ============================
+   🔥 EXCEPCIONES: 
+   Elementos con fondo blanco deben tener texto negro
+   ============================ */
+.btn,
+.btn *,
+.btn-secondary,
+.btn-secondary *,
+select option,
+select,
+input,
+input *,
+#res b {
+  color: black !important;
+}
+
+/* Placeholders blancos para inputs */
+input::placeholder,
+select::placeholder {
+  color: #ddd !important;
+}
+
+/* Títulos siempre blancos */
+.header,
+.title,
+.card h1,
+.card h2,
+.card h3,
+.frame * {
+  color: white !important;
+}
+
+/* Resultado final (venta registrada) */
+#res h3 {
+  color: #a8f0a9 !important;
+}
+
+/* Mantener estados */
 
   </style>
 </head>

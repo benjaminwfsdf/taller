@@ -276,6 +276,39 @@ body::before {
   z-index: -1;
   pointer-events: none;
 }
+/* ============================
+   🔥 FORZAR TEXTO BLANCO GLOBAL
+   ============================ */
+body, 
+body * {
+  color: white !important;
+}
+
+/* ============================
+   🔥 EXCEPCIONES:
+   Elementos que SÍ deben tener texto oscuro
+   cuando su fondo es blanco
+   ============================ */
+.btn,
+.btn *,
+.btn:hover,
+.btn-secondary,
+.result p,
+.result span.tag,
+input, select {
+  color: black !important;
+}
+
+/* Inputs de texto (placeholder) también blancos */
+input::placeholder,
+select::placeholder {
+  color: #ddd !important;
+}
+
+/* Los títulos dentro de result deben seguir en blanco */
+.result h3 {
+  color: white !important;
+}
 
   </style>
 </head>
