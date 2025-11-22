@@ -9,37 +9,24 @@
 
   <style>
     :root{
-      --brand:#d40000;          
+      --brand:#d40000;          /* ROJO PRINCIPAL */
       --brand-dark:#9b0000;
 
-      --blue:#003391;           
+      --blue:#003391;           /* AZUL */
       --blue-dark:#003391;
 
-      --ink:#ffffff;
+      --ink:#ffffff;            /* TEXTO BLANCO */
 
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    /* 👇 FIX GLOBAL QUE ELIMINA EL BLANCO FINAL */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
     body{
       margin:0;
-      min-height:100vh; /* 👈 asegura que cubre todo sin dejar blanco */
-      background-image:url("img/portada_celular.png");
-      background-repeat:no-repeat;
-      background-size:cover;     /* 👈 JAMÁS se repite */
-      background-position:center;
-      background-attachment:scroll; /* 👈 evita bugs iPhone / PWA */
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
-      overflow-x:hidden; /* 👈 evita desplazamiento lateral */
     }
 
     /* TOPBAR */
@@ -63,7 +50,7 @@
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
@@ -164,17 +151,14 @@
       box-shadow:0 6px 14px rgba(0,0,0,.5);
     }
 
-    /* FOOTER (FIX: que no genere fondo blanco) */
+    /* FOOTER */
     .footer{
       text-align:center;
       color:white;
       font-size:13px;
       margin-top:22px;
-      padding-bottom:12px;
-      background:transparent !important; /* 👈 evita el rectángulo blanco */
       text-shadow:0 2px 6px black;
     }
-
   </style>
 </head>
 
