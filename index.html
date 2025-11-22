@@ -2,46 +2,49 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#1d3053" />
-  <meta name="description" content="Panel Principal de Mecánica Walter Uriol" />
-  
-  <!-- Manifest para PWA -->
-  <link rel="manifest" href="manifest.json" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Panel Principal | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
 
   <style>
     :root{
-      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand:#d40000;          
       --brand-dark:#9b0000;
 
-      --blue:#1d3053;           /* AZUL */
-      --blue-dark:#1d3053;
+      --blue:#003391;           
+      --blue-dark:#003391;
 
-      --ink:#ffffff;            /* TEXTO BLANCO */
+      --ink:#ffffff;
 
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
+    /* 👇 FIX GLOBAL QUE ELIMINA EL BLANCO FINAL */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     body{
       margin:0;
-      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      min-height:100vh; /* 👈 asegura que cubre todo sin dejar blanco */
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;     /* 👈 JAMÁS se repite */
+      background-position:center;
+      background-attachment:scroll; /* 👈 evita bugs iPhone / PWA */
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
-      min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x:hidden; /* 👈 evita desplazamiento lateral */
     }
 
     /* TOPBAR */
     .topbar{
-      background:#1d3053;
+      background:#003391;
       color:white;
       text-align:center;
       padding:14px;
@@ -49,9 +52,6 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -59,23 +59,21 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
-      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      background:rgba(135, 206, 250, 0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
-      margin: 0 auto;
     }
 
     /* HEADER */
     .header{
-      background:#1d3053;
+      background:#003391;
       color:white;
       border-radius:16px;
       padding:20px;
@@ -83,12 +81,6 @@
       font-weight:900;
       border:3px solid var(--brand);
       text-shadow:0 3px 8px rgba(0,0,0,.6);
-      margin-bottom: 22px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
     }
 
     /* GRID */
@@ -98,17 +90,13 @@
       gap:22px;
       padding:12px;
     }
-    @media(max-width:768px){
-      .grid{ 
-        grid-template-columns:1fr; 
-        gap: 16px;
-        padding: 8px;
-      }
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
     }
 
     /* CARDS */
     .card{
-      background:#1d3053;
+      background:#003391;
       border:3px solid var(--brand);
       border-radius:16px;
       padding:18px;
@@ -117,7 +105,6 @@
       align-items:flex-start;
       box-shadow:var(--shadow);
       transition:.25s;
-      width: 100%;
     }
 
     .card:hover{
@@ -138,7 +125,7 @@
 
     .title{
       margin:0;
-      font-size:clamp(1.1rem, 4vw, 1.4rem);
+      font-size:20px;
       font-weight:900;
       color:white;
     }
@@ -147,7 +134,7 @@
       margin:4px 0 0;
       color:white;
       opacity:.9;
-      font-size:clamp(0.9rem, 3vw, 1rem);
+      font-size:15px;
     }
 
     /* BOTÓN ABRIR */
@@ -166,9 +153,8 @@
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size:clamp(0.9rem, 3vw, 1rem);
+      font-size:16px;
       box-shadow:0 4px 10px rgba(0,0,0,.35);
-      white-space: nowrap;
     }
 
     .btn:hover{
@@ -178,50 +164,17 @@
       box-shadow:0 6px 14px rgba(0,0,0,.5);
     }
 
-    /* FOOTER */
+    /* FOOTER (FIX: que no genere fondo blanco) */
     .footer{
       text-align:center;
       color:white;
       font-size:13px;
       margin-top:22px;
+      padding-bottom:12px;
+      background:transparent !important; /* 👈 evita el rectángulo blanco */
       text-shadow:0 2px 6px black;
-      padding: 0 10px;
     }
 
-    /* Mejoras para móviles */
-    @media (max-width: 480px) {
-      .wrapper {
-        margin: 20px auto 40px;
-        padding: 0 12px;
-      }
-      
-      .frame {
-        padding: 16px;
-      }
-      
-      .card {
-        padding: 14px;
-        gap: 12px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .actions {
-        margin-left: 0;
-        margin-top: 12px;
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .icon {
-        align-self: center;
-      }
-    }
   </style>
 </head>
 
@@ -275,34 +228,5 @@
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
-  <!-- Scripts para PWA -->
-  <script>
-    // Registrar el Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-          });
-      });
-    }
-
-    // Instalar la PWA
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevenir que el navegador muestre automáticamente el prompt
-      e.preventDefault();
-      // Guardar el evento para usarlo después
-      deferredPrompt = e;
-      // Opcional: mostrar un botón para instalar la app
-      console.log('PWA puede ser instalada');
-    });
-  </script>
-  
-  <!-- Script de Vercel (mantenido del código original) -->
-  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>
