@@ -12,7 +12,7 @@
 
   <meta name="theme-color" content="#000000">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Buscar Vehículo | Walter Uriol</title>
   <style>
@@ -27,11 +27,17 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body{
       margin:0;
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* TOPBAR */
@@ -44,6 +50,9 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -51,6 +60,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
@@ -61,6 +71,7 @@
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
+      margin: 0 auto;
     }
 
     /* HEADER */
@@ -76,6 +87,11 @@
       margin-bottom: 22px;
     }
 
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
     /* CARD */
     .card{
       background:#1d3053;
@@ -84,6 +100,7 @@
       padding:20px;
       margin-bottom: 22px;
       box-shadow:var(--shadow);
+      width: 100%;
     }
 
     /* LABELS E INPUTS */
@@ -92,6 +109,7 @@
       margin:8px 0 6px;
       font-weight:800;
       color:white;
+      font-size: clamp(1rem, 3vw, 1.1rem);
     }
 
     input{
@@ -101,7 +119,7 @@
       border-radius:12px;
       background:rgba(0,0,0,0.3);
       color:var(--ink);
-      font-size:16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       box-sizing:border-box;
     }
 
@@ -120,12 +138,13 @@
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size:16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       cursor: pointer;
       display: block;
       width: 100%;
       margin-top: 16px;
+      text-align: center;
     }
 
     .btn:hover{
@@ -155,6 +174,7 @@
       padding:18px;
       color:white;
       display:none;
+      font-size: clamp(0.9rem, 3vw, 1rem);
     }
 
     .result strong{
@@ -162,6 +182,7 @@
       min-width:140px;
       color:#a8f0a9;
       margin-bottom: 8px;
+      font-size: clamp(0.9rem, 3vw, 1rem);
     }
 
     /* FOOTER */
@@ -171,6 +192,44 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding: 0 10px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      .result {
+        padding: 14px;
+      }
+      
+      .result strong {
+        min-width: 120px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      
+      input, .btn {
+        padding: 14px 16px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .result strong {
+        min-width: 100px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -195,6 +254,33 @@
       <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
     </div>
   </div>
+
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
 
   <script>
     // ====== CONFIG ======
@@ -374,5 +460,8 @@
       });
     })();
   </script>
+
+  <!-- Script de Vercel (mantenido del código original) -->
+  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>

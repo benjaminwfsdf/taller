@@ -2,9 +2,12 @@
 <html lang="es-CL">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👷 Trabajadores | Walter Uriol</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>👷 Gestión de Trabajadores | Walter Uriol</title>
   <meta name="theme-color" content="#000000">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
 
   <style>
     :root{
@@ -18,11 +21,17 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body{
       margin:0;
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* TOPBAR */
@@ -35,6 +44,9 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -42,6 +54,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
@@ -52,6 +65,7 @@
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
+      margin: 0 auto;
     }
 
     /* HEADER */
@@ -67,6 +81,11 @@
       margin-bottom: 22px;
     }
 
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
     /* CARDS */
     .card{
       background:#1d3053;
@@ -75,11 +94,12 @@
       padding:18px;
       margin-bottom: 22px;
       box-shadow:var(--shadow);
+      width: 100%;
     }
 
     .title{
       margin:0 0 16px 0;
-      font-size:20px;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
       font-weight:900;
       color:white;
     }
@@ -88,16 +108,19 @@
     .btn{
       background:white;
       color:black;
-      padding:10px 20px;
+      padding:12px 24px;
       font-weight:900;
       border-radius:14px;
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size:16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       cursor: pointer;
       display: inline-block;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 10px;
     }
 
     .btn:hover{
@@ -117,34 +140,67 @@
       background: rgba(255,255,255,0.1);
     }
 
-    /* INPUTS */
-    input{
+    /* FORMULARIOS */
+    input,select{
       width:100%;
-      padding:12px;
+      padding:14px;
       border-radius:10px;
-      border:1px solid #333;
-      background:#101114;
+      border:2px solid rgba(255,255,255,0.2);
+      background:rgba(0,0,0,0.3);
       color:#fff;
-      margin-bottom:10px;
+      margin-bottom:15px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
+      box-sizing: border-box;
     }
 
-    /* TABLA */
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
-      font-size:clamp(12px,3vw,15px);
+    input:focus, select:focus{
+      outline:none;
+      border-color:var(--brand);
     }
 
-    th,td{
-      border:1px solid var(--brand);
-      padding:8px;
-      text-align:center;
+    /* LISTA DE TRABAJADORES */
+    .worker-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
     }
 
-    th{
-      background:var(--brand);
-      color:#fff;
+    .worker-card {
+      background: rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .worker-name {
+      font-size: clamp(1.1rem, 3vw, 1.3rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #a8f0a9;
+    }
+
+    .worker-info {
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      margin: 4px 0;
+    }
+
+    .worker-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .status-active {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .status-inactive {
+      background: #c62828;
+      color: white;
     }
 
     /* FOOTER */
@@ -154,6 +210,31 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding: 0 10px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      input, select, .btn {
+        padding: 16px;
+      }
+      
+      .worker-card {
+        padding: 14px;
+      }
     }
   </style>
 </head>
@@ -164,59 +245,131 @@
   <div class="wrapper">
     <div class="frame">
       <div class="header">
-        <h1>👷 Trabajadores</h1>
+        <h1>👷 Gestión de Trabajadores</h1>
       </div>
 
       <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
 
-      <!-- AGREGAR TRABAJADOR -->
+      <!-- FORMULARIO AGREGAR TRABAJADOR -->
       <div class="card">
-        <h2 class="title">Agregar trabajador</h2>
-        <input id="nombre" placeholder="Nombre del trabajador">
-        <button id="guardar" class="btn">Guardar</button>
+        <h2 class="title">Agregar Trabajador</h2>
+        <input type="text" id="nombre" placeholder="Nombre completo">
+        <input type="text" id="cargo" placeholder="Cargo">
+        <input type="number" id="porcentajeBono" placeholder="% Bono por venta" step="0.1">
+        <button class="btn" id="btnAgregar">Agregar Trabajador</button>
       </div>
 
-      <!-- LISTADO -->
+      <!-- LISTA DE TRABAJADORES -->
       <div class="card">
-        <h2 class="title">Listado</h2>
-        <input id="buscar" placeholder="Buscar trabajador...">
-        <div id="tabla"></div>
+        <h2 class="title">Trabajadores Activos</h2>
+        <div id="listaTrabajadores" class="worker-list">
+          <p style="text-align: center; opacity: 0.7;">Cargando trabajadores...</p>
+        </div>
       </div>
     </div>
 
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
+  <!-- Scripts para PWA -->
   <script>
-    const BASE_URL="https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
-    const api=async(a,p={})=>{
-      const r=await fetch(BASE_URL,{method:"POST",headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:a,payload:p})});
-      return r.json();
-    };
-    const $=id=>document.getElementById(id);
-    async function renderTabla(data){
-      if(!data.length){$('tabla').innerHTML="<p>No hay resultados.</p>";return;}
-      let html="<table><thead><tr><th>ID</th><th>Nombre</th><th>Activo</th><th>Bono Total</th><th>Acciones</th></tr></thead><tbody>";
-      data.forEach(t=>{
-        html+=`<tr>
-          <td>${t.id}</td><td>${t.nombre}</td><td>${t.activo?'✅':'❌'}</td>
-          <td>${(t.bono_total||0).toLocaleString('es-CL')}</td>
-          <td><button class='btn' onclick="toggle('${t.id}')">${t.activo?'Desactivar':'Activar'}</button></td>
-        </tr>`;
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
       });
-      html+="</tbody></table>";$('tabla').innerHTML=html;
     }
-    window.toggle=async(id)=>{const r=await api("toggleWorker",{id});if(r.ok)buscar();else alert(r.error);};
-    async function buscar(){
-      const q=$('buscar').value.trim();if(!q){$('tabla').innerHTML="";return;}
-      const r=await api('searchWorker',{query:q});if(r.ok)renderTabla(r.data);else alert(r.error);
+  </script>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+    
+    const api = async (action, payload = {}) => {
+      const res = await fetch(BASE_URL, {
+        method: "POST",
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({action, payload})
+      });
+      return res.json();
+    };
+
+    const $ = id => document.getElementById(id);
+
+    // Cargar trabajadores
+    async function cargarTrabajadores() {
+      const r = await api('listWorkers');
+      if (!r.ok) {
+        alert('Error al cargar trabajadores: ' + r.error);
+        return;
+      }
+
+      const trabajadores = r.data || [];
+      const lista = $('listaTrabajadores');
+      
+      if (trabajadores.length === 0) {
+        lista.innerHTML = '<p style="text-align: center; opacity: 0.7;">No hay trabajadores registrados</p>';
+        return;
+      }
+
+      lista.innerHTML = trabajadores.map(t => `
+        <div class="worker-card">
+          <div class="worker-name">${t.nombre}</div>
+          <div class="worker-info"><strong>Cargo:</strong> ${t.cargo || 'No especificado'}</div>
+          <div class="worker-info"><strong>Bono:</strong> ${t.porcentaje_bono || 0}%</div>
+          <div class="worker-status ${t.activo ? 'status-active' : 'status-inactive'}">
+            ${t.activo ? 'Activo' : 'Inactivo'}
+          </div>
+        </div>
+      `).join('');
     }
-    $('buscar').addEventListener('input',buscar);
-    $('guardar').addEventListener('click',async()=>{
-      const n=$('nombre').value.trim();if(!n)return alert("Escribe un nombre");
-      const r=await api('addWorker',{nombre:n});
-      if(r.ok){alert("Trabajador agregado");$('nombre').value='';buscar();}else alert(r.error);
+
+    // Agregar trabajador
+    $('btnAgregar').addEventListener('click', async () => {
+      const nombre = $('nombre').value.trim();
+      const cargo = $('cargo').value.trim();
+      const porcentajeBono = parseFloat($('porcentajeBono').value);
+
+      if (!nombre) {
+        alert('El nombre es obligatorio');
+        return;
+      }
+
+      if (isNaN(porcentajeBono) || porcentajeBono < 0) {
+        alert('El porcentaje de bono debe ser un número válido');
+        return;
+      }
+
+      const r = await api('addWorker', {
+        nombre,
+        cargo,
+        porcentaje_bono: porcentajeBono,
+        activo: true
+      });
+
+      if (!r.ok) {
+        alert('Error al agregar trabajador: ' + r.error);
+        return;
+      }
+
+      alert('Trabajador agregado exitosamente');
+      
+      // Limpiar formulario
+      $('nombre').value = '';
+      $('cargo').value = '';
+      $('porcentajeBono').value = '';
+      
+      // Recargar lista
+      cargarTrabajadores();
     });
+
+    // Cargar trabajadores al iniciar
+    cargarTrabajadores();
   </script>
 </body>
 </html>

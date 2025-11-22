@@ -14,7 +14,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Agregar Vehículo | Walter Uriol</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     :root{
       --brand:#d40000;          /* ROJO PRINCIPAL */
@@ -27,11 +27,17 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body{
       margin:0;
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* TOPBAR */
@@ -44,6 +50,9 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -51,6 +60,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
@@ -61,6 +71,7 @@
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
+      margin: 0 auto;
     }
 
     /* HEADER */
@@ -76,6 +87,11 @@
       margin-bottom: 22px;
     }
 
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
     /* CARD */
     .card{
       background:#1d3053;
@@ -84,6 +100,7 @@
       padding:20px;
       margin-bottom: 22px;
       box-shadow:var(--shadow);
+      width: 100%;
     }
 
     /* TABLA */
@@ -106,6 +123,7 @@
     th{
       background:rgba(0,0,0,0.3);
       font-weight:700;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
     }
 
     /* INPUTS */
@@ -118,12 +136,16 @@
       color:var(--ink);
       text-transform:uppercase;
       box-sizing:border-box;
-      font-size:14px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
     }
 
     input[type="text"]:focus{
       outline:none;
       border-color:var(--brand);
+    }
+
+    #telefono {
+      text-transform: none;
     }
 
     /* BOTONES */
@@ -136,11 +158,13 @@
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size:16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       cursor: pointer;
       display: inline-block;
       margin-top: 16px;
+      text-align: center;
+      width: 100%;
     }
 
     .btn:hover{
@@ -170,10 +194,24 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding: 0 10px;
     }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
       table, thead, tbody, th, td, tr {
         display: block;
       }
@@ -189,12 +227,15 @@
         border: 2px solid var(--brand);
         border-radius: 10px;
         padding: 10px;
+        background: rgba(0,0,0,0.2);
       }
       
       td {
         border: none;
         position: relative;
         padding-left: 50%;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
       
       td:before {
@@ -205,6 +246,33 @@
         padding-right: 10px;
         white-space: nowrap;
         font-weight: 700;
+        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      }
+      
+      input[type="text"] {
+        padding: 12px 10px;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      td {
+        padding-left: 45%;
+      }
+      
+      td:before {
+        width: 40%;
+      }
+    }
+
+    @media (max-width: 360px) {
+      td {
+        padding-left: 40%;
+      }
+      
+      td:before {
+        width: 35%;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -231,12 +299,12 @@
           </thead>
           <tbody>
             <tr>
-              <td data-label="Nombre"><input type="text" id="nombre"></td>
-              <td data-label="Teléfono"><input type="text" id="telefono" maxlength="14" value="+56 9 " oninput="formatearTelefono(this)" style="text-transform:none"></td>
-              <td data-label="Dirección"><input type="text" id="direccion"></td>
-              <td data-label="Marca"><input type="text" id="marca"></td>
-              <td data-label="Modelo"><input type="text" id="modelo"></td>
-              <td data-label="Patente"><input type="text" id="patente"></td>
+              <td data-label="Nombre"><input type="text" id="nombre" placeholder="JUAN PEREZ"></td>
+              <td data-label="Teléfono"><input type="text" id="telefono" maxlength="14" value="+56 9 " oninput="formatearTelefono(this)" placeholder="+56 9 12345678"></td>
+              <td data-label="Dirección"><input type="text" id="direccion" placeholder="AV. PRINCIPAL 123"></td>
+              <td data-label="Marca"><input type="text" id="marca" placeholder="TOYOTA"></td>
+              <td data-label="Modelo"><input type="text" id="modelo" placeholder="COROLLA"></td>
+              <td data-label="Patente"><input type="text" id="patente" placeholder="ABCD12"></td>
             </tr>
           </tbody>
         </table>
@@ -248,6 +316,33 @@
       <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
     </div>
   </div>
+
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
 
   <script>
     function formatearTelefono(input) {
@@ -355,5 +450,8 @@
       });
     })();
   </script>
+
+  <!-- Script de Vercel (mantenido del código original) -->
+  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>

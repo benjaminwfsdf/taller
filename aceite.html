@@ -2,10 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🛢️ Panel Principal | Sistema de Aceites | Walter Uriol</title>
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="icons/icon-192.png">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
 
   <style>
     :root{
@@ -19,11 +22,17 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body{
       margin:0;
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* TOPBAR */
@@ -36,6 +45,9 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -43,6 +55,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
@@ -53,6 +66,7 @@
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
+      margin: 0 auto;
     }
 
     /* HEADER */
@@ -68,6 +82,17 @@
       margin-bottom: 22px;
     }
 
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
+    .header p {
+      margin: 8px 0 0 0; 
+      opacity: 0.9; 
+      font-size: clamp(0.9rem, 3vw, 1rem);
+    }
+
     /* GRID */
     .grid{
       display:grid;
@@ -75,8 +100,12 @@
       gap:22px;
       padding:12px;
     }
-    @media(max-width:900px){
-      .grid{ grid-template-columns:1fr; }
+    @media(max-width:768px){
+      .grid{ 
+        grid-template-columns:1fr; 
+        gap: 16px;
+        padding: 8px;
+      }
     }
 
     /* CARDS */
@@ -90,6 +119,7 @@
       align-items:flex-start;
       box-shadow:var(--shadow);
       transition:.25s;
+      width: 100%;
     }
 
     .card:hover{
@@ -110,7 +140,7 @@
 
     .title{
       margin:0;
-      font-size:20px;
+      font-size:clamp(1.1rem, 4vw, 1.4rem);
       font-weight:900;
       color:white;
     }
@@ -119,7 +149,7 @@
       margin:4px 0 0;
       color:white;
       opacity:.9;
-      font-size:15px;
+      font-size:clamp(0.9rem, 3vw, 1rem);
     }
 
     /* BOTÓN ABRIR */
@@ -138,8 +168,9 @@
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size:16px;
+      font-size:clamp(0.9rem, 3vw, 1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
+      white-space: nowrap;
     }
 
     .btn:hover{
@@ -167,6 +198,7 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding: 0 10px;
     }
 
     /* ESTADÍSTICAS RÁPIDAS */
@@ -186,16 +218,60 @@
     }
 
     .stat-value {
-      font-size: 24px;
+      font-size: clamp(1.5rem, 4vw, 2rem);
       font-weight: 900;
       color: white;
       display: block;
     }
 
     .stat-label {
-      font-size: 12px;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
       opacity: 0.8;
       margin-top: 4px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 14px;
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .actions {
+        margin-left: 0;
+        margin-top: 12px;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .icon {
+        align-self: center;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      .stat-card {
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -209,10 +285,8 @@
 
       <div class="header">
         <h1>🛢️ Sistema de Gestión de Aceites</h1>
-        <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 16px;">Panel de control completo para gestión de inventario y ventas</p>
+        <p>Panel de control completo para gestión de inventario y ventas</p>
       </div>
-
-      
 
       <div class="grid">
 
@@ -304,6 +378,32 @@
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
-  
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
+
 </body>
 </html>

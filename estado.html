@@ -5,15 +5,15 @@
 
   <link rel="manifest" href="/manifest.json">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Taller">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Taller">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-<meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000">
 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Actualizar Estado del Vehículo</title>
   <style>
@@ -31,12 +31,17 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body{
       margin:0;
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       color:var(--ink);
       min-height:100vh;
+      overflow-x: hidden;
     }
 
     /* TOPBAR */
@@ -49,6 +54,9 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     /* CONTENEDOR */
@@ -56,6 +64,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
@@ -66,6 +75,7 @@
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
+      margin: 0 auto;
     }
 
     /* HEADER */
@@ -81,6 +91,11 @@
       margin-bottom: 20px;
     }
 
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
     /* CARD */
     .card{
       background:#1d3053;
@@ -89,6 +104,7 @@
       padding:24px;
       box-shadow:var(--shadow);
       margin-bottom: 20px;
+      width: 100%;
     }
 
     label{
@@ -96,6 +112,7 @@
       margin:14px 0 6px;
       font-weight:800;
       color:#ffffff;
+      font-size: clamp(1rem, 3vw, 1.1rem);
     }
 
     input,select{
@@ -105,7 +122,7 @@
       border-radius:12px;
       background:#0f1a2f;
       color:#ffffff;
-      font-size:16px;
+      font-size:clamp(1rem, 3vw, 1.1rem);
       box-sizing:border-box;
       text-transform:uppercase;
       font-weight: 600;
@@ -125,7 +142,7 @@
       border:3px solid var(--brand);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       transition:.25s;
-      font-size: 16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
     }
 
     .btn:hover{
@@ -153,6 +170,8 @@
       color:#fff;
       font-weight:800;
       transition:.25s;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      text-align: center;
     }
 
     .btn-link:hover{
@@ -164,7 +183,7 @@
       text-align:center;
       margin-top:16px;
       font-weight:800;
-      font-size: 16px;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       padding: 10px;
       border-radius: 10px;
     }
@@ -175,6 +194,36 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding: 0 10px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 18px;
+      }
+      
+      .actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .btn-link {
+        width: 100%;
+      }
+      
+      input, select, .btn {
+        padding: 12px 14px;
+      }
     }
   </style>
 </head>
@@ -208,6 +257,33 @@
     </div>
   </div>
 
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
+
   <script>
     const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwgTHItHOHM_rlyDL9JH-RLaTAuZeF3HJowpIH91juNB9TsfGOMSAk6lKKf2FEdWD5ibA/exec";
 
@@ -229,7 +305,7 @@
           body: JSON.stringify({ patente, estado, detalle_estado: "" })
         });
         mensajeEl.style.color = "#3ddc97";
-        mensajeEl.textContent = "✅ Estado enviado. ";
+        mensajeEl.textContent = "✅ Estado enviado. (El backend actualiza y envía WhatsApp).";
         document.getElementById("patente").value = "";
         document.getElementById("estado").value = "REPARACIÓN";
       } catch (e) {
@@ -239,76 +315,78 @@
     }
   </script>
   
-<script>
-(function () {
-  // Actúa solo en la app instalada (PWA)
-  const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  if (!isStandalone) return;
+  <script>
+  (function () {
+    // Actúa solo en la app instalada (PWA)
+    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    if (!isStandalone) return;
 
-  // ✅ Edita esta lista:
-  // - deja SOLO externos reales (dominios de fuera)
-  // - si de verdad quieres que "informes.html" o "buscador_averias.html" salgan a Safari,
-  //   añádelos aquí también.
-  const EXTERN = new Set([
-    'https://www.patentechile.com/',
-    'https://taller-todo.vercel.app/informes.html',
-    'https://taller-todo.vercel.app/buscador_averias.html'
+    // ✅ Edita esta lista:
+    // - deja SOLO externos reales (dominios de fuera)
+    // - si de verdad quieres que "informes.html" o "buscador_averias.html" salgan a Safari,
+    //   añádelos aquí también.
+    const EXTERN = new Set([
+      'https://www.patentechile.com/',
+      'https://taller-todo.vercel.app/informes.html',
+      'https://taller-todo.vercel.app/buscador_averias.html'
 
-    // 'informes.html',
-    // 'buscador_averias.html'
-  ]);
+      // 'informes.html',
+      // 'buscador_averias.html'
+    ]);
 
-  const toURL = (h) => { try { return new URL(h, location.href); } catch { return null; } };
-  const sameOrigin = (u) => u && u.origin === location.origin;
-  const fileName = (u) => u ? u.pathname.split('/').pop() : '';
-  const go = (u) => location.assign(u.pathname + u.search + u.hash);
+    const toURL = (h) => { try { return new URL(h, location.href); } catch { return null; } };
+    const sameOrigin = (u) => u && u.origin === location.origin;
+    const fileName = (u) => u ? u.pathname.split('/').pop() : '';
+    const go = (u) => location.assign(u.pathname + u.search + u.hash);
 
-  // 1) Enlaces <a>: internos -> misma ventana (evita la vista con "Listo")
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href]'); if (!a) return;
-    if (a.hasAttribute('download') || a.href.startsWith('mailto:') || a.href.startsWith('tel:')) return;
-    const u = toURL(a.getAttribute('href')); if (!u) return;
+    // 1) Enlaces <a>: internos -> misma ventana (evita la vista con "Listo")
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href]'); if (!a) return;
+      if (a.hasAttribute('download') || a.href.startsWith('mailto:') || a.href.startsWith('tel:')) return;
+      const u = toURL(a.getAttribute('href')); if (!u) return;
 
-    const isExternalWhitelisted =
-      EXTERN.has(u.href) || EXTERN.has(fileName(u));
+      const isExternalWhitelisted =
+        EXTERN.has(u.href) || EXTERN.has(fileName(u));
 
-    if (sameOrigin(u) && !isExternalWhitelisted) {
-      e.preventDefault();
-      go(u);
-    }
-    // Externos o whitelisted: respetamos su comportamiento (podrán abrir Safari).
-  }, true); // captura para adelantarnos a handlers que modifiquen target
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        e.preventDefault();
+        go(u);
+      }
+      // Externos o whitelisted: respetamos su comportamiento (podrán abrir Safari).
+    }, true); // captura para adelantarnos a handlers que modifiquen target
 
-  // 2) window.open internos -> misma ventana (salvo EXTERN)
-  const _open = window.open;
-  window.open = function (url, target, features) {
-    const u = toURL(url);
-    const isExternalWhitelisted =
-      EXTERN.has(u?.href) || EXTERN.has(fileName(u));
-    if (sameOrigin(u) && !isExternalWhitelisted) {
-      go(u);
-      return null;
-    }
-    return _open.call(window, url, target, features);
-  };
+    // 2) window.open internos -> misma ventana (salvo EXTERN)
+    const _open = window.open;
+    window.open = function (url, target, features) {
+      const u = toURL(url);
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        go(u);
+        return null;
+      }
+      return _open.call(window, url, target, features);
+    };
 
-  // 3) Formularios internos -> _self
-  document.addEventListener('submit', (e) => {
-    const f = e.target;
-    if (!(f && f.tagName === 'FORM')) return;
-    const u = toURL(f.getAttribute('action') || location.href);
-    if (sameOrigin(u)) f.target = '_self';
-  }, true);
+    // 3) Formularios internos -> _self
+    document.addEventListener('submit', (e) => {
+      const f = e.target;
+      if (!(f && f.tagName === 'FORM')) return;
+      const u = toURL(f.getAttribute('action') || location.href);
+      if (sameOrigin(u)) f.target = '_self';
+    }, true);
 
-  // 4) Limpieza: si quedó algún _blank interno por error, quítalo
-  document.querySelectorAll('a[target="_blank"]').forEach((a) => {
-    const u = toURL(a.getAttribute('href'));
-    const isExternalWhitelisted =
-      EXTERN.has(u?.href) || EXTERN.has(fileName(u));
-    if (sameOrigin(u) && !isExternalWhitelisted) a.removeAttribute('target');
-  });
-})();
-</script>
+    // 4) Limpieza: si quedó algún _blank interno por error, quítalo
+    document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+      const u = toURL(a.getAttribute('href'));
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      if (sameOrigin(u) && !isExternalWhitelisted) a.removeAttribute('target');
+    });
+  })();
+  </script>
 
+  <!-- Script de Vercel (mantenido del código original) -->
+  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>
