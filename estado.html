@@ -124,13 +124,13 @@
       border:2px solid var(--brand);
       border-radius:12px;
       background:#0f1a2f;
-      color:#ffffff;
+      color:#ffffff !important;
       font-size:clamp(1rem, 3vw, 1.1rem);
       text-transform:uppercase;
       font-weight: 600;
     }
 
-    /* SELECT EN BLANCO */
+    /* SELECT EN BLANCO ✔ */
     select {
       width:100%;
       padding:14px 16px;
@@ -139,7 +139,7 @@
       background:#0f1a2f !important;
       color:white !important;
       font-size:clamp(1rem, 3vw, 1.1rem);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
     }
 
@@ -155,7 +155,7 @@
       margin-top:20px;
       border-radius:14px;
       padding:14px 16px;
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       color:#000;
       background:#ffffff;
@@ -246,100 +246,30 @@ body, body * {
   color: white !important;
 }
 
-/* 🔥 EXCEPCIONES: botones e inputs siguen negros */
+/* EXCEPCIONES: botón e input quedan negros */
 .btn, .btn *,
 input, input * {
   color: black !important;
 }
 
-/* Select y opciones → blanco */
-select, select *, option {
+/* SELECT SIEMPRE BLANCO ✔ */
+select, select * {
   color: white !important;
 }
 
-/* Placeholders */
+/* PLACEHOLDER */
 input::placeholder {
   color: #ddd !important;
 }
-/* ============================
-   ✔ TIPOGRAFÍA UNIFICADA
-============================ */
 
-/* Familia tipográfica global */
+/* TIPOGRAFÍA PROFESIONAL */
 body {
   font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
 }
 
-/* TÍTULOS PRINCIPALES */
-h1, .header h1, .title, h2, h3 {
-  font-family: inherit !important;
+label, h1 {
   font-weight: 900 !important;
-  letter-spacing: .5px !important;
-  text-align: center !important;
-  color: white !important;
 }
-
-/* SUBTÍTULOS Y DESCRIPCIONES */
-.card p,
-.card span,
-.card small,
-.card div,
-label {
-  font-family: inherit !important;
-  color: white !important;
-  font-weight: 600 !important;
-  line-height: 1.35em !important;
-}
-
-/* ITEMS DE MENÚ Y BLOQUES */
-.card b,
-strong {
-  font-weight: 800 !important;
-  color: white !important;
-}
-
-/* BOTONES */
-.btn,
-.btn * {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-  color: black !important;
-  letter-spacing: .3px !important;
-}
-
-/* OPCIONES Y SELECT */
-select, option {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
-  color: black !important;
-}
-
-/* INPUTS */
-input {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  color: black !important;
-  text-transform: uppercase;
-}
-
-/* PLACEHOLDERS */
-input::placeholder,
-select::placeholder {
-  font-family: inherit !important;
-  font-weight: 500 !important;
-  color: #bbb !important;
-}
-
-/* FOOTER */
-.footer {
-  font-family: inherit !important;
-  font-weight: 400 !important;
-  color: white !important;
-  opacity: .9;
-}
-
   </style>
 </head>
 
