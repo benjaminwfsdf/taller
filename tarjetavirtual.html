@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Mecánica Walter Uriol | Tarjeta Virtual</title>
+<meta name="theme-color" content="#161616" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#fff;
+    --muted:#d9d9d9;
+    --shadow:0 14px 32px rgba(0,0,0,.36);
+
+    --btn-whatsapp:#25D366;
+    --btn-blue:#0f4ea8;
+    --btn-yellow:#ffbc49;
+    --btn-green:#7cb342;
+    --btn-purple:#b00000;
+
+    --gold:#d4af37;
+    --raise: clamp(90px, 12vh, 180px);
+  }
+
+  *{box-sizing:border-box;}
+  html, body{height:100%; overflow:hidden; overscroll-behavior:none;}
+
+  body{
+    margin:0;
+    background:#000;
+    color:var(--ink);
+    font-family:Arimo,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
+    padding-bottom:56px;
+    position:fixed;
+    inset:0;
+  }
+
+  /* ============================
+        HERO — FONDO PC
+  ============================ */
+  .hero{
+    position:relative;
+    background:#0b0d0f url("img/portada_pc.png") no-repeat center bottom/cover;
+    min-height:130svh;
+    display:flex;
+    align-items:center;
+  }
+
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.64) 30%, rgba(0,0,0,.30) 58%, rgba(0,0,0,.08) 78%, rgba(0,0,0,0) 100%),
+      linear-gradient(0deg, rgba(0,0,0,.08), rgba(0,0,0,.08));
+    pointer-events:none;
+  }
+
+  .hero .container{
+    position:relative;
+    z-index:2;
+    margin:0 auto;
+    width:100%;
+    max-width:1180px;
+    padding:32px 20px;
+    display:grid;
+    grid-template-columns:minmax(300px,420px) 1fr;
+    gap:24px;
+    align-items:stretch;
+    transform:translateY(calc(-1 * var(--raise)));
+  }
+
+  @media(max-width:980px){
+    .hero{
+      background-position:center bottom;
+    }
+    .hero .container{
+      grid-template-columns:1fr;
+      gap:18px;
+      padding:18px 14px;
+      transform:none;
+    }
+  }
+
+  /* ============================
+           TARJETA
+  ============================ */
+
+  .card-wrap{
+    display:flex;
+    align-items:stretch;
+    min-height:420px;
+    max-height:560px;
+  }
+
+  .card-container{
+    perspective:1400px;
+    width:100%;
+    border:none;
+    background:transparent;
+  }
+
+  .card{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .card.flipped{
+    transform:rotateY(180deg);
+  }
+
+  .card-face{
+    position:absolute;
+    inset:0;
+    display:flex;
+    backface-visibility:hidden;
+  }
+
+  .card-back{
+    transform:rotateY(180deg);
+  }
+
+  /* ============================
+     PANEL IZQUIERDO TRANSLÚCIDO
+  ============================ */
+  .left{
+    flex:1;
+    padding:20px 18px;
+
+    /* efecto translúcido real */
+    background: linear-gradient(
+      180deg,
+      rgba(0,0,0,0.20),
+      rgba(0,0,0,0.07)
+    );
+    backdrop-filter:blur(8px) saturate(1.1);
+
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    color:white;
+  }
+
+  .left .logo img{
+    max-width:210px;
+    display:block;
+    margin:0 auto;
+  }
+
+  .h3{
+    margin:0;
+    font-size:34px;
+    font-weight:700;
+  }
+
+  .sub{
+    margin:0;
+    font-size:15px;
+    opacity:.95;
+  }
+
+  .div-line{
+    height:1px;
+    background:rgba(255,255,255,.18);
+    margin:6px auto;
+    max-width:220px;
+  }
+
+  .flip-hint{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:17px;
+    font-weight:800;
+    color:#fff;
+    background:rgba(0,0,0,.45);
+    border:1px solid rgba(212, 55, 55, 0.75);
+    padding:10px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    margin:4px auto 0;
+  }
+
+  .flip-hint .arrow{
+    color:var(--btn-purple);
+  }
+
+  /* ============================
+           SERVICIOS
+  ============================ */
+
+  .services{
+    display:grid;
+    gap:10px;
+    margin-top:6px;
+    text-align:left;
+    max-height:270px;
+    overflow-y:auto;
+    padding-right:6px;
+  }
+
+  .svc{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:12px;
+    background:rgba(0,0,0,0.30);
+    border:1px solid rgba(255,255,255,.08);
+    padding:10px 12px;
+    border-radius:12px;
+  }
+
+  .svc h4{
+    margin:0;
+    font-size:16px;
+    color:white;
+  }
+
+  .svc p{
+    margin:6px 0 0;
+    font-size:13.4px;
+    color:white;
+  }
+
+  /* ============================
+           PANEL DERECHO
+  ============================ */
+  .right{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .title-box{
+    background:rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,.08);
+    padding:14px;
+    border-radius:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,.28);
+  }
+
+  .title{
+    font-size:28px;
+    margin:0;
+    font-weight:700;
+    color:white;
+  }
+
+  .subtitle{
+    font-size:14px;
+    margin:6px 0 0;
+    color:white;
+  }
+
+  .btns{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+
+  .btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 14px;
+    border-radius:10px;
+    font-weight:700;
+    color:#fff;
+    text-decoration:none;
+    box-shadow:0 8px 18px rgba(0,0,0,.30);
+  }
+
+  .btn-yellow{
+    background:var(--btn-yellow);
+    color:#000;
+  }
+
+  .btn-blue{ background:var(--btn-blue); }
+  .btn-green{ background:var(--btn-green); }
+  .btn-purple{ background:var(--btn-purple); }
+  .btn-whatsapp{ background:var(--btn-whatsapp); }
+
+
+  /* ============================
+             FOOTER
+  ============================ */
+  .infobar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:10px 14px;
+    display:flex;
+    justify-content:space-between;
+    background:rgba(0,0,0,.75);
+    border-top:1px solid rgba(255,255,255,.05);
+    font-size:13px;
+  }
+
+  /* ============================
+        MODO CELULAR
+  ============================ */
+  @media(max-width:430px){
+
+    html,body{
+      height:auto;
+      overflow:auto;
+      position:static;
+    }
+
+    /* **FONDO REAL DEL CELULAR** */
+    .hero{
+      background-image:url("img/portada_celular.png");
+      background-position:center bottom;
+      background-size:cover;
+    }
+
+    .left{
+      background:linear-gradient(
+        180deg,
+        rgba(0,0,0,0.20),
+        rgba(0,0,0,0.06)
+      );
+      backdrop-filter:blur(6px) saturate(1.2);
+    }
+
+    .title-box{
+      background:rgba(0,0,0,0.28);
+      backdrop-filter:blur(6px);
+    }
+
+    .svc{
+      background:rgba(0,0,0,0.22);
+    }
+
+    .btns{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+<div class="container">
+
+  <!-- TARJETA -->
+  <div class="card-wrap">
+    <button class="card-container" id="flipCardBtn">
+      <div class="card" id="flipCard">
+
+        <!-- FRONT -->
+        <div class="card-face card-front">
+          <div class="left">
+            <div class="logo">
+              <img src="img/logo.png" alt="Mecánica Walter Uriol">
+            </div>
+
+            <h3 class="h3">Mecánica Walter Uriol</h3>
+            <p class="sub">Servicio automotriz completo</p>
+            <div class="div-line"></div>
+
+            <p class="flip-hint"><span class="arrow">➜</span> Ver servicios</p>
+          </div>
+        </div>
+
+        <!-- BACK -->
+        <div class="card-face card-back">
+          <div class="left">
+            <h3 class="h3">Servicios</h3>
+            <p class="sub">Diagnóstico · Inyección · DPF · Frenos</p>
+            <div class="div-line"></div>
+
+            <div class="services">
+
+              <div class="svc">
+                <div class="ico">🔧</div>
+                <div><h4>Inyección Electrónica</h4><p>Mantención profesional y diagnóstico avanzado.</p></div>
+              </div>
+
+              <div class="svc">
+                <div class="ico">🔍</div>
+                <div><h4>Scanner</h4><p>Diagnóstico completo de sistemas electrónicos.</p></div>
+              </div>
+
+              <div class="svc">
+                <div class="ico">🔥</div>
+                <div><h4>Regeneración de Filtro DPF</h4><p>Limpieza profunda y recuperación de potencia.</p></div>
+              </div>
+
+              <div class="svc">
+                <div class="ico">🛠</div>
+                <div><h4>Frenos</h4><p>Revisión y mantención completa.</p></div>
+              </div>
+
+              <div class="svc">
+                <div class="ico">⚙️</div>
+                <div><h4>Afinamientos</h4><p>Puesta a punto general del motor.</p></div>
+              </div>
+
+              <div class="svc">
+                <div class="ico">🏎</div>
+                <div><h4>Ajuste de Motores</h4><p>Diagnóstico y ajuste fino para máximo rendimiento.</p></div>
+              </div>
+
+            </div>
+
+            <div class="div-line"></div>
+            <p class="flip-hint"><span class="arrow">←</span> Volver</p>
+          </div>
+        </div>
+
+      </div>
+    </button>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+    <div class="title-box">
+      <h2 class="title">Taller Mecánico Integral</h2>
+      <p class="subtitle">Diagnóstico · Inyección · DPF · Frenos</p>
+    </div>
+
+    <div class="btns">
+      <a class="btn btn-whatsapp" data-action="whatsapp">WhatsApp</a>
+      <a class="btn btn-blue" data-action="horario">Horario</a>
+      <a class="btn btn-green" data-action="vcard">Guardar contacto</a>
+      <a class="btn btn-yellow" data-action="open"
+         data-href="https://maps.google.com/maps?q=Avenida%20los%20orientales%206041%2C%20pe%C3%B1alolen%2C%20santiago&amp;t=m&amp;z=16&amp;output=embed&amp;iwloc=near">Ubicación</a>
+      <a class="btn btn-purple" data-action="open"
+         data-href="https://www.mecanicawalteruriol.cl">Sitio web</a>
+      <a class="btn btn-blue" data-action="telefonos">Teléfonos fijos</a>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<!-- FOOTER -->
+<div class="infobar">
+  <span>© <span id="year"></span> Mecánica Walter Uriol</span>
+  <span>Hecho por Benjamín González</span>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); place-items:center; z-index:90;">
+  <div class="box" style="background:#0f151d; padding:18px; border-radius:18px; max-width:420px; color:white;">
+    <h3 id="modalTitle">Aviso</h3>
+    <div id="modalBody"></div>
+    <div style="text-align:right; margin-top:12px;">
+      <button id="modalOk" style="padding:8px 14px; border:none; background:#2ecc71; color:white; border-radius:10px;">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CFG = {
+  nombre:"Mecánica Walter Uriol",
+  telefono:"+56 2 22 967 8027 / +56 2 22 792 1950",
+  whatsapp:"56962191593",
+  mensaje:"Hola, vengo desde la Tarjeta Virtual.",
+  sitio:"https://www.mecanicawalteruriol.cl",
+  correo:"ventas@mecanicawalteruriol.cl"
+};
+
+const $ = s => document.querySelector(s);
+const modal = $("#modal");
+const mTitle=$("#modalTitle");
+const mBody=$("#modalBody");
+let afterOk=null;
+
+function showModal(t,html,cb){
+  mTitle.textContent=t;
+  mBody.innerHTML=html;
+  modal.style.display="grid";
+  afterOk=cb||null;
+}
+function closeModal(){
+  modal.style.display="none";
+  if(afterOk){afterOk(); afterOk=null;}
+}
+$("#modalOk").onclick=closeModal;
+
+document.addEventListener("click",e=>{
+  const btn = e.target.closest("[data-action]");
+  if(!btn) return;
+
+  const act = btn.dataset.action;
+
+  if(act==="whatsapp"){
+    showModal("WhatsApp","<p>Atención solo por mensajes.</p>",()=>{
+      window.open(`https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(CFG.mensaje)}`);
+    });
+  }
+
+  if(act==="horario"){
+    showModal("Horario",
+    `<p><strong>Lun–Jue:</strong> 08:00–17:00</p>
+     <p><strong>Vie:</strong> 08:00–14:00</p>
+     <p><strong>Sáb–Dom:</strong> Cerrado</p>`);
+  }
+
+  if(act==="telefonos"){
+    showModal("Teléfonos",
+      `<p><strong>Teléfonos fijos:</strong><br>${CFG.telefono}</p>`);
+  }
+
+  if(act==="open"){
+    window.open(btn.dataset.href,"_blank");
+  }
+
+  if(act==="vcard"){
+    const vcard=
+`BEGIN:VCARD
+VERSION:3.0
+FN:${CFG.nombre}
+TEL:${CFG.telefono}
+EMAIL:${CFG.correo}
+URL:${CFG.sitio}
+END:VCARD`;
+
+    const blob=new Blob([vcard],{type:"text/vcard"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url; a.download="ContactoWalterUriol.vcf"; a.click();
+    URL.revokeObjectURL(url);
+
+    showModal("Contacto","Ficha de contacto descargada.");
+  }
+});
+
+$("#flipCardBtn").onclick=()=>$("#flipCard").classList.toggle("flipped");
+document.getElementById("year").textContent=(new Date()).getFullYear();
+</script>
+
+</body>
+</html>

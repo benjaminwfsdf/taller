@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✏️ Editar Inventario · Aceites | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom: 22px;
+      box-shadow:var(--shadow);
+    }
+
+    .title{
+      margin:0 0 16px 0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    /* BOTONES */
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* INPUTS */
+    input{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #333;
+      background:#101114;
+      color:#fff;
+      margin-bottom:10px;
+    }
+
+    input:focus{
+      outline:none;
+      border-color:var(--brand);
+    }
+
+    input:read-only{
+      background:#0a0a0c;
+      color:#888;
+    }
+
+    /* TABLA */
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:clamp(12px,3vw,15px);
+    }
+
+    th,td{
+      border-bottom:1px solid #2a2d33;
+      padding:8px;
+      text-align:center;
+    }
+
+    tr.clickable:hover{
+      background:#15171b;
+      cursor:pointer;
+    }
+
+    /* BADGES */
+    .badge{
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:12px;
+    }
+    .badge.ok{background:#163016;color:#a8f0a9;}
+    .badge.off{background:#301616;color:#f0a8a8;}
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header">
+        <h1>✏️ Editar Inventario</h1>
+      </div>
+
+      <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
+
+      <!-- BUSCAR -->
+      <div class="card">
+        <h2 class="title">Buscar producto</h2>
+
+        <input id="buscar" placeholder="Buscar por nombre, SKU, categoría o aplicación..."
+               oninput="this.value=this.value.toUpperCase()">
+
+        <button class="btn" onclick="filtrar()">Buscar</button>
+
+        <div style="margin-top:10px;max-height:260px;overflow:auto;">
+          <table id="tbl">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>SKU</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Aplicación</th>
+                <th>Stock</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <p style="font-size:13px;opacity:.8;margin-top:8px;">
+          Pulsa una fila para cargarla en el formulario de edición.
+        </p>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div class="card" id="formCard" style="display:none;">
+        <h2 class="title">Datos del producto</h2>
+
+        <div class="grid">
+          <input id="id" placeholder="ID" readonly>
+          <input id="sku" placeholder="SKU" readonly>
+
+          <input id="nombre" placeholder="Nombre del producto"
+                 oninput="this.value=this.value.toUpperCase()">
+
+          <input id="categoria" placeholder="Categoría"
+                 oninput="this.value=this.value.toUpperCase()">
+
+          <input id="aplicacion" placeholder="Aplicación / Autos compatibles"
+                 oninput="this.value=this.value.toUpperCase()">
+
+          <!-- CAMBIO: type="text" para funcionar en PC + CELULAR -->
+          <input id="costo_unit" type="text" placeholder="Costo unitario ($)"
+                 oninput="formatearAuto(this)">
+
+          <input id="precio_unit" type="text" placeholder="Precio venta ($)"
+                 oninput="formatearAuto(this)">
+
+          <input id="stock" type="text" placeholder="Stock"
+                 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+
+        <button class="btn" onclick="guardar()">💾 Guardar cambios</button>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+
+    const api = async (action,payload={})=>{
+      try{
+        const r = await fetch(BASE_URL,{
+          method:"POST",
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body:JSON.stringify({action,payload})
+        });
+        return r.json();
+      }catch(err){
+        return {ok:false,error:err.message};
+      }
+    };
+
+    let productos = [];
+    const $ = id => document.getElementById(id);
+
+    /* ⭐ FORMATEO AUTOMÁTICO DE MILES (PC + CELULAR) */
+    function formatearAuto(input){
+      let val = input.value.replace(/\./g,"").replace(",",".");
+      if(val === "") return;
+      let num = Number(val);
+      if(isNaN(num)) return;
+      input.value = num.toLocaleString("es-CL",{
+        minimumFractionDigits:0,
+        maximumFractionDigits:2
+      });
+    }
+
+    async function cargar(){
+      const r = await api("listInventory");
+      if(!r.ok){
+        alert("Error al cargar inventario: " + r.error);
+        return;
+      }
+      productos = r.data || [];
+      renderTabla(productos);
+    }
+
+    function renderTabla(list){
+      const tb = document.querySelector("#tbl tbody");
+      tb.innerHTML = "";
+
+      list.forEach(p=>{
+        const tr = document.createElement("tr");
+        tr.className = "clickable";
+
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.sku}</td>
+          <td>${p.nombre}</td>
+          <td>${p.categoria}</td>
+          <td>${p.aplicacion || "-"}</td>
+          <td>${p.stock}</td>
+          <td>${p.activo ? '<span class="badge ok">Activo</span>' : '<span class="badge off">Inactivo</span>'}</td>
+        `;
+
+        tr.addEventListener("click",()=>cargarEnFormulario(p));
+        tb.appendChild(tr);
+      });
+    }
+
+    function filtrar(){
+      const q = $('buscar').value.toUpperCase();
+
+      const filtrados = productos.filter(p=>
+        p.nombre.toUpperCase().includes(q) ||
+        p.sku.toUpperCase().includes(q) ||
+        p.categoria.toUpperCase().includes(q) ||
+        (p.aplicacion || "").toUpperCase().includes(q)
+      );
+
+      renderTabla(filtrados);
+    }
+
+    function cargarEnFormulario(p){
+      $("formCard").style.display = "block";
+
+      $("id").value = p.id;
+      $("sku").value = p.sku;
+
+      $("nombre").value = p.nombre;
+      $("categoria").value = p.categoria;
+      $("aplicacion").value = p.aplicacion || "";
+
+      $("costo_unit").value = p.costo_unit.toLocaleString("es-CL");
+      $("precio_unit").value = p.precio_unit.toLocaleString("es-CL");
+      $("stock").value = p.stock;
+    }
+
+    async function guardar(){
+      const id = $("id").value.trim();
+      if(!id){
+        alert("No hay producto cargado.");
+        return;
+      }
+
+      const costoNum = Number(costo_unit.value.replace(/\./g,"").replace(",","."));
+      const precioNum = Number(precio_unit.value.replace(/\./g,"").replace(",","."));
+
+      const payload = {
+        id: id,
+        nombre: $("nombre").value.trim().toUpperCase(),
+        categoria: $("categoria").value.trim().toUpperCase(),
+        aplicacion: $("aplicacion").value.trim().toUpperCase(),
+        costo_unit: costoNum,
+        precio_unit: precioNum,
+        stock: Number($("stock").value || 0)
+      };
+
+      const r = await api("editInventory", payload);
+      if(!r.ok){
+        alert("Error al guardar: " + r.error);
+        return;
+      }
+
+      alert("Producto actualizado correctamente.");
+      cargar();
+    }
+
+    cargar();
+  </script>
+</body>
+</html>

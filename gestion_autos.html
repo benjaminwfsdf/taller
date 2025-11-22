@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_self">
+
+  <link rel="manifest" href="/manifest.json">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Taller">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="img/scanner.png">
+  <title>Gestor de Vehículos | Walter Uriol</title>
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:22px;
+      padding:12px;
+    }
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:.25s;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .icon{
+      flex:0 0 48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:white;
+      color:black;
+      font-size:26px;
+      border:3px solid var(--brand);
+    }
+
+    .title{
+      margin:0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    .desc{
+      margin:4px 0 0;
+      color:white;
+      opacity:.9;
+      font-size:15px;
+    }
+
+    /* BOTÓN ABRIR */
+    .actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+      margin-top: 16px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <!-- Contenido principal -->
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header"><h1>GESTOR DE VEHÍCULOS</h1></div>
+
+      <div class="grid" role="list">
+        <!-- Añadir vehículo -->
+        <article class="card" role="listitem">
+          <div class="icon">➕</div>
+          <div class="content">
+            <h2 class="title">Añadir Vehículo</h2>
+            <p class="desc">Registrar un nuevo vehículo con los datos del cliente y dejarlo en la fila del taller.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="agregar.html">Abrir</a>
+          </div>
+        </article>
+
+        <!-- Buscar por patente -->
+        <article class="card" role="listitem">
+          <div class="icon">🔎</div>
+          <div class="content">
+            <h2 class="title">Buscar por Patente</h2>
+            <p class="desc">Encuentra rápidamente un auto usando su placa.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="buscar.html?tipo=patente">Abrir</a>
+          </div>
+        </article>
+
+        <!-- Buscar por nombre -->
+        <article class="card" role="listitem">
+          <div class="icon">🧑</div>
+          <div class="content">
+            <h2 class="title">Buscar por Nombre</h2>
+            <p class="desc">Localiza vehículos por el nombre del dueño.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="buscar.html?tipo=nombre">Abrir</a>
+          </div>
+        </article>
+
+        <!-- Buscar por teléfono -->
+        <article class="card" role="listitem">
+          <div class="icon">📞</div>
+          <div class="content">
+            <h2 class="title">Buscar por Teléfono</h2>
+            <p class="desc">Filtra por número de contacto del cliente.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="buscar.html?tipo=telefono">Abrir</a>
+          </div>
+        </article>
+
+        <!-- Actualizar estado -->
+        <article class="card" role="listitem">
+          <div class="icon">🛠️</div>
+          <div class="content">
+            <h2 class="title">Actualizar Estado</h2>
+            <p class="desc">Cambia el estado del trabajo.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="estado.html">Abrir</a>
+          </div>
+        </article>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="index.html" class="btn btn-secondary">← Volver al Panel Principal</a>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <!-- PWA: navegación interna en modo standalone -->
+  <script>
+  (function () {
+    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    if (!isStandalone) return;
+
+    const EXTERN = new Set([
+      'https://www.patentechile.com/',
+      'https://taller-todo.vercel.app/informes.html',
+      'https://taller-todo.vercel.app/buscador_averias.html'
+    ]);
+
+    const toURL = (h) => { try { return new URL(h, location.href); } catch { return null; } };
+    const sameOrigin = (u) => u && u.origin === location.origin;
+    const fileName = (u) => u ? u.pathname.split('/').pop() : '';
+    const go = (u) => location.assign(u.pathname + u.search + u.hash);
+
+    // 1) Enlaces <a>: internos -> misma ventana (evita la vista con "Listo")
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href]'); if (!a) return;
+      if (a.hasAttribute('download') || a.href.startsWith('mailto:') || a.href.startsWith('tel:')) return;
+      const u = toURL(a.getAttribute('href')); if (!u) return;
+
+      const isExternalWhitelisted =
+        EXTERN.has(u.href) || EXTERN.has(fileName(u));
+
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        e.preventDefault();
+        go(u);
+      }
+      // Externos o whitelisted: respetamos su comportamiento (podrán abrir Safari).
+    }, true); // captura
+
+    // 2) window.open internos -> misma ventana (salvo EXTERN)
+    const _open = window.open;
+    window.open = function (url, target, features) {
+      const u = toURL(url);
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        go(u);
+        return null;
+      }
+      return _open.call(window, url, target, features);
+    };
+
+    // 3) Formularios internos -> _self
+    document.addEventListener('submit', (e) => {
+      const f = e.target;
+      if (!(f && f.tagName === 'FORM')) return;
+      const u = toURL(f.getAttribute('action') || location.href);
+      if (sameOrigin(u)) f.target = '_self';
+    }, true);
+
+    // 4) Limpieza: si quedó algún _blank interno por error, quítalo
+    document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+      const u = toURL(a.getAttribute('href'));
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      if (sameOrigin(u) && !isExternalWhitelisted) a.removeAttribute('target');
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📦 Inventario · Aceites</title>
+
+<style>
+/* ============================
+   VARIABLES PRINCIPALES
+============================ */
+:root{
+  --brand:#d40000;
+  --brand-dark:#9b0000;
+
+  --blue:#1d3053;
+  --ink:#ffffff;
+
+  --radius:18px;
+  --shadow:0 12px 30px rgba(0,0,0,.45);
+  --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+}
+
+/* ============================
+   CUERPO
+============================ */
+body{
+  margin:0;
+  background:url("img/portada_celular.png") no-repeat center/cover fixed;
+  font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--ink);
+}
+
+/* ============================
+   TOPBAR
+============================ */
+.topbar{
+  background:#1d3053;
+  color:white;
+  text-align:center;
+  padding:14px;
+  font-weight:700;
+  border-bottom:5px solid var(--brand);
+  box-shadow:var(--shadow-soft);
+  font-size:clamp(16px,4vw,20px);
+}
+
+/* ============================
+   WRAPPER + FRAME
+============================ */
+.wrapper{
+  max-width:1100px;
+  margin:40px auto 60px;
+  padding:0 22px;
+}
+
+.frame{
+  background:rgba(135,206,250,0.35);
+  border-radius:var(--radius);
+  padding:25px;
+  border:3px solid var(--brand);
+  backdrop-filter:blur(8px);
+  box-shadow:var(--shadow);
+}
+
+/* ============================
+   TÍTULO PRINCIPAL
+============================ */
+.header{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  border-radius:16px;
+  text-align:center;
+  padding:20px;
+  margin-bottom:22px;
+  font-size:clamp(22px,4vw,30px);
+  font-weight:900;
+  text-shadow:0 3px 8px rgba(0,0,0,.6);
+}
+
+/* ============================
+   CARD SECCIÓN
+============================ */
+.card{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+
+/* ============================
+   BOTÓN VOLVER
+============================ */
+.btn-back{
+  display:inline-block;
+  background:white;
+  color:black;
+  padding:10px 22px;
+  border-radius:14px;
+  border:3px solid var(--brand);
+  font-weight:900;
+  font-size:16px;
+  text-decoration:none;
+  box-shadow:0 5px 12px rgba(0,0,0,.35);
+  transition:.25s;
+}
+.btn-back:hover{
+  background:var(--blue);
+  color:white;
+  border-color:var(--brand-dark);
+}
+
+/* ============================
+   INPUTS
+============================ */
+input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:2px solid var(--brand);
+  background:#0c1627;
+  color:white;
+  font-size:15px;
+}
+
+/* ============================
+   GRID INPUTS
+============================ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:12px;
+}
+
+/* ============================
+   BOTÓN GUARDAR / RECARGAR
+============================ */
+.btn{
+  background:white;
+  color:black;
+  padding:12px 16px;
+  border-radius:14px;
+  border:3px solid var(--brand);
+  font-weight:900;
+  cursor:pointer;
+  font-size:17px;
+  margin:14px auto 0;
+  display:block;
+  width:100%;
+  max-width:280px;
+  text-align:center;
+  box-shadow:0 5px 12px rgba(0,0,0,.35);
+}
+.btn:hover{
+  background:var(--blue);
+  color:white;
+  border-color:var(--brand-dark);
+}
+
+/* ============================
+   TABLA
+============================ */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:clamp(12px,3vw,15px);
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.25);
+  text-align:center;
+}
+
+.badge{
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:13px;
+}
+.badge.ok{background:#163016;color:#a8f0a9;}
+.badge.off{background:#301616;color:#f0a8a8;}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">📦 INVENTARIO — MECÁNICA WALTER URIOL</div>
+
+<div class="wrapper">
+  <div class="frame">
+
+    <!-- TITULAR -->
+    <div class="header">Inventario de Aceites</div>
+
+    <!-- VOLVER -->
+    <a href="aceite.html" class="btn-back">⬅ Volver al panel</a>
+
+    <!-- =======================
+         AGREGAR PRODUCTO
+    ======================== -->
+    <div class="card">
+      <h2>Agregar producto</h2>
+
+      <div class="grid">
+        <input id="sku" placeholder="SKU (opcional)">
+        <input id="nombre" placeholder="Nombre del producto" oninput="this.value=this.value.toUpperCase()">
+        <input id="categoria" placeholder="Categoría (5W30, ATF...)" oninput="this.value=this.value.toUpperCase()">
+        <input id="aplicacion" placeholder="Aplicación (opcional)" oninput="this.value=this.value.toUpperCase()">
+
+        <input id="costo" type="text" placeholder="Costo ($)" oninput="formatearAuto(this)">
+        <input id="precio" type="text" placeholder="Precio venta ($)" oninput="formatearAuto(this)">
+        <input id="stock" type="text" placeholder="Stock" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+
+      <button class="btn" onclick="agregar()">Guardar</button>
+    </div>
+
+    <!-- =======================
+         LISTADO
+    ======================== -->
+    <div class="card">
+      <h2>Listado</h2>
+
+      <input id="buscar" placeholder="Buscar..." oninput="filtrar()">
+      <button class="btn" onclick="cargar()">Recargar</button>
+
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>SKU</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Venta</th>
+            <th>Costo</th>
+            <th>Stock</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===========================
+     JAVASCRIPT API + FUNCIONES
+=========================== -->
+<script>
+const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+
+const api = async (action,payload={})=>{
+  try{
+    const r=await fetch(BASE_URL,{
+      method:"POST",
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action,payload})
+    });
+    return r.json();
+  }catch(err){return {ok:false,error:err.message};}
+};
+
+let productos=[];
+const $=id=>document.getElementById(id);
+
+/* ⭐ FORMATO AUTOMÁTICO */
+function formatearAuto(input){
+  let val = input.value.replace(/\./g,"").replace(",",".");
+  if(val==="") return;
+
+  let num = Number(val);
+  if(isNaN(num)) return;
+
+  input.value = num.toLocaleString("es-CL",{maximumFractionDigits:2});
+}
+
+/* 🔄 CARGAR */
+async function cargar(){
+  const r=await api('listInventory');
+  if(!r.ok) return alert('Error: '+r.error);
+  productos=r.data||[];
+  render(productos);
+}
+
+/* TABLA */
+function render(list){
+  const tb=document.querySelector('#tbl tbody');
+  tb.innerHTML='';
+  list.forEach(p=>{
+    tb.innerHTML+=`
+      <tr>
+        <td>${p.id}</td>
+        <td>${p.sku||'-'}</td>
+        <td>${p.nombre}</td>
+        <td>${p.categoria||'-'}</td>
+        <td>${p.precio_unit.toLocaleString('es-CL')}</td>
+        <td>${p.costo_unit.toLocaleString('es-CL')}</td>
+        <td>${p.stock}</td>
+        <td>${p.activo ? '<span class="badge ok">Activo</span>' : '<span class="badge off">Inactivo</span>'}</td>
+      </tr>`;
+  });
+}
+
+/* BUSCAR */
+function filtrar(){
+  const q=$('buscar').value.toUpperCase();
+  render(productos.filter(p=>
+    p.nombre.toUpperCase().includes(q) ||
+    p.sku.toUpperCase().includes(q) ||
+    p.categoria.toUpperCase().includes(q)
+  ));
+}
+
+/* AGREGAR */
+async function agregar(){
+  const costoNum = Number(costo.value.replace(/\./g,"").replace(",","."));  
+  const precioNum = Number(precio.value.replace(/\./g,"").replace(",","."));
+  const stockNum  = Number(stock.value || "0");
+
+  const item={
+    sku: sku.value.trim() || 'SKU-'+Date.now(),
+    nombre: nombre.value.trim().toUpperCase(),
+    categoria: categoria.value.trim().toUpperCase(),
+    aplicacion: aplicacion.value.trim().toUpperCase(),
+    costo_unit: costoNum,
+    precio_unit: precioNum,
+    stock: stockNum
+  };
+
+  if(!item.nombre) return alert('Debe ingresar un nombre');
+
+  const r = await api('addInventory',{item});
+  if(!r.ok) return alert('Error: '+r.error);
+
+  document.querySelectorAll('input').forEach(i=>i.value='');
+  cargar();
+}
+
+cargar();
+</script>
+
+</body>
+</html>

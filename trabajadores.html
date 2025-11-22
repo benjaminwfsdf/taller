@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👷 Trabajadores | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom: 22px;
+      box-shadow:var(--shadow);
+    }
+
+    .title{
+      margin:0 0 16px 0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    /* BOTONES */
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* INPUTS */
+    input{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #333;
+      background:#101114;
+      color:#fff;
+      margin-bottom:10px;
+    }
+
+    /* TABLA */
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:clamp(12px,3vw,15px);
+    }
+
+    th,td{
+      border:1px solid var(--brand);
+      padding:8px;
+      text-align:center;
+    }
+
+    th{
+      background:var(--brand);
+      color:#fff;
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header">
+        <h1>👷 Trabajadores</h1>
+      </div>
+
+      <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
+
+      <!-- AGREGAR TRABAJADOR -->
+      <div class="card">
+        <h2 class="title">Agregar trabajador</h2>
+        <input id="nombre" placeholder="Nombre del trabajador">
+        <button id="guardar" class="btn">Guardar</button>
+      </div>
+
+      <!-- LISTADO -->
+      <div class="card">
+        <h2 class="title">Listado</h2>
+        <input id="buscar" placeholder="Buscar trabajador...">
+        <div id="tabla"></div>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <script>
+    const BASE_URL="https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+    const api=async(a,p={})=>{
+      const r=await fetch(BASE_URL,{method:"POST",headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:a,payload:p})});
+      return r.json();
+    };
+    const $=id=>document.getElementById(id);
+    async function renderTabla(data){
+      if(!data.length){$('tabla').innerHTML="<p>No hay resultados.</p>";return;}
+      let html="<table><thead><tr><th>ID</th><th>Nombre</th><th>Activo</th><th>Bono Total</th><th>Acciones</th></tr></thead><tbody>";
+      data.forEach(t=>{
+        html+=`<tr>
+          <td>${t.id}</td><td>${t.nombre}</td><td>${t.activo?'✅':'❌'}</td>
+          <td>${(t.bono_total||0).toLocaleString('es-CL')}</td>
+          <td><button class='btn' onclick="toggle('${t.id}')">${t.activo?'Desactivar':'Activar'}</button></td>
+        </tr>`;
+      });
+      html+="</tbody></table>";$('tabla').innerHTML=html;
+    }
+    window.toggle=async(id)=>{const r=await api("toggleWorker",{id});if(r.ok)buscar();else alert(r.error);};
+    async function buscar(){
+      const q=$('buscar').value.trim();if(!q){$('tabla').innerHTML="";return;}
+      const r=await api('searchWorker',{query:q});if(r.ok)renderTabla(r.data);else alert(r.error);
+    }
+    $('buscar').addEventListener('input',buscar);
+    $('guardar').addEventListener('click',async()=>{
+      const n=$('nombre').value.trim();if(!n)return alert("Escribe un nombre");
+      const r=await api('addWorker',{nombre:n});
+      if(r.ok){alert("Trabajador agregado");$('nombre').value='';buscar();}else alert(r.error);
+    });
+  </script>
+</body>
+</html>

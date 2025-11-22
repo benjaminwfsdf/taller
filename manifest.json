@@ -1,0 +1,23 @@
+{
+  "name": "Taller Walter",
+  "short_name": "Taller",
+  "lang": "es-CL",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#900000",
+  "background_color": "#0b0b0c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

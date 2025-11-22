@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧮 Calculadora de Ganancia | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      padding:20px;
+    }
+
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      width:100%;
+      max-width:500px;
+      border-radius:12px;
+      margin-bottom:20px;
+    }
+
+    h1{
+      background:var(--brand);
+      padding:16px 24px;
+      border-radius:12px;
+      box-shadow:0 6px 16px rgba(0,0,0,.5);
+      color:#fff;
+      letter-spacing:.3px;
+      margin-top:10px;
+      text-align:center;
+    }
+
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      margin-top:25px;
+      width:100%;
+      max-width:400px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      text-align:left;
+      color:var(--ink);
+      font-size:15px;
+      font-weight:600;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:2px solid rgba(255,255,255,0.2);
+      background:rgba(0,0,0,0.3);
+      color:#fff;
+      font-size:16px;
+      margin-bottom:15px;
+      box-sizing:border-box;
+    }
+
+    input:focus{
+      outline:none;
+      border-color:var(--brand);
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      background:white;
+      color:black;
+      font-weight:bold;
+      font-size:16px;
+      cursor:pointer;
+      transition:.25s;
+      border:3px solid var(--brand);
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    button:hover{
+      background:var(--blue-dark);
+      color:white;
+    }
+
+    .btn-home{
+      background:transparent;
+      color:white;
+      border-color:white;
+    }
+
+    .btn-home:hover{
+      background:rgba(255,255,255,0.1);
+    }
+
+    .resultado{
+      margin-top:20px;
+      font-size:16px;
+      text-align:center;
+      background:rgba(0,0,0,0.3);
+      border-radius:10px;
+      padding:14px;
+      line-height:1.6;
+      border:2px solid rgba(255,255,255,0.1);
+    }
+
+    .resultado strong{
+      color:#a8f0a9;
+    }
+
+    .footer{
+      margin-top:auto;
+      text-align:center;
+      color:white;
+      font-size:13px;
+      padding:20px 0 10px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <h1>💰 Calculadora de Ganancia</h1>
+
+  <div class="card">
+    <label>Precio de compra ($):</label>
+    <input type="number" id="costo" placeholder="Ej: 25000">
+
+    <label>Porcentaje de ganancia deseada (%):</label>
+    <input type="number" id="ganancia" placeholder="Ej: 60">
+
+    <button onclick="calcular()">Calcular Precio de Venta</button>
+    <button class="btn-home" onclick="window.location.href='aceite.html'">🏠 Volver al panel</button>
+
+    <div class="resultado" id="resultado">Ingresa los valores para calcular.</div>
+  </div>
+
+  <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+
+  <script>
+    function calcular(){
+      const costo=parseFloat(document.getElementById("costo").value);
+      const gan=parseFloat(document.getElementById("ganancia").value);
+      const res=document.getElementById("resultado");
+
+      if(isNaN(costo)||isNaN(gan)){
+        res.innerHTML="⚠️ Ingresa ambos valores correctamente.";
+        res.style.color="#ff4444";
+        return;
+      }
+
+      const venta=costo*(1+gan/100);
+      const utilidad=venta-costo;
+      const margen=(utilidad/venta)*100;
+
+      res.style.color="#fff";
+      res.innerHTML=`
+        💵 <strong>Precio de venta sugerido:</strong> $${venta.toLocaleString("es-CL")}<br>
+        📈 <strong>Utilidad bruta:</strong> $${utilidad.toLocaleString("es-CL")}<br>
+        🧮 <strong>Margen real sobre venta:</strong> ${margen.toFixed(1)}%
+      `;
+    }
+  </script>
+
+</body>
+</html>

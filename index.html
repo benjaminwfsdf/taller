@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Panel Principal | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d30531;
+
+      --ink:#ffffff;            /* TEXTO BLANCO */
+
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    /* ==========================================================
+       🔥 FONDO CORREGIDO PARA CELULARES / SIN ESPACIOS BLANCOS
+       ========================================================== */
+    body{
+      margin:0;
+      background-color:#000; /* respaldo oscuro */
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:cover;
+      background-attachment:scroll; /* corrección para móviles */
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    @media(max-width: 768px){
+      body{
+        background-size:cover;
+        background-position:top center;
+        background-attachment:scroll;
+      }
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:22px;
+      padding:12px;
+    }
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:.25s;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .icon{
+      flex:0 0 48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:white;
+      color:black;
+      font-size:26px;
+      border:3px solid var(--brand);
+    }
+
+    .title{
+      margin:0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    .desc{
+      margin:4px 0 0;
+      color:white;
+      opacity:.9;
+      font-size:15px;
+    }
+
+    /* BOTÓN ABRIR */
+    .actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+
+      <div class="header"><h1>Panel Principal</h1></div>
+
+      <div class="grid">
+
+        <article class="card">
+          <div class="icon">🚗</div>
+          <div>
+            <h2 class="title">Gestión de Vehículos</h2>
+            <p class="desc">Añadir, actualizar y ver autos registrados.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="gestion_autos.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🛢️</div>
+          <div>
+            <h2 class="title">Gestión de Aceites</h2>
+            <p class="desc">Inventario y ventas de lubricantes.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="aceite.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🤳</div>
+          <div>
+            <h2 class="title">Tarjeta Virtual</h2>
+            <p class="desc">Compartir contacto y QR.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="tarjeta-virtual.html">Abrir</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+</body>
+</html>

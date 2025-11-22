@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛢️ Panel Principal | Sistema de Aceites | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="icons/icon-192.png">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:22px;
+      padding:12px;
+    }
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:.25s;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .icon{
+      flex:0 0 48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:white;
+      color:black;
+      font-size:26px;
+      border:3px solid var(--brand);
+    }
+
+    .title{
+      margin:0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    .desc{
+      margin:4px 0 0;
+      color:white;
+      opacity:.9;
+      font-size:15px;
+    }
+
+    /* BOTÓN ABRIR */
+    .actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+      margin-top: 16px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+
+    /* ESTADÍSTICAS RÁPIDAS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: white;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+
+      <div class="header">
+        <h1>🛢️ Sistema de Gestión de Aceites</h1>
+        <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 16px;">Panel de control completo para gestión de inventario y ventas</p>
+      </div>
+
+      
+
+      <div class="grid">
+
+        <article class="card">
+          <div class="icon">📦</div>
+          <div>
+            <h2 class="title">Inventario Completo</h2>
+            <p class="desc">Ver todos los productos en stock con filtros avanzados</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="inventario.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">✏️</div>
+          <div>
+            <h2 class="title">Editar Inventario</h2>
+            <p class="desc">Modificar precios, stock y información de productos</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="editar_inventario.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🔎</div>
+          <div>
+            <h2 class="title">Buscar por Auto</h2>
+            <p class="desc">Encontrar productos compatibles con vehículos específicos</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="buscar_aplicacion.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">👷</div>
+          <div>
+            <h2 class="title">Gestión de Trabajadores</h2>
+            <p class="desc">Administrar equipo y calcular bonos por ventas</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="trabajadores.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">💰</div>
+          <div>
+            <h2 class="title">Registrar Venta</h2>
+            <p class="desc">Procesar ventas y actualizar inventario automáticamente</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="ventas.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">📊</div>
+          <div>
+            <h2 class="title">Reportes y Análisis</h2>
+            <p class="desc">Estadísticas de ventas, inventario y rendimiento</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="reportes.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🧮</div>
+          <div>
+            <h2 class="title">Calculadora</h2>
+            <p class="desc">Herramientas de cálculo para operaciones diarias</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="calculadora.html">Abrir</a>
+          </div>
+        </article>
+
+      </div>
+
+      <div style="text-align: center; margin-top: 22px;">
+        <a href="index.html" class="btn btn-secondary">⬅ Volver al Inicio Principal</a>
+      </div>
+
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 Registrar Venta | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom: 22px;
+      box-shadow:var(--shadow);
+    }
+
+    .title{
+      margin:0 0 16px 0;
+      font-size:20px;
+      font-weight:900;
+      color:white;
+    }
+
+    /* BOTONES */
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:16px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* INPUTS */
+    input,select{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #333;
+      background:#101114;
+      color:#fff;
+      margin-bottom:10px;
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header">
+        <h1>💰 Registrar Venta</h1>
+      </div>
+
+      <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
+
+      <!-- FORMULARIO VENTA -->
+      <div class="card">
+        <h2 class="title">Datos de la venta</h2>
+        <select id="trabajador"></select>
+        <select id="producto"></select>
+        <input id="precio" type="number" placeholder="Precio unitario" readonly>
+        <input id="qty" type="number" placeholder="Cantidad">
+        <input id="cliente" placeholder="Cliente (opcional)">
+        <button class="btn" id="btnGuardar">Registrar venta</button>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="card" id="res" style="display:none"></div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+    const api = async (action, payload={})=>{
+      const res = await fetch(BASE_URL,{
+        method:"POST",
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({action,payload})
+      });
+      return res.json();
+    };
+
+    const $=id=>document.getElementById(id);
+    let trabajadores=[], productos=[];
+
+    async function cargar(){
+      const [rW,rP]=await Promise.all([api('listWorkers'),api('listInventory')]);
+      if(!rW.ok||!rP.ok) return alert("Error al cargar datos del servidor");
+
+      trabajadores=rW.data||[];
+      productos=rP.data||[];
+
+      $('trabajador').innerHTML='<option value="">Selecciona trabajador</option>'+
+        trabajadores.filter(x=>x.activo).map(x=>`<option value="${x.id}">${x.nombre}</option>`).join('');
+
+      $('producto').innerHTML='<option value="">Selecciona producto</option>'+
+        productos.filter(p=>p.activo).map(p=>`
+          <option value="${p.id}" 
+            data-sku="${p.sku}" 
+            data-precio="${p.precio_unit}" 
+            data-costo="${p.costo_unit}" 
+            data-categoria="${p.categoria}">
+            ${p.nombre} — ${p.categoria} (Stock: ${p.stock})
+          </option>`).join('');
+    }
+
+    $('producto').addEventListener('change',()=>{
+      const o=$('producto').selectedOptions[0];
+      $('precio').value=o?o.dataset.precio||'':'';
+    });
+
+    $('btnGuardar').addEventListener('click',async()=>{
+      const p=$('producto').selectedOptions[0], pid=$('producto').value;
+      const t=$('trabajador').value;
+      if(!pid||!t) return alert('Selecciona trabajador y producto');
+      const qty=Number($('qty').value||0);
+      if(qty<=0) return alert('Cantidad inválida');
+      const cliente=$('cliente').value.trim();
+
+      const body={
+        trabajador_id:t,
+        trabajador_nombre:trabajadores.find(x=>x.id==t)?.nombre||'',
+        sku:p.dataset.sku,
+        nombre:p.textContent.trim().split('—')[0].trim(),
+        categoria:p.dataset.categoria,
+        qty,
+        costo_unit:Number(p.dataset.costo||0),
+        precio_unit:Number(p.dataset.precio||0),
+        cliente
+      };
+
+      const r=await api('addSale',body);
+      if(!r.ok) return alert('Error: '+r.error);
+
+      const res=$('res'); res.style.display='block';
+      res.innerHTML=`<h3>✅ Venta registrada</h3>
+      <p><b>Subtotal:</b> ${r.subtotal.toLocaleString('es-CL')}</p>
+      <p><b>Utilidad:</b> ${r.utilidad.toLocaleString('es-CL')}</p>
+      <p><b>Bono trabajador:</b> ${r.bono_trabajador.toLocaleString('es-CL')}</p>`;
+
+      $('qty').value=''; $('cliente').value='';
+      $('producto').selectedIndex=0; $('precio').value='';
+    });
+
+    cargar();
+  </script>
+</body>
+</html>
