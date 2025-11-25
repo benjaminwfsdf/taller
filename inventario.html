@@ -283,6 +283,7 @@ td {
     padding: 4px 8px;
   }
 }
+
 /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
 html, body {
   height: 100%;
@@ -292,9 +293,9 @@ html, body {
 
 body {
   position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
+  min-height: 100dvh;
   overflow-x: hidden;
-  background-color: #000; /* evita blancos */
+  background-color: #000;
 }
 
 /* El fondo real se genera aquí */
@@ -302,16 +303,17 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
+  background-image: inherit;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: -1;
   pointer-events: none;
 }
+
 /* ============================
-   🔥 FORZAR TEXTO BLANCO GLOBAL
-   ============================ */
+   🔥 TEXTO BLANCO GLOBAL
+============================ */
 body,
 body * {
   color: white !important;
@@ -319,7 +321,7 @@ body * {
 
 /* ============================
    🔥 EXCEPCIONES NECESARIAS
-   ============================ */
+============================ */
 
 /* Botones con fondo blanco → texto negro */
 .btn,
@@ -329,14 +331,14 @@ body * {
   color: black !important;
 }
 
-/* Inputs y su texto (para que se lean bien sobre fondo blanco/transparente) */
+/* Inputs y placeholders → BLANCOS */
 input,
 input *,
 input::placeholder {
   color: white !important;
 }
 
-/* Titulares y headers siguen siendo blancos (por si algo los sobreescribe) */
+/* Titulares */
 .header,
 .header *,
 .card h2,
@@ -345,7 +347,7 @@ input::placeholder {
   color: white !important;
 }
 
-/* La tabla tiene filas oscuras, así que mantenemos texto blanco */
+/* Tabla */
 table,
 table *,
 td,
@@ -353,13 +355,13 @@ td * {
   color: white !important;
 }
 
-/* Encabezados de tabla debe mantener texto blanco */
+/* Encabezados tabla */
 th,
 th * {
   color: white !important;
 }
 
-/* Badges deben conservar sus colores originales */
+/* Badges */
 .badge.ok {
   background: #163016 !important;
   color: #a8f0a9 !important;
@@ -368,16 +370,15 @@ th * {
   background: #301616 !important;
   color: #f0a8a8 !important;
 }
+
 /* ============================
    ✔ TIPOGRAFÍA UNIFICADA
 ============================ */
-
-/* Familia tipográfica global */
 body {
   font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
 }
 
-/* TÍTULOS PRINCIPALES */
+/* Títulos */
 h1, .header h1, .title, h2, h3 {
   font-family: inherit !important;
   font-weight: 900 !important;
@@ -386,7 +387,7 @@ h1, .header h1, .title, h2, h3 {
   color: white !important;
 }
 
-/* SUBTÍTULOS Y DESCRIPCIONES */
+/* Textos */
 .card p,
 .card span,
 .card small,
@@ -398,14 +399,14 @@ label {
   line-height: 1.35em !important;
 }
 
-/* ITEMS DE MENÚ Y BLOQUES */
+/* Negritas */
 .card b,
 strong {
   font-weight: 800 !important;
   color: white !important;
 }
 
-/* BOTONES */
+/* Botones */
 .btn,
 .btn * {
   font-family: inherit !important;
@@ -415,7 +416,7 @@ strong {
   letter-spacing: .3px !important;
 }
 
-/* OPCIONES Y SELECT */
+/* Select */
 select, option {
   font-family: inherit !important;
   font-weight: 700 !important;
@@ -423,24 +424,25 @@ select, option {
   color: black !important;
 }
 
-/* INPUTS */
+/*  ⬅⬅⬅ **AQUÍ CORREGIDO**  
+    Antes decía *color: black !important;* */
+
 input {
   font-family: inherit !important;
   font-weight: 700 !important;
-  color: black !important;
+  color: white !important;   /* ✔ TEXTO BLANCO */
   text-transform: uppercase;
 }
 
-/* PLACEHOLDERS */
+/* Placeholders */
 input::placeholder,
 select::placeholder {
   font-family: inherit !important;
   font-weight: 500 !important;
-  color: white !important;
-
+  color: #bbb !important;
 }
 
-/* FOOTER */
+/* Footer */
 .footer {
   font-family: inherit !important;
   font-weight: 400 !important;
@@ -517,7 +519,6 @@ select::placeholder {
 
 <!-- Scripts para PWA -->
 <script>
-  // Registrar el Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('service-worker.js')
@@ -554,6 +555,7 @@ const $=id=>document.getElementById(id);
 /* ⭐ FORMATO AUTOMÁTICO */
 function formatearAuto(input){
   let val = input.value.replace(/\./g,"").replace(",",".");
+
   if(val==="") return;
 
   let num = Number(val);
