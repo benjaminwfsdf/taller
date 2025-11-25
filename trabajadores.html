@@ -11,32 +11,29 @@
 
   <style>
     :root{
-      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand:#d40000;
       --brand-dark:#9b0000;
-      --blue:#1d3053;           /* AZUL */
+      --blue:#1d3053;
       --blue-dark:#1d3053;
-      --ink:#ffffff;            /* TEXTO BLANCO */
+      --ink:#ffffff;
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      background-attachment:scroll;
+      min-height:100vh;
+      overflow-x:hidden;
     }
-body{
-  margin:0;
-  background-image: url("img/portada_celular.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: scroll; /* evita el bug */
-  min-height: 100vh;
-  overflow-x: hidden;
-}
 
-
-    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -46,31 +43,26 @@ body{
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      position:sticky;
+      top:0;
+      z-index:10;
     }
 
-    /* CONTENEDOR */
     .wrapper{
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
-      width: 100%;
     }
 
-    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      background:rgba(135,206,250,0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
-      margin: 0 auto;
     }
 
-    /* HEADER */
     .header{
       background:#1d3053;
       color:white;
@@ -80,33 +72,26 @@ body{
       font-weight:900;
       border:3px solid var(--brand);
       text-shadow:0 3px 8px rgba(0,0,0,.6);
-      margin-bottom: 22px;
+      margin-bottom:22px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    h1,h2{
+      margin:0;
+      font-weight:900;
+      color:white;
+      text-align:center;
+      font-size:clamp(1.4rem,5vw,2rem);
     }
 
-    /* CARDS */
     .card{
       background:#1d3053;
       border:3px solid var(--brand);
       border-radius:16px;
       padding:18px;
-      margin-bottom: 22px;
+      margin-bottom:22px;
       box-shadow:var(--shadow);
-      width: 100%;
     }
 
-    .title{
-      margin:0 0 16px 0;
-      font-size: clamp(1.2rem, 4vw, 1.6rem);
-      font-weight:900;
-      color:white;
-    }
-
-    /* BOTONES */
     .btn{
       background:white;
       color:black;
@@ -115,254 +100,92 @@ body{
       border-radius:14px;
       border:3px solid var(--brand);
       transition:.25s;
-      text-decoration:none;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
-      cursor: pointer;
-      display: inline-block;
-      text-align: center;
-      width: 100%;
-      margin-bottom: 10px;
+      width:100%;
+      margin-bottom:10px;
+      text-align:center;
+      display:block;
     }
 
     .btn:hover{
       background:var(--blue-dark);
       color:white;
       border-color:var(--brand-dark);
-      box-shadow:0 6px 14px rgba(0,0,0,.5);
     }
 
-    .btn-secondary {
-      background: transparent;
-      color: white;
-      border-color: white;
+    .btn-secondary{
+      background:transparent;
+      color:white;
+      border-color:white;
     }
 
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.1);
     }
 
-    /* FORMULARIOS */
-    input,select{
+    /* INPUT SOLO de nombre - color blanco */
+    input{
       width:100%;
       padding:14px;
       border-radius:10px;
       border:2px solid rgba(255,255,255,0.2);
       background:rgba(0,0,0,0.3);
-      color:#fff;
+      color:white !important;
       margin-bottom:15px;
-      font-size: clamp(1rem, 3vw, 1.1rem);
-      box-sizing: border-box;
+      font-size:clamp(1rem,3vw,1.1rem);
+      text-transform:uppercase;
     }
 
-    input:focus, select:focus{
+    input::placeholder{
+      color:#ddd !important;
+    }
+
+    input:focus{
       outline:none;
       border-color:var(--brand);
     }
 
-    /* LISTA DE TRABAJADORES */
-    .worker-list {
-      display: grid;
-      gap: 16px;
-      margin-top: 16px;
+    /* Lista de trabajadores */
+    .worker-list{
+      display:grid;
+      gap:16px;
+      margin-top:16px;
     }
 
-    .worker-card {
-      background: rgba(0,0,0,0.2);
-      border: 2px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px;
+    .worker-card{
+      background:rgba(0,0,0,0.2);
+      border:2px solid rgba(255,255,255,0.1);
+      border-radius:12px;
+      padding:16px;
+      color:white;
     }
 
-    .worker-name {
-      font-size: clamp(1.1rem, 3vw, 1.3rem);
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #a8f0a9;
+    .worker-name{
+      font-size:clamp(1.1rem,3vw,1.3rem);
+      font-weight:700;
+      margin-bottom:8px;
+      color:#a8f0a9;
     }
 
-    .worker-info {
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-      margin: 4px 0;
+    .worker-status{
+      display:inline-block;
+      padding:4px 12px;
+      border-radius:20px;
+      margin-top:8px;
+      font-weight:600;
     }
 
-    .worker-status {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-      font-weight: 600;
-      margin-top: 8px;
-    }
+    .status-active{ background:#2e7d32; }
+    .status-inactive{ background:#c62828; }
 
-    .status-active {
-      background: #2e7d32;
-      color: white;
-    }
-
-    .status-inactive {
-      background: #c62828;
-      color: white;
-    }
-
-    /* FOOTER */
     .footer{
       text-align:center;
       color:white;
       font-size:13px;
       margin-top:22px;
-      text-shadow:0 2px 6px rgb(255, 255, 255);
-      padding: 0 10px;
+      text-shadow:0 2px 6px white;
     }
-
-    /* Mejoras para móviles */
-    @media (max-width: 480px) {
-      .wrapper {
-        margin: 20px auto 40px;
-        padding: 0 12px;
-      }
-      
-      .frame {
-        padding: 16px;
-      }
-      
-      .card {
-        padding: 16px;
-      }
-      
-      input, select, .btn {
-        padding: 16px;
-      }
-      
-      .worker-card {
-        padding: 14px;
-      }
-    }
-    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
-  overflow-x: hidden;
-  background-color: #000; /* evita blancos */
-}
-
-/* El fondo real se genera aquí */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
-/* Forzar texto blanco en la lista cuando está vacía */
-#listaTrabajadores p {
-  color: white !important;
-  opacity: 0.9;
-}
-
-/* Forzar texto blanco en los datos de cada trabajador */
-.worker-info {
-  color: white !important;
-}
-
-/* Ajuste del mensaje "No hay trabajadores registrados" */
-#listaTrabajadores p {
-  color: white !important;
-  opacity: 0.8;
-}
-
-/* Titulos y textos dentro del card de trabajadores */
-.worker-card {
-  color: white !important;
-}
-/* ============================
-   ✔ TIPOGRAFÍA UNIFICADA
-============================ */
-
-/* Familia tipográfica global */
-body {
-  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
-}
-
-/* TÍTULOS PRINCIPALES */
-h1, .header h1, .title, h2, h3 {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  letter-spacing: .5px !important;
-  text-align: center !important;
-  color: white !important;
-}
-
-/* SUBTÍTULOS Y DESCRIPCIONES */
-.card p,
-.card span,
-.card small,
-.card div,
-label {
-  font-family: inherit !important;
-  color: white !important;
-  font-weight: 600 !important;
-  line-height: 1.35em !important;
-}
-
-/* ITEMS DE MENÚ Y BLOQUES */
-.card b,
-strong {
-  font-weight: 800 !important;
-  color: white !important;
-}
-
-/* BOTONES */
-.btn,
-.btn * {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-  color: black !important;
-  letter-spacing: .3px !important;
-}
-
-/* OPCIONES Y SELECT */
-select, option {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
-  color: black !important;
-}
-
-/* INPUTS */
-input {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  color: black !important;
-  text-transform: uppercase;
-}
-
-/* PLACEHOLDERS */
-input::placeholder,
-select::placeholder {
-  font-family: inherit !important;
-  font-weight: 500 !important;
-  color: #bbb !important;
-}
-
-/* FOOTER */
-.footer {
-  font-family: inherit !important;
-  font-weight: 400 !important;
-  color: white !important;
-  opacity: .9;
-}
 
   </style>
 </head>
@@ -372,6 +195,7 @@ select::placeholder {
 
   <div class="wrapper">
     <div class="frame">
+
       <div class="header">
         <h1>👷 Gestión de Trabajadores</h1>
       </div>
@@ -380,124 +204,92 @@ select::placeholder {
 
       <!-- FORMULARIO AGREGAR TRABAJADOR -->
       <div class="card">
-        <h2 class="title">Agregar Trabajador</h2>
+        <h2>Agregar Trabajador</h2>
+
+        <!-- 🔥 SOLO NOMBRE -->
         <input type="text" id="nombre" placeholder="Nombre completo">
-        <input type="text" id="cargo" placeholder="Cargo">
-        <input type="number" id="porcentajeBono" placeholder="% Bono por venta" step="0.1">
+
         <button class="btn" id="btnAgregar">Agregar Trabajador</button>
       </div>
 
-      <!-- LISTA DE TRABAJADORES -->
+      <!-- LISTA -->
       <div class="card">
-        <h2 class="title">Trabajadores Activos</h2>
+        <h2>Trabajadores Activos</h2>
+
         <div id="listaTrabajadores" class="worker-list">
-          <p style="text-align: center; opacity: 0.7;">Cargando trabajadores...</p>
+          <p style="text-align:center;opacity:0.7;">Cargando trabajadores...</p>
         </div>
       </div>
+
     </div>
 
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
-  <!-- Scripts para PWA -->
-  <script>
-    // Registrar el Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-          });
-      });
-    }
-  </script>
-
+  <!-- SCRIPTS -->
   <script>
     const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
-    
-    const api = async (action, payload = {}) => {
-      const res = await fetch(BASE_URL, {
-        method: "POST",
-        headers: {'Content-Type': 'text/plain;charset=utf-8'},
-        body: JSON.stringify({action, payload})
+
+    const api = async (action, payload={})=>{
+      const res = await fetch(BASE_URL,{
+        method:"POST",
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({action,payload})
       });
       return res.json();
     };
 
     const $ = id => document.getElementById(id);
 
-    // Cargar trabajadores
-    async function cargarTrabajadores() {
-      const r = await api('listWorkers');
-      if (!r.ok) {
-        alert('Error al cargar trabajadores: ' + r.error);
+    async function cargarTrabajadores(){
+      const r = await api("listWorkers");
+
+      if(!r.ok){
+        alert("Error cargando trabajadores");
         return;
       }
 
-      const trabajadores = r.data || [];
-      const lista = $('listaTrabajadores');
-      
-      if (trabajadores.length === 0) {
-        lista.innerHTML = '<p style="text-align: center; opacity: 0.7;">No hay trabajadores registrados</p>';
+      const lista = $("listaTrabajadores");
+      const items = r.data || [];
+
+      if(items.length === 0){
+        lista.innerHTML = `<p style="text-align:center;opacity:0.7;">No hay trabajadores registrados</p>`;
         return;
       }
 
-      lista.innerHTML = trabajadores.map(t => `
+      lista.innerHTML = items.map(t => `
         <div class="worker-card">
           <div class="worker-name">${t.nombre}</div>
-          <div class="worker-info"><strong>Cargo:</strong> ${t.cargo || 'No especificado'}</div>
-          <div class="worker-info"><strong>Bono:</strong> ${t.porcentaje_bono || 0}%</div>
-          <div class="worker-status ${t.activo ? 'status-active' : 'status-inactive'}">
-            ${t.activo ? 'Activo' : 'Inactivo'}
+          <div class="worker-status ${t.activo ? 'status-active':'status-inactive'}">
+            ${t.activo ? 'Activo':'Inactivo'}
           </div>
         </div>
-      `).join('');
+      `).join("");
     }
 
-    // Agregar trabajador
-    $('btnAgregar').addEventListener('click', async () => {
-      const nombre = $('nombre').value.trim();
-      const cargo = $('cargo').value.trim();
-      const porcentajeBono = parseFloat($('porcentajeBono').value);
+    $("btnAgregar").addEventListener("click", async ()=>{
+      const nombre = $("nombre").value.trim();
 
-      if (!nombre) {
-        alert('El nombre es obligatorio');
+      if(!nombre){
+        alert("Debes ingresar un nombre");
         return;
       }
 
-      if (isNaN(porcentajeBono) || porcentajeBono < 0) {
-        alert('El porcentaje de bono debe ser un número válido');
+      const r = await api("addWorker",{ nombre, activo:true });
+
+      if(!r.ok){
+        alert("Error agregando trabajador");
         return;
       }
 
-      const r = await api('addWorker', {
-        nombre,
-        cargo,
-        porcentaje_bono: porcentajeBono,
-        activo: true
-      });
+      alert("Trabajador agregado");
+      $("nombre").value = "";
 
-      if (!r.ok) {
-        alert('Error al agregar trabajador: ' + r.error);
-        return;
-      }
-
-      alert('Trabajador agregado exitosamente');
-      
-      // Limpiar formulario
-      $('nombre').value = '';
-      $('cargo').value = '';
-      $('porcentajeBono').value = '';
-      
-      // Recargar lista
       cargarTrabajadores();
     });
 
-    // Cargar trabajadores al iniciar
     cargarTrabajadores();
   </script>
+
 </body>
 </html>
