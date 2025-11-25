@@ -20,9 +20,7 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     /* === Fondo completo === */
     body{
@@ -31,12 +29,12 @@
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
-      min-height: 100vh;
       overflow-x: hidden;
       background-attachment: scroll;
       position: relative;
       min-height: 100dvh;
       background-color: #000;
+      font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
     }
 
     body::before {
@@ -63,11 +61,10 @@
     }
 
     @media (max-width: 480px) {
-      .center-wrap {
-        padding-top: 20px;
-      }
+      .center-wrap { padding-top: 20px; }
     }
 
+    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -83,20 +80,23 @@
       margin-bottom:20px;
     }
 
+    /* TÍTULO */
     h1{
       background:var(--brand);
       padding:16px 24px;
       border-radius:12px;
       box-shadow:0 6px 16px rgba(0,0,0,.5);
-      color:#fff;
-      letter-spacing:.3px;
+      color:#fff !important;
       margin-top:10px;
       text-align:center;
-      font-size: clamp(1.3rem, 4vw, 1.8rem);
-      width: 100%;
-      max-width: 500px;
+      font-weight:900 !important;
+      letter-spacing:.5px;
+      font-size:clamp(1.3rem,4vw,1.8rem);
+      width:100%;
+      max-width:500px;
     }
 
+    /* CARD */
     .card{
       background:#1d3053;
       border:3px solid var(--brand);
@@ -112,50 +112,59 @@
       display:block;
       margin-bottom:6px;
       text-align:left;
-      color:var(--ink);
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      color:white !important;
+      font-size:clamp(1rem,3vw,1.1rem);
       font-weight:600;
     }
 
+    /* INPUTS corregidos */
     input{
       width:100%;
       padding:14px;
       border-radius:8px;
       border:2px solid rgba(255,255,255,0.2);
       background:rgba(0,0,0,0.3);
-      color:#fff;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      color:black !important;
+      background:white;
+      font-weight:700 !important;
+      font-size:clamp(1rem,3vw,1.1rem);
       margin-bottom:15px;
+      text-transform:uppercase;
     }
+
+    input::placeholder{ color:#888 !important; }
 
     input:focus{
       outline:none;
       border-color:var(--brand);
     }
 
+    /* BOTONES */
     button{
       width:100%;
       padding:14px;
-      border:none;
       border-radius:8px;
       background:white;
       color:black;
-      font-weight:900;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-weight:900 !important;
+      font-size:clamp(1rem,3vw,1.1rem);
       cursor:pointer;
       transition:.25s;
       border:3px solid var(--brand);
       margin-bottom:10px;
+      letter-spacing:.3px;
+      font-family: inherit !important;
     }
 
     button:hover{
       background:var(--blue-dark);
       color:white;
+      border-color:var(--brand-dark);
     }
 
     .btn-home{
       background:transparent;
-      color:white;
+      color:white !important;
       border-color:white;
     }
 
@@ -163,109 +172,33 @@
       background:rgba(255,255,255,0.1);
     }
 
+    /* RESULTADO */
     .resultado{
       margin-top:20px;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size:clamp(0.9rem,3vw,1rem);
       text-align:center;
       background:rgba(0,0,0,0.3);
       border-radius:10px;
       padding:14px;
       line-height:1.6;
       border:2px solid rgba(255,255,255,0.1);
-      color:white;
+      color:white !important;
+      font-family:inherit !important;
     }
 
-    .resultado strong{
-      color:#a8f0a9;
-    }
+    .resultado strong{ color:#a8f0a9 !important; }
 
+    /* FOOTER */
     .footer{
       margin-top:20px;
       text-align:center;
-      color:white;
+      color:white !important;
       font-size:13px;
       padding:20px 0 10px;
       text-shadow:0 2px 6px black;
-      width: 100%;
+      width:100%;
+      opacity:.9;
     }
-/* ============================
-   ✔ TIPOGRAFÍA UNIFICADA
-============================ */
-
-/* Familia tipográfica global */
-body {
-  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
-}
-
-/* TÍTULOS PRINCIPALES */
-h1, .header h1, .title, h2, h3 {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  letter-spacing: .5px !important;
-  text-align: center !important;
-  color: white !important;
-}
-
-/* SUBTÍTULOS Y DESCRIPCIONES */
-.card p,
-.card span,
-.card small,
-.card div,
-label {
-  font-family: inherit !important;
-  color: white !important;
-  font-weight: 600 !important;
-  line-height: 1.35em !important;
-}
-
-/* ITEMS DE MENÚ Y BLOQUES */
-.card b,
-strong {
-  font-weight: 800 !important;
-  color: white !important;
-}
-
-/* BOTONES */
-.btn,
-.btn * {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-  color: black !important;
-  letter-spacing: .3px !important;
-}
-
-/* OPCIONES Y SELECT */
-select, option {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
-  color: black !important;
-}
-
-/* INPUTS */
-input {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  color: black !important;
-  text-transform: uppercase;
-}
-
-/* PLACEHOLDERS */
-input::placeholder,
-select::placeholder {
-  font-family: inherit !important;
-  font-weight: 500 !important;
-  color: #bbb !important;
-}
-
-/* FOOTER */
-.footer {
-  font-family: inherit !important;
-  font-weight: 400 !important;
-  color: white !important;
-  opacity: .9;
-}
 
   </style>
 </head>
@@ -278,6 +211,7 @@ select::placeholder {
   <h1>💰 Calculadora de Ganancia</h1>
 
   <div class="card">
+
     <label>Precio de compra ($):</label>
     <input type="number" id="costo" placeholder="Ej: 25000">
 
@@ -312,7 +246,7 @@ function calcular(){
 
   if(isNaN(costo) || isNaN(gan)){
     res.innerHTML = "⚠️ Ingresa ambos valores correctamente.";
-    res.style.color = "#ff4444";
+    res.style.color = "#ff8888";
     return;
   }
 
