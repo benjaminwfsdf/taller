@@ -6,7 +6,6 @@
   <title>👷 Gestión de Trabajadores | Walter Uriol</title>
   <meta name="theme-color" content="#000000">
 
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json">
 
   <style>
@@ -21,7 +20,7 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box;}
 
     body{
       margin:0;
@@ -30,8 +29,22 @@
       background-size:cover;
       background-position:center;
       background-attachment:scroll;
-      min-height:100vh;
+      min-height:100dvh;
       overflow-x:hidden;
+      background-color:#000;
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif !important;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      pointer-events:none;
+      z-index:-1;
     }
 
     .topbar{
@@ -52,6 +65,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width:100%;
     }
 
     .frame{
@@ -81,6 +95,7 @@
       color:white;
       text-align:center;
       font-size:clamp(1.4rem,5vw,2rem);
+      font-family:inherit !important;
     }
 
     .card{
@@ -92,20 +107,41 @@
       box-shadow:var(--shadow);
     }
 
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:10px;
+      border:2px solid rgba(255,255,255,0.2);
+      background:rgba(0,0,0,0.3);
+      color:white !important;
+      margin-bottom:15px;
+      font-size:clamp(1rem,3vw,1.1rem);
+      font-family:inherit !important;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    input::placeholder{color:#ddd !important;}
+
+    input:focus{
+      outline:none;
+      border-color:var(--brand);
+    }
+
     .btn{
       background:white;
       color:black;
-      padding:12px 24px;
+      padding:12px;
       font-weight:900;
       border-radius:14px;
       border:3px solid var(--brand);
       transition:.25s;
       font-size:clamp(1rem,3vw,1.1rem);
-      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor:pointer;
       width:100%;
-      margin-bottom:10px;
       text-align:center;
-      display:block;
+      margin-bottom:10px;
+      font-family:inherit !important;
     }
 
     .btn:hover{
@@ -116,7 +152,7 @@
 
     .btn-secondary{
       background:transparent;
-      color:white;
+      color:white !important;
       border-color:white;
     }
 
@@ -124,29 +160,6 @@
       background:rgba(255,255,255,0.1);
     }
 
-    /* INPUT SOLO de nombre - color blanco */
-    input{
-      width:100%;
-      padding:14px;
-      border-radius:10px;
-      border:2px solid rgba(255,255,255,0.2);
-      background:rgba(0,0,0,0.3);
-      color:white !important;
-      margin-bottom:15px;
-      font-size:clamp(1rem,3vw,1.1rem);
-      text-transform:uppercase;
-    }
-
-    input::placeholder{
-      color:#ddd !important;
-    }
-
-    input:focus{
-      outline:none;
-      border-color:var(--brand);
-    }
-
-    /* Lista de trabajadores */
     .worker-list{
       display:grid;
       gap:16px;
@@ -159,38 +172,41 @@
       border-radius:12px;
       padding:16px;
       color:white;
+      font-family:inherit !important;
     }
 
     .worker-name{
       font-size:clamp(1.1rem,3vw,1.3rem);
-      font-weight:700;
-      margin-bottom:8px;
+      font-weight:800;
       color:#a8f0a9;
+      margin-bottom:8px;
     }
 
     .worker-status{
-      display:inline-block;
       padding:4px 12px;
-      border-radius:20px;
-      margin-top:8px;
-      font-weight:600;
+      border-radius:18px;
+      font-weight:700;
+      display:inline-block;
+      font-family:inherit !important;
     }
 
-    .status-active{ background:#2e7d32; }
-    .status-inactive{ background:#c62828; }
+    .status-active{background:#2e7d32;}
+    .status-inactive{background:#c62828;}
 
     .footer{
       text-align:center;
       color:white;
       font-size:13px;
       margin-top:22px;
-      text-shadow:0 2px 6px white;
+      text-shadow:0 2px 6px black;
+      padding-bottom:20px;
+      font-family:inherit !important;
     }
-
   </style>
 </head>
 
 <body>
+
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
   <div class="wrapper">
@@ -202,17 +218,14 @@
 
       <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
 
-      <!-- FORMULARIO AGREGAR TRABAJADOR -->
       <div class="card">
         <h2>Agregar Trabajador</h2>
 
-        <!-- 🔥 SOLO NOMBRE -->
         <input type="text" id="nombre" placeholder="Nombre completo">
 
         <button class="btn" id="btnAgregar">Agregar Trabajador</button>
       </div>
 
-      <!-- LISTA -->
       <div class="card">
         <h2>Trabajadores Activos</h2>
 
@@ -226,56 +239,55 @@
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
-  <!-- SCRIPTS -->
   <script>
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+    const BASE_URL="https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
 
-    const api = async (action, payload={})=>{
-      const res = await fetch(BASE_URL,{
+    const api=async(action,payload={})=>{
+      const r=await fetch(BASE_URL,{
         method:"POST",
         headers:{'Content-Type':'text/plain;charset=utf-8'},
         body:JSON.stringify({action,payload})
       });
-      return res.json();
+      return r.json();
     };
 
-    const $ = id => document.getElementById(id);
+    const $=id=>document.getElementById(id);
 
     async function cargarTrabajadores(){
-      const r = await api("listWorkers");
+      const r=await api("listWorkers");
 
       if(!r.ok){
         alert("Error cargando trabajadores");
         return;
       }
 
-      const lista = $("listaTrabajadores");
-      const items = r.data || [];
+      const list=$("listaTrabajadores");
+      const items=r.data||[];
 
-      if(items.length === 0){
-        lista.innerHTML = `<p style="text-align:center;opacity:0.7;">No hay trabajadores registrados</p>`;
+      if(items.length===0){
+        list.innerHTML="<p style='text-align:center;opacity:.7;'>No hay trabajadores registrados</p>";
         return;
       }
 
-      lista.innerHTML = items.map(t => `
+      list.innerHTML=items.map(t=>`
         <div class="worker-card">
           <div class="worker-name">${t.nombre}</div>
-          <div class="worker-status ${t.activo ? 'status-active':'status-inactive'}">
-            ${t.activo ? 'Activo':'Inactivo'}
+          <div class="worker-status ${t.activo?'status-active':'status-inactive'}">
+            ${t.activo?'Activo':'Inactivo'}
           </div>
         </div>
       `).join("");
     }
 
-    $("btnAgregar").addEventListener("click", async ()=>{
-      const nombre = $("nombre").value.trim();
+    $("btnAgregar").addEventListener("click",async()=>{
+      const nombre=$("nombre").value.trim();
 
       if(!nombre){
         alert("Debes ingresar un nombre");
         return;
       }
 
-      const r = await api("addWorker",{ nombre, activo:true });
+      const r=await api("addWorker",{nombre,activo:true});
 
       if(!r.ok){
         alert("Error agregando trabajador");
@@ -283,13 +295,11 @@
       }
 
       alert("Trabajador agregado");
-      $("nombre").value = "";
-
+      $("nombre").value="";
       cargarTrabajadores();
     });
 
     cargarTrabajadores();
   </script>
-
 </body>
 </html>
