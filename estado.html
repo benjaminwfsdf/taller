@@ -4,50 +4,56 @@
   <base target="_self">
 
   <link rel="manifest" href="/manifest.json">
-
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Taller">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
   <meta name="theme-color" content="#000000">
-
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Actualizar Estado del Vehículo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
     :root{
       --brand:#d40000;
       --brand-dark:#9b0000;
-
       --blue:#1d3053;
       --blue-dark:#1d3053;
-
       --ink:#ffffff;
-
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
-      background-image: url("img/portada_celular.png");
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      background-attachment: scroll;
-      min-height: 100vh;
-      overflow-x: hidden;
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      min-height:100vh;
+      overflow-x:hidden;
+      position:relative;
+      font-family:system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
+      background-color:#000;
+      color:white;
     }
 
-    /* TOPBAR */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+    }
+
     .topbar{
       background:#1d3053;
       color:white;
@@ -57,31 +63,28 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      position:sticky;
+      top:0;
+      z-index:10;
     }
 
-    /* CONTENEDOR */
     .wrapper{
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
-      width: 100%;
+      width:100%;
     }
 
-    /* FRAME */
     .frame{
-      background:rgba(135, 206, 250, 0.35);
+      background:rgba(135,206,250,0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
-      margin: 0 auto;
+      margin:0 auto;
     }
 
-    /* HEADER */
     .header{
       background:#1d3053;
       color:white;
@@ -91,23 +94,18 @@
       font-weight:900;
       border:3px solid var(--brand);
       text-shadow:0 3px 8px rgba(0,0,0,.6);
-      margin-bottom: 20px;
+      margin-bottom:20px;
+      font-size:clamp(1.5rem,5vw,2.2rem);
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
-    }
-
-    /* CARD */
     .card{
       background:#1d3053;
       border:3px solid var(--brand);
       border-radius:16px;
       padding:24px;
       box-shadow:var(--shadow);
-      margin-bottom: 20px;
-      width: 100%;
+      margin-bottom:20px;
+      width:100%;
     }
 
     label{
@@ -115,7 +113,7 @@
       margin:14px 0 6px;
       font-weight:800;
       color:#ffffff;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
     }
 
     input{
@@ -125,31 +123,11 @@
       border-radius:12px;
       background:#0f1a2f;
       color:#ffffff !important;
-      font-size:clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
       text-transform:uppercase;
-      font-weight: 600;
+      font-weight:600;
     }
 
-    /* SELECT EN BLANCO ✔ */
-    select {
-      width:100%;
-      padding:14px 16px;
-      border:2px solid var(--brand);
-      border-radius:12px;
-      background:#0f1a2f !important;
-      color:white !important;
-      font-size:clamp(1rem, 3vw, 1.1rem);
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    option {
-      background:#0f1a2f !important;
-      color:white !important;
-      font-weight:700;
-    }
-
-    /* BOTÓN */
     .btn{
       width:100%;
       margin-top:20px;
@@ -162,7 +140,8 @@
       border:3px solid var(--brand);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       transition:.25s;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
+      text-align:center;
     }
 
     .btn:hover{
@@ -171,39 +150,52 @@
       border-color:var(--brand-dark);
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:20px;
-      justify-content:center;
+    .btn-secondary{
+      background:transparent;
+      color:white !important;
+      border-color:white;
+      margin-top:14px;
     }
 
-    .btn-link{
-      display:inline-block;
-      text-decoration:none;
-      padding:12px 20px;
+    .resultado{
+      margin-top:18px;
+      padding:16px;
       border-radius:14px;
-      border:3px solid var(--brand);
-      background:#1d3053;
-      color:#fff;
-      font-weight:800;
-      transition:.25s;
-      font-size: clamp(0.9rem, 3vw, 1rem);
-      text-align: center;
+      background:rgba(0,0,0,0.35);
+      border:2px solid rgba(255,255,255,0.15);
     }
 
-    .btn-link:hover{
-      background:var(--brand);
+    .opcion{
+      background:rgba(0,0,0,0.45);
+      border:2px solid var(--brand);
+      border-radius:12px;
+      padding:12px 14px;
+      margin-bottom:10px;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .opcion:hover{
+      background:rgba(212,0,0,0.9);
+      border-color:#fff;
+    }
+
+    .opcion strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:0.95rem;
+    }
+
+    .opcion small{
+      display:block;
+      font-size:0.85rem;
+      opacity:0.9;
     }
 
     .status{
-      text-align:center;
-      margin-top:16px;
-      font-weight:800;
-      font-size: clamp(1rem, 3vw, 1.1rem);
-      padding: 10px;
-      border-radius: 10px;
+      margin-top:10px;
+      font-weight:700;
+      font-size:0.95rem;
     }
 
     .footer{
@@ -212,128 +204,118 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
-      padding: 0 10px;
+      padding:0 10px;
     }
-
-    /* FIX iPHONE */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  position: relative;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  background-color: #000;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* 🔥 TEXTO BLANCO GLOBAL */
-body, body * {
-  color: white !important;
-}
-
-/* EXCEPCIONES: botón e input quedan negros */
-.btn, .btn *,
-input, input * {
-  color: black !important;
-}
-
-/* SELECT SIEMPRE BLANCO ✔ */
-select, select * {
-  color: white !important;
-}
-
-/* PLACEHOLDER */
-input::placeholder {
-  color: #ddd !important;
-}
-
-/* TIPOGRAFÍA PROFESIONAL */
-body {
-  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
-}
-
-label, h1 {
-  font-weight: 900 !important;
-}
   </style>
 </head>
 
 <body>
-  <div class="topbar">WWW.ELSEÑORDELOSESCANER.CL</div>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
   <div class="wrapper">
     <div class="frame">
-      <div class="header"><h1>Actualizar Estado del Vehículo</h1></div>
+      <div class="header">Actualizar Estado del Vehículo</div>
 
       <div class="card">
         <label for="patente">Patente del Vehículo</label>
-        <input id="patente" placeholder="ABCD12" required>
+        <input id="patente" placeholder="ABCD12">
 
-        <label for="estado">Estado Actual</label>
-        <select id="estado">
-          <option value="REPARACIÓN">REPARACIÓN</option>
-          <option value="LISTO">LISTO</option>
-        </select>
+        <button class="btn" onclick="buscarVisitas()">🔍 Buscar Visitas</button>
 
-        <button id="btnGuardar" class="btn">Guardar Estado</button>
+        <div id="mensaje" class="status">⏳ Esperando búsqueda…</div>
 
-        <div class="actions">
-          <a class="btn-link" href="gestion_autos.html">← Volver al Menú Principal</a>
-        </div>
+        <div id="lista" class="resultado" style="display:none;"></div>
 
-        <div id="mensaje" class="status"></div>
+        <button class="btn btn-secondary" onclick="location.href='gestion_autos.html'">
+          ← Volver al Menú Principal
+        </button>
       </div>
 
-      <div class="footer">© 2025 <strong>Benjamin González</strong>. Todos los derechos reservados.</div>
+      <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
     </div>
   </div>
 
 <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwgTHItHOHM_rlyDL9JH-RLaTAuZeF3HJowpIH91juNB9TsfGOMSAk6lKKf2FEdWD5ibA/exec";
+const API = "https://script.google.com/macros/s/AKfycbzCtbXzWEBdvkyWQKobmqhS6z6ZXLxWsRdwwA7l7axDTWbWeOj7Sws2ggbgQowRnhYBng/exec"; // 🔁 reemplaza por tu URL de Apps Script
 
-document.getElementById('btnGuardar').addEventListener('click', actualizarEstado);
+function formatearFecha(fechaRaw){
+  if (!fechaRaw) return "";
+  const d = new Date(fechaRaw);
+  if (isNaN(d)) return "";
+  return d.toLocaleDateString('es-CL'); // dd-mm-aaaa
+}
 
-async function actualizarEstado() {
+async function buscarVisitas(){
   const patente = document.getElementById("patente").value.trim().toUpperCase();
-  const estado  = document.getElementById("estado").value;
-  const mensajeEl = document.getElementById("mensaje");
+  const mensaje = document.getElementById("mensaje");
+  const lista = document.getElementById("lista");
 
-  if (!patente) { alert("⚠️ Ingresa la patente."); return; }
+  if (!patente){
+    alert("⚠️ Ingresa la patente.");
+    return;
+  }
 
-  mensajeEl.style.color = "#ffffff";
-  mensajeEl.textContent = "⏳ Enviando...";
+  mensaje.textContent = "⏳ Buscando...";
+  lista.style.display = "none";
+  lista.innerHTML = "";
 
-  try {
-    await fetch(WEBAPP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({ patente, estado, detalle_estado: "" })
+  try{
+    const res = await fetch(API, {
+      method:"POST",
+      body:JSON.stringify({
+        funcion:"listarporpatente",
+        patente:patente
+      })
     });
 
-    mensajeEl.style.color = "#3ddc97";
-    mensajeEl.textContent = "✅ Estado enviado.";
+    const data = await res.json();
 
-    document.getElementById("patente").value = "";
-    document.getElementById("estado").value = "REPARACIÓN";
+    if (!data.length){
+      mensaje.textContent = "❌ No hay autos en REPARACIÓN con esa patente.";
+      return;
+    }
 
-  } catch (e) {
-    mensajeEl.style.color = "#ff6b6b";
-    mensajeEl.textContent = "❌ Error de red: " + e.message;
+    mensaje.textContent = "Selecciona cuál pasar a LISTO:";
+    lista.style.display = "block";
+
+    data.forEach(v => {
+      const div = document.createElement("div");
+      div.className = "opcion";
+
+      const fechaStr = formatearFecha(v.Fecha);
+      const detalle = (v.Detalle || "").trim() || "SIN DETALLE REGISTRADO";
+
+      div.innerHTML = `
+        <strong>${v.Marca} ${v.Modelo}</strong>
+        <small>📅 Fecha: ${fechaStr}</small>
+        <small>🛠️ Detalle: ${detalle}</small>
+      `;
+
+      div.onclick = () => confirmarCambio(v.fila);
+      lista.appendChild(div);
+    });
+
+  } catch(e){
+    console.error(e);
+    mensaje.textContent = "❌ Error al consultar el servidor.";
+  }
+}
+
+async function confirmarCambio(fila){
+  if (!confirm("¿Marcar este vehículo como LISTO?")) return;
+
+  try{
+    await fetch(API, {
+      method:"POST",
+      body:JSON.stringify({
+        funcion:"actualizarfila",
+        fila:fila
+      })
+    });
+    alert("✔ Vehículo marcado como LISTO.");
+    buscarVisitas(); // refrescar lista
+  } catch(e){
+    alert("❌ Error al actualizar.");
   }
 }
 </script>
