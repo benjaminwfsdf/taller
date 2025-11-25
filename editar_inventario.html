@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>✏️ Editar Inventario · Aceites | Walter Uriol</title>
   <meta name="theme-color" content="#000000">
-
   <link rel="manifest" href="/manifest.json">
 
   <style>
@@ -22,6 +21,7 @@
 
     *{box-sizing:border-box;}
 
+    /* Fondo */
     body{
       margin:0;
       background-image:url("img/portada_celular.png");
@@ -29,8 +29,22 @@
       background-size:cover;
       background-position:center;
       background-attachment:scroll;
-      min-height:100vh;
+      min-height:100dvh;
       overflow-x:hidden;
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif !important;
+      background-color:#000;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+      pointer-events:none;
     }
 
     .topbar{
@@ -39,6 +53,7 @@
       text-align:center;
       padding:14px;
       font-weight:700;
+      letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
       position:sticky;
@@ -74,7 +89,10 @@
       color:white;
     }
 
-    .header h1{margin:0;font-size:clamp(1.5rem,5vw,2.2rem);}
+    .header h1{
+      margin:0;
+      font-size:clamp(1.5rem,5vw,2.2rem);
+    }
 
     .card{
       background:#1d3053;
@@ -90,6 +108,7 @@
       font-size:clamp(1.2rem,4vw,1.6rem);
       font-weight:900;
       color:white;
+      text-align:center;
     }
 
     .btn{
@@ -100,14 +119,14 @@
       border-radius:14px;
       border:3px solid var(--brand);
       font-size:clamp(1rem,3vw,1.1rem);
-      text-decoration:none;
       transition:.25s;
+      text-decoration:none;
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       cursor:pointer;
-      display:inline-block;
       width:100%;
-      margin-bottom:10px;
       text-align:center;
+      margin-bottom:10px;
+      display:block;
     }
 
     .btn:hover{
@@ -122,15 +141,22 @@
       border-color:white;
     }
 
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.1);
+    }
+
     input{
       width:100%;
       padding:14px;
       border-radius:10px;
       border:2px solid rgba(255,255,255,0.2);
       background:rgba(0,0,0,0.3);
-      color:white !important;        /* ✔ TEXTO AHORA BLANCO */
+      color:white !important;
       margin-bottom:15px;
       font-size:clamp(1rem,3vw,1.1rem);
+      font-family:inherit !important;
+      font-weight:700;
+      text-transform:uppercase;
     }
 
     input:focus{
@@ -142,18 +168,20 @@
       width:100%;
       border-collapse:collapse;
       margin-top:10px;
+      color:white;
+      font-family:inherit;
     }
 
     th,td{
-      border-bottom:1px solid rgba(255,255,255,0.2);
       padding:10px;
       text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.2);
     }
 
     th{
       background:var(--brand);
-      color:white;
       font-weight:700;
+      color:white;
     }
 
     tr.clickable:hover{
@@ -165,9 +193,18 @@
       padding:6px 12px;
       border-radius:20px;
       font-size:.9rem;
+      font-weight:800;
     }
-    .badge.ok{background:#163016;color:#a8f0a9;}
-    .badge.off{background:#301616;color:#f0a8a8;}
+
+    .badge.ok{
+      background:#163016;
+      color:#a8f0a9;
+    }
+
+    .badge.off{
+      background:#301616;
+      color:#f0a8a8;
+    }
 
     .grid{
       display:grid;
@@ -181,36 +218,8 @@
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
+      padding-bottom:20px;
     }
-
-    /* === FONDO iOS === */
-    html,body{height:100%;margin:0;padding:0;}
-    body{position:relative;min-height:100dvh;background-color:#000;}
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background-image:inherit;
-      background-size:cover;
-      background-position:center;
-      background-repeat:no-repeat;
-      z-index:-1;
-    }
-
-    /* === TEXTO BLANCO GLOBAL === */
-    body,body *{color:white !important;}
-
-    /* EXCEPCIONES */
-    .btn,.btn *{color:black !important;}
-
-    /* Inputs → mantener BLANCO */
-    input,
-    input * {
-      color:white !important;   /* ✔ CORREGIDO */
-    }
-
-    input::placeholder{color:#ddd !important;}
-
   </style>
 </head>
 
@@ -249,7 +258,7 @@
           </table>
         </div>
 
-        <p style="opacity:.8;margin-top:8px;">
+        <p style="opacity:.8;margin-top:8px;text-align:center;">
           Pulsa una fila para cargarla en el formulario de edición.
         </p>
       </div>
@@ -278,7 +287,6 @@
   </div>
 
   <script>
-    /* API */
     const BASE_URL="https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
 
     const api=async(action,payload={})=>{
