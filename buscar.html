@@ -15,34 +15,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Buscar Vehículo | Walter Uriol</title>
+
   <style>
     :root{
-      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand:#d40000;
       --brand-dark:#9b0000;
-      --blue:#1d3053;           /* AZUL */
+      --blue:#1d3053;
       --blue-dark:#1d3053;
-      --ink:#ffffff;            /* TEXTO BLANCO */
+      --ink:#ffffff;
       --radius:18px;
       --shadow:0 12px 30px rgba(0,0,0,.45);
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    *{ box-sizing:border-box; }
 
     body{
-  margin:0;
-  background-image: url("img/portada_celular.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: scroll; /* evita el bug */
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+      margin:0;
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      min-height:100vh;
+      overflow-x:hidden;
+      font-family:system-ui,Segoe UI,Roboto,Arial;
+    }
 
-    /* TOPBAR */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+    }
+
     .topbar{
       background:#1d3053;
       color:white;
@@ -52,31 +61,28 @@
       letter-spacing:.8px;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      position:sticky;
+      top:0;
+      z-index:10;
     }
 
-    /* CONTENEDOR */
     .wrapper{
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
-      width: 100%;
+      width:100%;
     }
 
-    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      background:rgba(135,206,250,0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
       border:3px solid var(--brand);
       backdrop-filter:blur(8px);
-      margin: 0 auto;
+      margin:0 auto;
     }
 
-    /* HEADER */
     .header{
       background:#1d3053;
       color:white;
@@ -85,33 +91,29 @@
       text-align:center;
       font-weight:900;
       border:3px solid var(--brand);
-      text-shadow:0 3px 8px rgba(0,0,0,.6);
-      margin-bottom: 22px;
+      margin-bottom:22px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    .header h1{
+      margin:0;
+      font-size:clamp(1.6rem,5vw,2.3rem);
     }
 
-    /* CARD */
     .card{
       background:#1d3053;
       border:3px solid var(--brand);
       border-radius:16px;
-      padding:20px;
-      margin-bottom: 22px;
+      padding:22px;
+      margin-bottom:22px;
       box-shadow:var(--shadow);
-      width: 100%;
     }
 
-    /* LABELS E INPUTS */
     label{
       display:block;
       margin:8px 0 6px;
       font-weight:800;
       color:white;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
     }
 
     input{
@@ -120,9 +122,9 @@
       border:2px solid rgba(255,255,255,0.2);
       border-radius:12px;
       background:rgba(0,0,0,0.3);
-      color:var(--ink);
-      font-size: clamp(1rem, 3vw, 1.1rem);
-      box-sizing:border-box;
+      color:white !important;
+      font-size:clamp(1rem,3vw,1.1rem);
+      text-transform:uppercase;
     }
 
     input:focus{
@@ -130,7 +132,6 @@
       border-color:var(--brand);
     }
 
-    /* BOTONES */
     .btn{
       background:white;
       color:black;
@@ -140,13 +141,12 @@
       border:3px solid var(--brand);
       transition:.25s;
       text-decoration:none;
-      font-size: clamp(1rem, 3vw, 1.1rem);
+      font-size:clamp(1rem,3vw,1.1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
-      cursor: pointer;
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      text-align: center;
+      cursor:pointer;
+      width:100%;
+      margin-top:18px;
+      text-align:center;
     }
 
     .btn:hover{
@@ -156,192 +156,63 @@
       box-shadow:0 6px 14px rgba(0,0,0,.5);
     }
 
-    .btn-secondary {
-      background: transparent;
-      color: white;
-      border-color: white;
-      margin-top: 16px;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* RESULTADO */
-    .result{
+    /* Botón secundario EXACTO AL ORIGINAL */
+    .btn-secondary{
+      background:transparent;
+      color:white !important;
+      border:3px solid white !important;
+      display:inline-block;
+      width:auto !important;
+      padding:12px 24px;
+      border-radius:14px;
+      font-weight:900;
       margin-top:20px;
-      background:rgba(0,0,0,0.3);
+      text-align:center;
+      text-decoration:none;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.15);
+      color:white;
+    }
+
+    .result-block{
+      margin-top:20px;
+      background:rgba(0,0,0,0.35);
       border:2px solid var(--brand);
       border-radius:12px;
       padding:18px;
       color:white;
-      display:none;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size:clamp(0.9rem,3vw,1rem);
+      box-shadow:0 4px 12px rgba(0,0,0,.4);
     }
 
-    .result strong{
+    .ultimo{
+      border:3px solid #00ff8c !important;
+      box-shadow:0 0 14px #00ff8c !important;
+    }
+
+    .item{ margin-bottom:6px; }
+
+    .item strong{
+      color:#a8f0a9;
       display:inline-block;
       min-width:140px;
-      color:#a8f0a9;
-      margin-bottom: 8px;
-      font-size: clamp(0.9rem, 3vw, 1rem);
     }
 
-    /* FOOTER */
     .footer{
       text-align:center;
       color:white;
       font-size:13px;
       margin-top:22px;
       text-shadow:0 2px 6px black;
-      padding: 0 10px;
     }
-
-    /* Mejoras para móviles */
-    @media (max-width: 480px) {
-      .wrapper {
-        margin: 20px auto 40px;
-        padding: 0 12px;
-      }
-      
-      .frame {
-        padding: 16px;
-      }
-      
-      .card {
-        padding: 16px;
-      }
-      
-      .result {
-        padding: 14px;
-      }
-      
-      .result strong {
-        min-width: 120px;
-        display: block;
-        margin-bottom: 4px;
-      }
-      
-      input, .btn {
-        padding: 14px 16px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .result strong {
-        min-width: 100px;
-        font-size: 0.9rem;
-      }
-    }
-    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
-  overflow-x: hidden;
-  background-color: #000; /* evita blancos */
-}
-
-/* El fondo real se genera aquí */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
-/* ============================
-   ✔ TIPOGRAFÍA UNIFICADA
-============================ */
-
-/* Familia tipográfica global */
-body {
-  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
-}
-
-/* TÍTULOS PRINCIPALES */
-h1, .header h1, .title, h2, h3 {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  letter-spacing: .5px !important;
-  text-align: center !important;
-  color: white !important;
-}
-
-/* SUBTÍTULOS Y DESCRIPCIONES */
-.card p,
-.card span,
-.card small,
-.card div,
-label {
-  font-family: inherit !important;
-  color: white !important;
-  font-weight: 600 !important;
-  line-height: 1.35em !important;
-}
-
-/* ITEMS DE MENÚ Y BLOQUES */
-.card b,
-strong {
-  font-weight: 800 !important;
-  color: white !important;
-}
-
-/* BOTONES */
-.btn,
-.btn * {
-  font-family: inherit !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-  color: black !important;
-  letter-spacing: .3px !important;
-}
-
-/* OPCIONES Y SELECT */
-select, option {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
-  color: black !important;
-}
-
-/* INPUTS */
-input {
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  color: black !important;
-  text-transform: uppercase;
-}
-
-/* PLACEHOLDERS */
-input::placeholder,
-select::placeholder {
-  font-family: inherit !important;
-  font-weight: 500 !important;
-  color: #bbb !important;
-}
-
-/* FOOTER */
-.footer {
-  font-family: inherit !important;
-  font-weight: 400 !important;
-  color: white !important;
-  opacity: .9;
-}
-
   </style>
 </head>
 
 <body>
+
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
   <div class="wrapper">
@@ -349,226 +220,86 @@ select::placeholder {
       <div class="header"><h1>Buscar Vehículo</h1></div>
 
       <div class="card">
-        <label id="etiqueta">Buscar por:</label>
-        <input type="text" id="valor" placeholder="">
+        <label>Buscar por patente, nombre o teléfono:</label>
+        <input type="text" id="valor" placeholder="EJ: ABCD12">
+
         <button class="btn" onclick="buscar()">🔍 Buscar</button>
 
-        <div id="resultado" class="result"></div>
+        <div id="historial"></div>
 
-        <a href="gestion_autos.html" class="btn btn-secondary">← Volver al Menú Principal</a>
+        <a href="gestion_autos.html" class="btn-secondary">← Volver al Menú Principal</a>
       </div>
 
       <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
     </div>
   </div>
 
-  <!-- Scripts para PWA -->
-  <script>
-    // Registrar el Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-          });
-      });
-    }
 
-    // Instalar la PWA
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevenir que el navegador muestre automáticamente el prompt
-      e.preventDefault();
-      // Guardar el evento para usarlo después
-      deferredPrompt = e;
-      // Opcional: mostrar un botón para instalar la app
-      console.log('PWA puede ser instalada');
-    });
-  </script>
+<script>
+const API_URL =
+"https://script.google.com/macros/s/AKfycbw2rxF6fCiwfSQ9JJeVIA94ppoCu5A1vtbyGNxCfyzLmOJO3_hNEDZM30U9cdOleKy9PA/exec";
 
-  <script>
-    // ====== CONFIG ======
-    const API_URL = "https://script.google.com/macros/s/AKfycbwgTHItHOHM_rlyDL9JH-RLaTAuZeF3HJowpIH91juNB9TsfGOMSAk6lKKf2FEdWD5ibA/exec";
+const norm = t => String(t||"").normalize("NFD").replace(/\p{Diacritic}/gu,"").toUpperCase().trim();
+const digits = t => String(t||"").replace(/\D/g,"");
 
-    // Utils
-    const norm = s => String(s ?? '')
-      .normalize('NFD').replace(/\p{Diacritic}/gu,'')  // quita tildes
-      .replace(/\s+/g,' ').trim().toUpperCase();
-    const digits = s => String(s ?? '').replace(/\D+/g,'');
+function formatearFecha(f){
+  if(!f) return "-";
+  const d = new Date(f);
+  const dia = String(d.getDate()).padStart(2,"0");
+  const mes = String(d.getMonth()+1).padStart(2,"0");
+  const año = d.getFullYear();
+  return `${dia}/${mes}/${año}`;
+}
 
-    const tipo = new URLSearchParams(location.search).get('tipo') || 'patente';
-    const $et = document.getElementById('etiqueta');
-    const $in = document.getElementById('valor');
-    const $out = document.getElementById('resultado');
+async function buscar(){
+  const val = valor.value.trim();
+  if(!val){
+    alert("Ingresa un dato para buscar");
+    return;
+  }
 
-    // UI según tipo
-    (function setupUI(){
-      if (tipo === 'nombre'){
-        $et.textContent = 'Buscar por Nombre del Dueño:';
-        $in.placeholder = 'Escribe el nombre del dueño';
-        $in.style.textTransform = 'none';
-      } else if (tipo === 'telefono'){
-        $et.textContent = 'Buscar por Teléfono del Dueño:';
-        $in.placeholder = 'Ej: +56 9 12345678';
-        $in.style.textTransform = 'none';
-      } else {
-        $et.textContent = 'Buscar por Patente:';
-        $in.placeholder = 'Ej: ABCD12';
-        $in.style.textTransform = 'uppercase';
-      }
-    })();
+  const rows = await fetch(API_URL).then(r=>r.json());
 
-    // Busca una clave en el objeto (tolerante a tildes/variantes)
-    function keyOf(row, guess, aliases=[]){
-      const want = norm(guess);
-      const keys = Object.keys(row);
-      for (const k of keys){ if (norm(k) === want) return k; }
-      for (const a of aliases){
-        const w = norm(a);
-        for (const k of keys){ if (norm(k) === w) return k; }
-      }
-      for (const k of keys){ if (norm(k).includes(want)) return k; }
-      return null;
-    }
+  const coincidencias = rows.filter(r=>{
+    const patente = norm(r["Patente"]);
+    const nombre  = norm(r["Nombre"]);
+    const fono    = digits(r["Teléfono"] || r["Telefono"]);
 
-    async function buscar(){
-      let v = $in.value.trim();
-      if (!v) { alert('Ingresa un dato para buscar'); return; }
+    return patente.includes(norm(val)) ||
+           nombre.includes(norm(val)) ||
+           fono.endsWith(digits(val));
+  });
 
-      // Normaliza input según tipo
-      let needle;
-      if (tipo === 'telefono') needle = digits(v);        // solo dígitos
-      else if (tipo === 'nombre') needle = norm(v);       // sin tildes/espacios
-      else needle = norm(v.replace(/[^A-Z0-9]/gi,''));    // patente sin guiones/espacios
+  const cont = document.getElementById("historial");
+  cont.innerHTML = "";
 
-      try {
-        const res = await fetch(API_URL, { cache:'no-store' });
-        const rows = await res.json();
-        if (!Array.isArray(rows) || rows.length === 0) throw new Error('Sin datos');
+  if(!coincidencias.length){
+    cont.innerHTML = `<div class="result-block">No se encontraron registros.</div>`;
+    return;
+  }
 
-        // Mapear columnas por nombre (tolerante)
-        const K = {
-          NOMBRE   : keyOf(rows[0], 'Nombre',   ['Cliente','Dueño']),
-          TELEFONO : keyOf(rows[0], 'Teléfono', ['Telefono','Celular','Fono','Whatsapp']),
-          DIRECCION: keyOf(rows[0], 'Dirección',['Direccion']),
-          MARCA    : keyOf(rows[0], 'Marca'),
-          MODELO   : keyOf(rows[0], 'Modelo'),
-          PATENTE  : keyOf(rows[0], 'Patente',  ['Placa'])
-        };
+  coincidencias.sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
 
-        let match = null;
-        for (const r of rows){
-          const nombre  = K.NOMBRE   ? r[K.NOMBRE]   : '';
-          const fono    = K.TELEFONO ? r[K.TELEFONO] : '';
-          const patente = K.PATENTE  ? r[K.PATENTE]  : '';
+  coincidencias.forEach((r,i)=>{
+    const box = document.createElement("div");
+    box.className = "result-block " + (i==0 ? "ultimo" : "");
 
-          if (tipo === 'nombre'){
-            if (norm(nombre).includes(needle)) { match = r; break; }           // parcial
-          } else if (tipo === 'telefono'){
-            const d = digits(fono);
-            if (d === needle || d.endsWith(needle)) { match = r; break; }      // acepta últimos 8
-          } else { // patente
-            const p = norm(String(patente).replace(/\s|-/g,''));
-            if (p === needle) { match = r; break; }                            // exacta normalizada
-          }
-        }
+    box.innerHTML = `
+      <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
+      <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
+      <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"] || r["Telefono"]}</div>
+      <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
+      <div class="item"><strong>Marca:</strong> ${r["Marca"]}</div>
+      <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
+      <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
+      <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
+      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]}</div>
+    `;
 
-        $out.style.display = 'block';
-        if (!match){
-          $out.innerHTML = `<strong>No se encontró ningún resultado con ese dato.</strong>`;
-          return;
-        }
+    cont.appendChild(box);
+  });
+}
+</script>
 
-        // Solo los campos pedidos
-        const nombre = K.NOMBRE    ? (match[K.NOMBRE]    ?? '-') : '-';
-        const tel    = K.TELEFONO  ? (match[K.TELEFONO]  ?? '-') : '-';
-        const dir    = K.DIRECCION ? (match[K.DIRECCION] ?? '-') : '-';
-        const marca  = K.MARCA     ? (match[K.MARCA]     ?? '-') : '-';
-        const modelo = K.MODELO    ? (match[K.MODELO]    ?? '-') : '-';
-        const pat    = K.PATENTE   ? (match[K.PATENTE]   ?? '-') : '-';
-
-        $out.innerHTML = `
-          <strong>Nombre:</strong> ${nombre}<br>
-          <strong>Teléfono:</strong> ${tel}<br>
-          <strong>Dirección:</strong> ${dir}<br>
-          <strong>Marca:</strong> ${marca}<br>
-          <strong>Modelo:</strong> ${modelo}<br>
-          <strong>Patente:</strong> ${pat}
-        `;
-      } catch (e) {
-        console.error(e);
-        alert('❌ Error al conectarse a la base de datos.');
-      }
-    }
-  </script>
-
-  <script>
-    (function () {
-      // Actúa solo en la app instalada (PWA)
-      const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-      if (!isStandalone) return;
-
-      const EXTERN = new Set([
-        'https://www.patentechile.com/',
-        'https://taller-todo.vercel.app/informes.html',
-        'https://taller-todo.vercel.app/buscador_averias.html'
-      ]);
-
-      const toURL = (h) => { try { return new URL(h, location.href); } catch { return null; } };
-      const sameOrigin = (u) => u && u.origin === location.origin;
-      const fileName = (u) => u ? u.pathname.split('/').pop() : '';
-      const go = (u) => location.assign(u.pathname + u.search + u.hash);
-
-      // 1) Enlaces <a>: internos -> misma ventana (evita la vista con "Listo")
-      document.addEventListener('click', (e) => {
-        const a = e.target.closest('a[href]'); if (!a) return;
-        if (a.hasAttribute('download') || a.href.startsWith('mailto:') || a.href.startsWith('tel:')) return;
-        const u = toURL(a.getAttribute('href')); if (!u) return;
-
-        const isExternalWhitelisted =
-          EXTERN.has(u.href) || EXTERN.has(fileName(u));
-
-        if (sameOrigin(u) && !isExternalWhitelisted) {
-          e.preventDefault();
-          go(u);
-        }
-      }, true);
-
-      // 2) window.open internos -> misma ventana (salvo EXTERN)
-      const _open = window.open;
-      window.open = function (url, target, features) {
-        const u = toURL(url);
-        const isExternalWhitelisted =
-          EXTERN.has(u?.href) || EXTERN.has(fileName(u));
-        if (sameOrigin(u) && !isExternalWhitelisted) {
-          go(u);
-          return null;
-        }
-        return _open.call(window, url, target, features);
-      };
-
-      // 3) Formularios internos -> _self
-      document.addEventListener('submit', (e) => {
-        const f = e.target;
-        if (!(f && f.tagName === 'FORM')) return;
-        const u = toURL(f.getAttribute('action') || location.href);
-        if (sameOrigin(u)) f.target = '_self';
-      }, true);
-
-      // 4) Limpieza: si quedó algún _blank interno por error, quítalo
-      document.querySelectorAll('a[target="_blank"]').forEach((a) => {
-        const u = toURL(a.getAttribute('href'));
-        const isExternalWhitelisted =
-          EXTERN.has(u?.href) || EXTERN.has(fileName(u));
-        if (sameOrigin(u) && !isExternalWhitelisted) a.removeAttribute('target');
-      });
-    })();
-  </script>
-
-  <!-- Script de Vercel (mantenido del código original) -->
-  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>
