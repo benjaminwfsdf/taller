@@ -22,24 +22,28 @@
 
     *{ box-sizing:border-box; }
 
-    body{
-      margin:0;
-      background:url("img/portada_celular.png") no-repeat center/cover fixed;
-      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-      color:white;
-      min-height:100vh;
-      overflow-x:hidden;
-      position:relative;
+    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
 
+    body{
+      position: relative;
+      min-height: 100dvh; /* 👈 corrige bug de Safari */
+      overflow-x: hidden;
+      background-color: #000; /* evita blancos */
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:white;
+    }
+
+    /* El fondo real se genera aquí */
     body::before{
       content:"";
       position:fixed;
       inset:0;
-      background-image:inherit;
-      background-size:cover;
-      background-position:center;
-      background-repeat:no-repeat;
+      background:url("img/portada_celular.png") no-repeat center/cover;
       z-index:-1;
       pointer-events:none;
     }
@@ -60,6 +64,7 @@
       max-width:1100px;
       margin:38px auto 60px;
       padding:0 22px;
+      width: 100%;
     }
 
     .frame{
@@ -211,6 +216,18 @@
       margin-top:12px;
     }
 
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+    }
+
     /* Estilos para la pantalla de carga */
    
     @keyframes glow{
@@ -231,8 +248,6 @@
 </head>
 
 <body>
- 
-
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
   <div class="wrapper">
