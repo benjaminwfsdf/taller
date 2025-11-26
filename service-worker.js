@@ -2,7 +2,7 @@ const CACHE_NAME = "taller-walter-v256";
 
 const FILES_TO_CACHE = [
   "/",
-  "/index.html",
+  "index.html",
   "/aceite.html",
   "/agregar.html",
   "/buscar.html",
