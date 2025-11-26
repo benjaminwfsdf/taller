@@ -1,6 +1,5 @@
-const CACHE_NAME = "taller-walter-v187";
+const CACHE_NAME = "taller-walter-v190";
 
-// Archivos que se guardan offline
 const FILES_TO_CACHE = [
   "/",
   "/index.html",
@@ -18,42 +17,61 @@ const FILES_TO_CACHE = [
   "/tarjetavirtual.html",
   "/trabajadores.html",
   "/ventas.html",
+
+  /* IMÁGENES */
+  "/img/logo.png",
+  "/img/portada_celular.png",
+  "/img/portada_pc.png",
   "/img/icon-192.png",
   "/img/icon-512.png",
-  "/img/logo.png"
+
+  /* MANIFEST */
+  "/manifest.json"
 ];
 
-// Instalar SW → crea el caché
+// INSTALAR → Guardar archivos en caché
 self.addEventListener("install", (event) => {
+  console.log("[SW] Instalando service worker…");
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("[SW] Cacheando archivos…");
+      return cache.addAll(FILES_TO_CACHE);
+    })
   );
+
   self.skipWaiting();
 });
 
-// Activar SW → limpia cachés viejos
+// ACTIVAR → Limpiar cachés viejos
 self.addEventListener("activate", (event) => {
+  console.log("[SW] Activando service worker…");
+
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
+    caches.keys().then((keys) => {
+      return Promise.all(
         keys
           .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    )
+          .map((key) => {
+            console.log("[SW] Borrando caché vieja:", key);
+            return caches.delete(key);
+          })
+      );
+    })
   );
+
   self.clients.claim();
 });
 
-// Interceptar solicitudes
+// FETCH → Modo cache-first
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return (
         cached ||
-        fetch(event.request).catch(() =>
-          caches.match("/index.html") // fallback offline
-        )
+        fetch(event.request).catch(() => {
+          return caches.match("/index.html");
+        })
       );
     })
   );
