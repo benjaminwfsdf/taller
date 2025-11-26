@@ -1,0 +1,16 @@
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/service-worker.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" },
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/service-worker.js", "destination": "/service-worker.js" }
+  ]
+}
