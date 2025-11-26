@@ -212,40 +212,11 @@
     }
 
     /* Estilos para la pantalla de carga */
-    #splash{
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity .4s ease;
-      text-align:center;
-      padding: 24px;
-      opacity: 1;
-    }
-    #splash img{
-      width:160px;
-      height:auto;
-      margin-bottom:14px;
-      filter: drop-shadow(0 8px 22px rgba(144,0,0,.35));
-      animation: glow 1.2s ease-in-out infinite alternate;
-    }
+   
     @keyframes glow{
       from{ filter: drop-shadow(0 6px 16px rgba(144,0,0,.25)); }
       to  { filter: drop-shadow(0 12px 28px rgba(144,0,0,.45)); }
-    }
-    #splash .brand {
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    #splash .tagline {
-      color: #ccc;
-      font-size: 1rem;
+   
     }
   </style>
 
@@ -260,13 +231,7 @@
 </head>
 
 <body>
-  <!-- Pantalla de carga (del segundo código) -->
-  <div id="splash" aria-live="polite">
-    <img src="icons/icon-192.png" alt="Logo Taller">
-    <div class="brand">El Señor de los Scanner</div>
-    <div class="tagline">Cargando recepción de clientes…</div>
-    <div class="bar" aria-hidden="true"></div>
-  </div>
+ 
 
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
@@ -368,40 +333,6 @@
       });
     }
 
-    // Script de pantalla de carga (del segundo código)
-    const MIN_SPLASH_MS = 900;
-    (async function(){
-      const splash=document.getElementById('splash');
-      const wrapper=document.querySelector('.wrapper');
-      
-      // Verificar si ya se mostró la pantalla de carga
-      const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || null;
-      const isFirstNav = nav ? nav.type === 'navigate' : true;
-      const alreadyShown = sessionStorage.getItem('splashShownV2') === '1';
-      const showSplash = isFirstNav && !alreadyShown;
-      
-      if(!showSplash){
-        wrapper.style.opacity='1';
-        splash.style.display='none';
-        return;
-      }
-      
-      const waitForLogo=()=>new Promise(res=>{
-        const img=splash.querySelector('img');
-        if(!img||img.complete)return res();
-        img.addEventListener('load',res,{once:true});
-        img.addEventListener('error',res,{once:true});
-      });
-      const start=performance.now();
-      await waitForLogo();
-      const elapsed=performance.now()-start;
-      setTimeout(()=>{
-        splash.style.opacity='0';
-        wrapper.style.opacity='1';
-        setTimeout(()=>splash.remove(),400);
-        sessionStorage.setItem('splashShownV2','1');
-      },Math.max(0,MIN_SPLASH_MS-elapsed));
-    })();
 
     // Actualizar turnos cada 3 segundos
     setInterval(cargarTurnos, 3000);
