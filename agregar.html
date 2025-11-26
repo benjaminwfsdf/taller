@@ -14,7 +14,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="img/scanner.png">
   <title>Agregar Vehículo | Walter Uriol</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- FIX iPhone que agranda todo cuando escribes -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
   <style>
     :root{
@@ -54,20 +56,22 @@
       z-index:-1;
     }
 
+    /* INPUTS móviles mejorados */
     input[type="text"]{
       width:100%;
-      padding:10px 12px;
+      padding:14px 14px;
       border:2px solid rgba(255,255,255,0.2);
-      border-radius:10px;
-      background:rgba(0,0,0,0.3);
-      color:white !important;  /* ← TEXTO BLANCO */
+      border-radius:12px;
+      background:rgba(0,0,0,0.45);
+      color:white !important;
       text-transform:uppercase;
-      font-size:clamp(0.9rem, 2.5vw, 1rem);
+      font-size:16px;    /* evita zoom en iPhone */
     }
 
     input[type="text"]:focus{
       outline:none;
       border-color:var(--brand);
+      background:rgba(0,0,0,0.55);
     }
 
     #telefono { text-transform:none; }
@@ -89,7 +93,7 @@
     .wrapper{
       max-width:1100px;
       margin:38px auto 60px;
-      padding:0 22px;
+      padding:0 18px;
       width:100%;
     }
 
@@ -130,8 +134,16 @@
       width:100%;
     }
 
+    /* 🔥 FIX: Tabla para celular */
+    .table-container{
+      width:100%;
+      overflow-x:auto;         /* ← permite desplazamiento horizontal */
+      -webkit-overflow-scrolling: touch;
+    }
+
     table{
       width:100%;
+      min-width:720px;         /* ← evita que se rompa en celular */
       border-collapse:collapse;
       margin-top:8px;
       background:rgba(0,0,0,0.3);
@@ -203,37 +215,42 @@
       <div class="header"><h1>Agregar Vehículo</h1></div>
 
       <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre del Dueño</th>
-              <th>Teléfono</th>
-              <th>Dirección</th>
-              <th>Marca</th>
-              <th>Modelo</th>
-              <th>Patente</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><input type="text" id="nombre" placeholder="JUAN PEREZ"></td>
-              <td><input type="text" id="telefono" value="+56 9 " maxlength="14" oninput="formatearTelefono(this)" placeholder="+56 9 12345678"></td>
-              <td><input type="text" id="direccion" placeholder="AV. PRINCIPAL 123"></td>
-              <td><input type="text" id="marca" placeholder="TOYOTA"></td>
-              <td><input type="text" id="modelo" placeholder="COROLLA"></td>
-              <td><input type="text" id="patente" placeholder="ABCD12"></td>
-            </tr>
 
-            <!-- NUEVO CAMPO DETALLE -->
-            <tr>
-              <th colspan="6" style="text-align:center;">Motivo / Detalle</th>
-            </tr>
-            <tr>
-              <td colspan="6"><input type="text" id="detalle" placeholder="NO PARTE · REVISION · CAMBIO DE ACEITE"></td>
-            </tr>
+        <!-- 🔥 CONTENEDOR RESPONSIVE PARA CELULAR -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre del Dueño</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Patente</th>
+              </tr>
+            </thead>
 
-          </tbody>
-        </table>
+            <tbody>
+              <tr>
+                <td><input type="text" id="nombre" placeholder="JUAN PÉREZ"></td>
+                <td><input type="text" id="telefono" value="+56 9 " maxlength="14" oninput="formatearTelefono(this)" placeholder="+56 9 12345678"></td>
+                <td><input type="text" id="direccion" placeholder="AV. PRINCIPAL 123"></td>
+                <td><input type="text" id="marca" placeholder="TOYOTA"></td>
+                <td><input type="text" id="modelo" placeholder="COROLLA"></td>
+                <td><input type="text" id="patente" placeholder="ABCD12"></td>
+              </tr>
+
+              <tr>
+                <th colspan="6" style="text-align:center;">Motivo / Detalle</th>
+              </tr>
+
+              <tr>
+                <td colspan="6"><input type="text" id="detalle" placeholder="NO PARTE · REVISION · CAMBIO DE ACEITE"></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
 
         <button class="btn" onclick="guardarVehiculo()">Guardar Vehículo</button>
         <a href="gestion_autos.html" class="btn btn-secondary">← Volver al Menú Principal</a>
