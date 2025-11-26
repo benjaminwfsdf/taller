@@ -1,8 +1,8 @@
-const CACHE_NAME = "taller-walter-v259";
+const CACHE_NAME = "taller-walter-v260"; // Incrementa la versión
 
 const FILES_TO_CACHE = [
   "/",
-  "index.html",
+  "/index.html",
   "/aceite.html",
   "/agregar.html",
   "/buscar.html",
@@ -56,16 +56,24 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// FETCH → Cache first + fallback offline
+// FETCH → Mejorado para manejar rutas
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      return (
-        cached ||
-        fetch(event.request).catch(() => caches.match("/index.html"))
-      );
+      if (cached) {
+        return cached;
+      }
+      
+      return fetch(event.request).catch(() => {
+        // Si falla la red y no está en cache, servir la página principal
+        if (event.request.url.endsWith('.html') || 
+            event.request.destination === 'document') {
+          return caches.match('/index.html');
+        }
+        return caches.match('/');
+      });
     })
   );
 });
