@@ -1,79 +1,110 @@
-const CACHE_NAME = "taller-walter-v260"; // Incrementa la versión
+const VERSION = "v3.0.0";
 
-const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/aceite.html",
-  "/agregar.html",
-  "/buscar.html",
-  "/buscar_aplicacion.html",
-  "/calculadora.html",
-  "/editar_inventario.html",
-  "/estado.html",
-  "/gestion_autos.html",
-  "/inventario.html",
-  "/reportes.html",
-  "/tarjeta-virtual.html",
-  "/tarjetavirtual.html",
-  "/trabajadores.html",
-  "/ventas.html",
+const PRECACHE = `precache-${VERSION}`;
+const RUNTIME  = `runtime-${VERSION}`;
 
-  /* IMÁGENES */
-  "/img/logo.png",
-  "/img/portada_celular.png",
-  "/img/portada_pc.png",
-  "/img/icon-192.png",
-  "/img/icon-512.png",
+const PRECACHE_URLS = [
+  "index.html",
+  "aceite.html",
+  "agregar.html",
+  "buscar.html",
+  "buscar_aplicacion.html",
+  "calculadora.html",
+  "editar_inventario.html",
+  "estado.html",
+  "gestion_autos.html",
+  "inventario.html",
+  "reportes.html",
+  "tarjeta-virtual.html",
+  "tarjetavirtual.html",
+  "trabajadores.html",
+  "ventas.html",
 
-  /* MANIFEST */
-  "/manifest.json"
+  /* Imágenes */
+  "img/logo.png",
+  "img/portada_celular.png",
+  "img/portada_pc.png",
+  "img/icon-192.png",
+  "img/icon-512.png",
+
+  /* Otros */
+  "manifest.json"
 ];
 
-// INSTALAR → Guardar archivos en caché
+// INSTALAR
 self.addEventListener("install", (event) => {
-  console.log("[SW] Instalando service worker…");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("[SW] Cacheando archivos…");
-      return cache.addAll(FILES_TO_CACHE);
+    caches.open(PRECACHE).then(async (cache) => {
+      
+      for (const url of PRECACHE_URLS) {
+        try {
+          const res = await fetch(url, {redirect: "manual"});
+          
+          // Safari NO permite guardar redirects
+          if (res.type === "opaqueredirect") {
+            console.warn("[SW] Ignorando redirect:", url);
+            continue;
+          }
+
+          await cache.put(url, res.clone());
+        } catch(e) {
+          console.warn("[SW] Error cacheando:", url);
+        }
+      }
+      
     })
   );
   self.skipWaiting();
 });
 
-// ACTIVAR → Limpiar cachés viejos
+// ACTIVAR
 self.addEventListener("activate", (event) => {
-  console.log("[SW] Activando service worker…");
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+        keys.filter((key) => ![PRECACHE, RUNTIME].includes(key))
+            .map((key) => caches.delete(key))
       )
     )
   );
   self.clients.claim();
 });
 
-// FETCH → Mejorado para manejar rutas
+// FETCH
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const req = event.request;
+  const url = new URL(req.url);
 
+  // Sólo manejar cosas del mismo dominio
+  if (url.origin !== location.origin) return;
+
+  // Navegación (HTML)
+  if (req.mode === "navigate") {
+    event.respondWith(
+      caches.match("index.html").then((cached) =>
+        fetch(req).catch(() => cached)
+      )
+    );
+    return;
+  }
+
+  // Recursos estáticos
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-      
-      return fetch(event.request).catch(() => {
-        // Si falla la red y no está en cache, servir la página principal
-        if (event.request.url.endsWith('.html') || 
-            event.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
-        return caches.match('/');
-      });
+    caches.match(req).then((cached) => {
+      return (
+        cached ||
+        fetch(req)
+          .then((res) => {
+            // Si la respuesta es redirect → NO GUARDAR
+            if (res.type === "opaqueredirect") return res;
+
+            caches.open(RUNTIME).then((cache) =>
+              cache.put(req, res.clone())
+            );
+            return res;
+          })
+          .catch(() => cached)
+      );
     })
   );
 });
