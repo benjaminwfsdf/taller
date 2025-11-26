@@ -3,7 +3,7 @@
   "name": "Taller Walter",
   "short_name": "Taller",
   "lang": "es-CL",
-  "start_url": "index.html",
+  "start_url": "/",  // Cambia esto
   "scope": "/",
   "display": "standalone",
   "theme_color": "#900000",
