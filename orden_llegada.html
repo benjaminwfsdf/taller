@@ -210,114 +210,203 @@
       overflow:auto;
       margin-top:12px;
     }
+
+    /* Estilos para la pantalla de carga */
+    #splash{
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity .4s ease;
+      text-align:center;
+      padding: 24px;
+      opacity: 1;
+    }
+    #splash img{
+      width:160px;
+      height:auto;
+      margin-bottom:14px;
+      filter: drop-shadow(0 8px 22px rgba(144,0,0,.35));
+      animation: glow 1.2s ease-in-out infinite alternate;
+    }
+    @keyframes glow{
+      from{ filter: drop-shadow(0 6px 16px rgba(144,0,0,.25)); }
+      to  { filter: drop-shadow(0 12px 28px rgba(144,0,0,.45)); }
+    }
+    #splash .brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    #splash .tagline {
+      color: #ccc;
+      font-size: 1rem;
+    }
   </style>
+
+  <!-- Script para Service Worker (del segundo código) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js");
+      });
+    }
+  </script>
 </head>
 
 <body>
-
-<div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
-
-<div class="wrapper">
-  <div class="frame">
-
-    <div class="header"><h1>Recepción y Turnos</h1></div>
-
-    <!-- Formulario -->
-    <div class="card">
-      <label>Patente</label>
-      <input id="patente" placeholder="ABCD12">
-
-      <label>Modelo</label>
-      <input id="modelo" placeholder="TOYOTA HILUX">
-
-      <button class="btn" onclick="agregarCliente()">➕ Añadir Cliente</button>
-
-      <div id="confirmacion" style="text-align:center;font-weight:900;color:#3ddc97;margin-top:10px"></div>
-    </div>
-
-    <!-- Turno actual -->
-    <div class="block" id="turnoActual">
-      <div style="font-weight:700">🔧 En Atención</div>
-      <div class="patente-actual" id="patenteActual">---</div>
-      <div class="modelo-actual" id="modeloActual">---</div>
-
-      <button class="btn" onclick="marcarComoListo()">✔ Marcar como Listo</button>
-    </div>
-
-    <div class="subtitulo" id="contadorTotal">🚘 Autos en espera: 0</div>
-    <div class="subtitulo" id="etaTexto" style="opacity:.7;font-size:1rem;margin-top:4px">⏱️ Espera estimada ~0 min</div>
-
-    <div class="subtitulo">🔜 Próximos</div>
-    <div id="proximos"></div>
-
-    <a class="back" href="index.html">← Volver al Panel</a>
-
-    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
-
+  <!-- Pantalla de carga (del segundo código) -->
+  <div id="splash" aria-live="polite">
+    <img src="icons/icon-192.png" alt="Logo Taller">
+    <div class="brand">El Señor de los Scanner</div>
+    <div class="tagline">Cargando recepción de clientes…</div>
+    <div class="bar" aria-hidden="true"></div>
   </div>
-</div>
 
-<script>
-/* === API === */
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzvhrwn4aggBZngCGyV-18ACcHs20CeF0BSUoRlu-9rDRMlLKOfhkaIVi02YRbfXZgA/exec";
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
-function agregarCliente(){
-  const p=document.getElementById("patente").value.trim().toUpperCase();
-  const m=document.getElementById("modelo").value.trim().toUpperCase();
-  if(!p||!m){ alert("Completa los campos."); return; }
-  fetch(`${API_URL}?funcion=agregarCliente&patente=${p}&modelo=${m}`)
-  .then(()=>{
-    document.getElementById("confirmacion").textContent="✔ Registrado.";
-    setTimeout(()=>document.getElementById("confirmacion").textContent="",2500);
-    document.getElementById("patente").value="";
-    document.getElementById("modelo").value="";
-    setTimeout(cargarTurnos,600);
-  });
-}
+  <div class="wrapper">
+    <div class="frame">
 
-function marcarComoListo(){
-  fetch(`${API_URL}?funcion=eliminarPrimero`)
-  .then(()=>setTimeout(cargarTurnos,600));
-}
+      <div class="header"><h1>Recepción y Turnos</h1></div>
 
-function cargarTurnos(){
-  fetch(`${API_URL}?funcion=obtenerClientes`)
-  .then(r=>r.json())
-  .then(lista=>{
-    
-    if(!lista || !lista.length){
-      document.getElementById("patenteActual").textContent="---";
-      document.getElementById("modeloActual").textContent="---";
-      document.getElementById("contadorTotal").textContent="Autos en espera: 0";
-      document.getElementById("proximos").innerHTML="";
-      return;
+      <!-- Formulario -->
+      <div class="card">
+        <label>Patente</label>
+        <input id="patente" placeholder="ABCD12">
+
+        <label>Modelo</label>
+        <input id="modelo" placeholder="TOYOTA HILUX">
+
+        <button class="btn" onclick="agregarCliente()">➕ Añadir Cliente</button>
+
+        <div id="confirmacion" style="text-align:center;font-weight:900;color:#3ddc97;margin-top:10px"></div>
+      </div>
+
+      <!-- Turno actual -->
+      <div class="block" id="turnoActual">
+        <div style="font-weight:700">🔧 En Atención</div>
+        <div class="patente-actual" id="patenteActual">---</div>
+        <div class="modelo-actual" id="modeloActual">---</div>
+
+        <button class="btn" onclick="marcarComoListo()">✔ Marcar como Listo</button>
+      </div>
+
+      <div class="subtitulo" id="contadorTotal">🚘 Autos en espera: 0</div>
+      <div class="subtitulo" id="etaTexto" style="opacity:.7;font-size:1rem;margin-top:4px">⏱️ Espera estimada ~0 min</div>
+
+      <div class="subtitulo">🔜 Próximos</div>
+      <div id="proximos"></div>
+
+      <a class="back" href="index.html">← Volver al Panel</a>
+
+      <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+
+    </div>
+  </div>
+
+  <script>
+    /* === API === */
+    const API_URL =
+    "https://script.google.com/macros/s/AKfycby1tUw1YO-pfokPK7900LP5Y8o98P-i-q3LZm4ZeHCUNagRWelexYutnJK1nk2L2eYs/exec";
+
+    function agregarCliente(){
+      const p=document.getElementById("patente").value.trim().toUpperCase();
+      const m=document.getElementById("modelo").value.trim().toUpperCase();
+      if(!p||!m){ alert("Completa los campos."); return; }
+      fetch(`${API_URL}?funcion=agregarCliente&patente=${p}&modelo=${m}`)
+      .then(()=>{
+        document.getElementById("confirmacion").textContent="✔ Registrado.";
+        setTimeout(()=>document.getElementById("confirmacion").textContent="",2500);
+        document.getElementById("patente").value="";
+        document.getElementById("modelo").value="";
+        setTimeout(cargarTurnos,600);
+      });
     }
 
-    const actual = lista[0];
-    const proxs = lista.slice(1);
+    function marcarComoListo(){
+      fetch(`${API_URL}?funcion=eliminarPrimero`)
+      .then(()=>setTimeout(cargarTurnos,600));
+    }
 
-    document.getElementById("patenteActual").textContent = actual.Patente || "-";
-    document.getElementById("modeloActual").textContent  = actual.Modelo || "-";
+    function cargarTurnos(){
+      fetch(`${API_URL}?funcion=obtenerClientes`)
+      .then(r=>r.json())
+      .then(lista=>{
+        
+        if(!lista || !lista.length){
+          document.getElementById("patenteActual").textContent="---";
+          document.getElementById("modeloActual").textContent="---";
+          document.getElementById("contadorTotal").textContent="Autos en espera: 0";
+          document.getElementById("proximos").innerHTML="";
+          return;
+        }
 
-    document.getElementById("contadorTotal").textContent =
-      `🚘 Autos en espera: ${Math.max(0, lista.length-1)}`;
+        const actual = lista[0];
+        const proxs = lista.slice(1);
 
-    document.getElementById("etaTexto").textContent =
-      `⏱️ Espera estimada ~${(lista.length-1)*15} min`;
+        document.getElementById("patenteActual").textContent = actual.Patente || "-";
+        document.getElementById("modeloActual").textContent  = actual.Modelo || "-";
 
-    const cont = document.getElementById("proximos");
-    cont.innerHTML = "";
-    proxs.forEach(c=>{
-      cont.innerHTML += `<div class="proximo">🚗 <b>${c.Patente}</b> — ${c.Modelo}</div>`;
-    });
+        document.getElementById("contadorTotal").textContent =
+          `🚘 Autos en espera: ${Math.max(0, lista.length-1)}`;
 
-  });
-}
+        document.getElementById("etaTexto").textContent =
+          `⏱️ Espera estimada ~${(lista.length-1)*15} min`;
 
-setInterval(cargarTurnos, 3000);
-cargarTurnos();
-</script>
+        const cont = document.getElementById("proximos");
+        cont.innerHTML = "";
+        proxs.forEach(c=>{
+          cont.innerHTML += `<div class="proximo">🚗 <b>${c.Patente}</b> — ${c.Modelo}</div>`;
+        });
 
+      });
+    }
+
+    // Script de pantalla de carga (del segundo código)
+    const MIN_SPLASH_MS = 900;
+    (async function(){
+      const splash=document.getElementById('splash');
+      const wrapper=document.querySelector('.wrapper');
+      
+      // Verificar si ya se mostró la pantalla de carga
+      const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || null;
+      const isFirstNav = nav ? nav.type === 'navigate' : true;
+      const alreadyShown = sessionStorage.getItem('splashShownV2') === '1';
+      const showSplash = isFirstNav && !alreadyShown;
+      
+      if(!showSplash){
+        wrapper.style.opacity='1';
+        splash.style.display='none';
+        return;
+      }
+      
+      const waitForLogo=()=>new Promise(res=>{
+        const img=splash.querySelector('img');
+        if(!img||img.complete)return res();
+        img.addEventListener('load',res,{once:true});
+        img.addEventListener('error',res,{once:true});
+      });
+      const start=performance.now();
+      await waitForLogo();
+      const elapsed=performance.now()-start;
+      setTimeout(()=>{
+        splash.style.opacity='0';
+        wrapper.style.opacity='1';
+        setTimeout(()=>splash.remove(),400);
+        sessionStorage.setItem('splashShownV2','1');
+      },Math.max(0,MIN_SPLASH_MS-elapsed));
+    })();
+
+    // Actualizar turnos cada 3 segundos
+    setInterval(cargarTurnos, 3000);
+    // Cargar turnos iniciales
+    cargarTurnos();
+  </script>
 </body>
 </html>
