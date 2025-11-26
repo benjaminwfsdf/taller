@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Panel de Turnos | Walter Uriol</title>
+<meta name="theme-color" content="#1d3053"/>
+
+<link rel="manifest" href="/manifest.json" />
+
+<style>
+/* ============================
+   VARIABLES DE DISEÑO ESTILO 1
+============================ */
+:root{
+  --brand:#d40000;
+  --brand-dark:#9b0000;
+
+  --blue:#1d3053;
+  --blue-dark:#1d3053;
+
+  --ink:#ffffff;
+
+  --radius:18px;
+  --shadow:0 12px 30px rgba(0,0,0,.45);
+  --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+
+/* ============================
+   FONDO GENERAL
+============================ */
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  background:url("img/portada_celular.png") no-repeat center/cover fixed;
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:inherit;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* ============================
+   TOPBAR
+============================ */
+.topbar{
+  background:#1d3053;
+  padding:14px;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.6px;
+  border-bottom:5px solid var(--brand);
+  box-shadow:var(--shadow-soft);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+/* ============================
+   CONTENEDOR PRINCIPAL
+============================ */
+.wrapper{
+  max-width:1300px;
+  margin:40px auto 50px;
+  padding:0 20px;
+}
+
+.frame{
+  background:rgba(135,206,250,0.35);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+  border:3px solid var(--brand);
+  backdrop-filter:blur(8px);
+}
+
+/* ============================
+   GRID
+============================ */
+.grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:22px;
+}
+
+@media(max-width:1100px){
+  .grid{ grid-template-columns:1fr; }
+}
+
+/* ============================
+   TARJETA AZUL
+============================ */
+.card{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+
+.card h2{
+  margin:0 0 12px 0;
+  font-size:1.4rem;
+  font-weight:900;
+}
+
+/* ============================
+   RELOJ
+============================ */
+.time{
+  font-size:clamp(2.6rem,6vw,4.8rem);
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+
+.time .sec{
+  font-size:.45em;
+  opacity:.7;
+  margin-left:8px;
+}
+
+.date{
+  font-size:1.2rem;
+  opacity:.9;
+}
+
+/* ============================
+   CLIMA
+============================ */
+.wx-now{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.wx-temp{
+  font-size:clamp(2.5rem,4.2vw,3.3rem);
+  font-weight:900;
+}
+
+.wx-icon{
+  font-size:2.6rem;
+}
+
+.wx-box{
+  background:rgba(0,0,0,0.25);
+  border:2px solid var(--brand);
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+  margin-top:10px;
+}
+
+/* ============================
+   TURNOS
+============================ */
+.patente{
+  font-size:2.2rem;
+  font-weight:900;
+  color:#3ddc97;
+  text-align:center;
+}
+
+.modelo{
+  text-align:center;
+  opacity:.9;
+  margin-top:8px;
+}
+
+.proximo{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  padding:12px;
+  border-radius:16px;
+  margin-top:12px;
+  text-align:center;
+  font-size:1.3rem;
+}
+
+/* ============================
+   BOTONES
+============================ */
+.btn{
+  background:white;
+  color:black;
+  padding:12px 22px;
+  border-radius:14px;
+  border:3px solid var(--brand);
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+  text-align:center;
+  width:100%;
+  margin-top:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,.35);
+}
+
+.btn:hover{
+  background:var(--blue-dark);
+  color:white;
+  border-color:var(--brand-dark);
+}
+
+/* ============================
+   FULLSCREEN
+============================ */
+.fs{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:white;
+  border:3px solid var(--brand);
+  color:black;
+  font-weight:900;
+  padding:12px;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:.25s;
+}
+
+.fs:hover{
+  background:var(--blue-dark);
+  color:white;
+}
+
+/* ============================
+   TITULOS
+============================ */
+.section-title{
+  font-size:1.4rem;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+<div class="wrapper">
+<div class="frame">
+
+  <div class="grid">
+
+    <!-- ============================
+         COLUMNA IZQUIERDA
+    ============================= -->
+    <div>
+
+      <!-- Reloj -->
+      <div class="card">
+        <div class="time" id="hora">--:-- <span class="sec">--</span></div>
+        <div class="date" id="fecha">---</div>
+      </div>
+
+      <!-- Clima -->
+      <div class="card">
+        <h2>Clima</h2>
+
+        <div class="wx-now">
+          <div class="wx-temp"><span id="tActual">--</span>°</div>
+
+          <div>
+            <div id="wxText">Cargando…</div>
+            <div class="wx-icon" id="wxEmoji"></div>
+          </div>
+        </div>
+
+        <div class="wx-box">
+          <div>Mín: <b id="tMin">--°</b></div>
+          <div>Máx: <b id="tMax">--°</b></div>
+          <div>Viento: <b id="viento">-- km/h</b></div>
+        </div>
+
+        <button class="btn" id="btnRefresh">↻ Actualizar clima</button>
+      </div>
+
+    </div>
+
+
+    <!-- ============================
+         COLUMNA DERECHA
+    ============================= -->
+    <div>
+
+      <h2 class="section-title">🔧 Turnos en Espera</h2>
+
+      <div class="card" id="actual">
+        <div class="patente">---</div>
+        <div class="modelo">---</div>
+      </div>
+
+      <h2 class="section-title">🔜 Próximos</h2>
+
+      <div id="siguientes"></div>
+
+      <div style="margin-top:20px;font-weight:900" id="totalPendientes">
+        Autos en espera: 0
+      </div>
+
+    </div>
+
+
+
+  </div><!-- grid -->
+
+</div><!-- frame -->
+</div><!-- wrapper -->
+
+<button class="fs" id="fsBtn">⛶</button>
+
+<!-- ============================
+     SCRIPTS
+============================ -->
+
+<script>
+/* ========== RELOJ ========== */
+const pad=n=>String(n).padStart(2,"0");
+
+function tick(){
+  const d=new Date();
+  const h=pad(d.getHours());
+  const m=pad(d.getMinutes());
+  const s=pad(d.getSeconds());
+
+  document.getElementById("hora").innerHTML = `${h}:${m} <span class="sec">${s}</span>`;
+
+  const dias=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const meses=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+  document.getElementById("fecha").textContent =
+    `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]}`;
+
+  setTimeout(tick,1000);
+}
+tick();
+
+/* ========== CLIMA ========== */
+function wxDesc(code){
+  const t={
+    0:"Despejado",1:"Mayormente despejado",2:"Parcial nublado",3:"Nublado",
+    45:"Niebla",48:"Escarcha",
+    51:"Llovizna ligera",53:"Llovizna",55:"Llovizna fuerte",
+    61:"Lluvia ligera",63:"Lluvia",65:"Lluvia fuerte",
+    80:"Chubascos",81:"Chubascos fuertes",82:"Chubascos violentos",
+    95:"Tormenta eléctrica"
+  };
+  return t[code]||"Clima";
+}
+
+function wxEmoji(code){
+  if([0,1].includes(code)) return "☀️";
+  if([2,3,45].includes(code)) return "☁️";
+  if([51,53,55,61,63,65,80,81,82].includes(code)) return "🌧️";
+  if([95].includes(code)) return "⛈️";
+  return "🌤️";
+}
+
+async function cargarClima(){
+  try{
+    const url="https://api.open-meteo.com/v1/forecast?latitude=-33.45&longitude=-70.72&current=temperature_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto";
+    const r=await fetch(url);
+    const d=await r.json();
+
+    const now=d.current;
+    document.getElementById("tActual").textContent=Math.round(now.temperature_2m);
+    document.getElementById("tMin").textContent=Math.round(d.daily.temperature_2_'||'m_min[0])+"°";
+    document.getElementById("tMax").textContent=Math.round(d.daily.temperature_2m_max[0])+"°";
+    document.getElementById("viento").textContent=Math.round(now.wind_speed_10m)+" km/h";
+
+    document.getElementById("wxText").textContent=wxDesc(now.weather_code);
+    document.getElementById("wxEmoji").textContent=wxEmoji(now.weather_code);
+
+  }catch(e){
+    document.getElementById("wxText").textContent="No disponible";
+  }
+}
+
+cargarClima();
+document.getElementById("btnRefresh").onclick=cargarClima;
+
+/* ========== TURNOS ========== */
+const API_URL="https://script.google.com/macros/s/AKfycbzvhrwn4aggBZngCGyV-18ACcHs20CeF0BSUoRlu-9rDRMlLKOfhkaIVi02YRbfXZgA/exec";
+
+async function obtenerClientes(){
+  try{
+    const r=await fetch(`${API_URL}?funcion=obtenerClientes`);
+    return await r.json();
+  }catch{
+    return [];
+  }
+}
+
+async function actualizarVista(){
+  const lista=await obtenerClientes();
+
+  const actual=document.getElementById("actual");
+  const siguientes=document.getElementById("siguientes");
+  const total=document.getElementById("totalPendientes");
+
+  siguientes.innerHTML="";
+
+  if(!lista.length){
+    actual.innerHTML = `<div class="patente">---</div><div class="modelo">Sin autos</div>`;
+    total.textContent = "Autos en espera: 0";
+    return;
+  }
+
+  const c0=lista[0];
+  actual.innerHTML = `
+    <div class="patente">🚗 ${c0.Patente}</div>
+    <div class="modelo">${c0.Modelo}</div>
+  `;
+
+  total.textContent = `Autos en espera: ${Math.max(0,lista.length-1)}`;
+
+  lista.slice(1,4).forEach(c=>{
+    const div=document.createElement("div");
+    div.className="proximo";
+    div.innerHTML = `🚗 <b>${c.Patente}</b> — ${c.Modelo}`;
+    siguientes.appendChild(div);
+  });
+}
+
+setInterval(actualizarVista,3000);
+actualizarVista();
+
+/* ========== FULLSCREEN ========== */
+document.getElementById("fsBtn").onclick=function(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
+};
+</script>
+
+</body>
+</html>
