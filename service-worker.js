@@ -1,4 +1,4 @@
-const CACHE_NAME = "taller-walter-v256";
+const CACHE_NAME = "taller-walter-v259";
 
 const FILES_TO_CACHE = [
   "/",
