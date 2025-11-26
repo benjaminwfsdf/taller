@@ -1,4 +1,4 @@
-const VERSION = "v3.0.0";
+const VERSION = "v3.0.5";
 
 const PRECACHE = `precache-${VERSION}`;
 const RUNTIME  = `runtime-${VERSION}`;
