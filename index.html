@@ -64,7 +64,7 @@
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      background:rgba(135, 206, 250, 0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
@@ -91,7 +91,7 @@
       font-size: clamp(1.5rem, 5vw, 2.2rem);
     }
 
-    /* GRID */
+    /* GRID de 2 columnas */
     .grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -150,7 +150,7 @@
       font-size:clamp(0.9rem, 3vw, 1rem);
     }
 
-    /* BOTÓN ABRIR */
+    /* BOTÓN */
     .actions{
       margin-left:auto;
       display:flex;
@@ -188,67 +188,6 @@
       padding: 0 10px;
     }
 
-    /* Mejoras para móviles */
-    @media (max-width: 480px) {
-      .wrapper {
-        margin: 20px auto 40px;
-        padding: 0 12px;
-      }
-      
-      .frame {
-        padding: 16px;
-      }
-      
-      .card {
-        padding: 14px;
-        gap: 12px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .actions {
-        margin-left: 0;
-        margin-top: 12px;
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .icon {
-        align-self: center;
-      }
-    }
-    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
-  overflow-x: hidden;
-  background-color: #000; /* evita blancos */
-}
-
-/* El fondo real se genera aquí */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
-
   </style>
   
 </head>
@@ -264,6 +203,9 @@ body::before {
 
       <div class="grid">
 
+        <!-- ========================
+             Gestión de vehículos
+        ======================== -->
         <article class="card">
           <div class="icon">🚗</div>
           <div>
@@ -275,6 +217,9 @@ body::before {
           </div>
         </article>
 
+        <!-- ========================
+             Aceites
+        ======================== -->
         <article class="card">
           <div class="icon">🛢️</div>
           <div>
@@ -286,6 +231,9 @@ body::before {
           </div>
         </article>
 
+        <!-- ========================
+             Tarjeta virtual
+        ======================== -->
         <article class="card">
           <div class="icon">🤳</div>
           <div>
@@ -297,40 +245,48 @@ body::before {
           </div>
         </article>
 
+        <!-- ========================
+             ORDEN DE LLEGADA
+        ======================== -->
+        <article class="card">
+          <div class="icon">📋</div>
+          <div>
+            <h2 class="title">Recepción de Clientes</h2>
+            <p class="desc">Registrar patentes en orden de llegada.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="orden_llegada.html">Abrir</a>
+          </div>
+        </article>
+
+        <!-- ========================
+             PANEL DE TURNOS
+        ======================== -->
+        <article class="card">
+          <div class="icon">📺</div>
+          <div>
+            <h2 class="title">Panel de Turnos</h2>
+            <p class="desc">Pantalla grande con reloj, clima y turnos.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="panel_llegada.html">Abrir</a>
+          </div>
+        </article>
+
       </div>
     </div>
 
     <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
   </div>
 
-  <!-- Scripts para PWA -->
+  <!-- Scripts PWA -->
   <script>
-    // Registrar el Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-          });
+        navigator.serviceWorker.register('service-worker.js');
       });
     }
-
-    // Instalar la PWA
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevenir que el navegador muestre automáticamente el prompt
-      e.preventDefault();
-      // Guardar el evento para usarlo después
-      deferredPrompt = e;
-      // Opcional: mostrar un botón para instalar la app
-      console.log('PWA puede ser instalada');
-    });
   </script>
-  
-  <!-- Script de Vercel (mantenido del código original) -->
-  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+
 </body>
 </html>
