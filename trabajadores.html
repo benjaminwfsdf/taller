@@ -107,6 +107,29 @@
       box-shadow:var(--shadow);
     }
 
+    /* BOTÓN VOLVER - ESTILO CORREGIDO */
+    .btn-back{
+      display:inline-block;
+      background:white;
+      color:black;
+      padding:12px 24px;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      font-weight:900;
+      font-size: clamp(1rem, 3vw, 1.1rem);
+      text-decoration:none;
+      box-shadow:0 5px 12px rgba(0,0,0,.35);
+      transition:.25s;
+      text-align: center;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .btn-back:hover{
+      background:var(--blue);
+      color:white;
+      border-color:var(--brand-dark);
+    }
+
     input{
       width:100%;
       padding:14px;
@@ -148,16 +171,6 @@
       background:var(--blue-dark);
       color:white;
       border-color:var(--brand-dark);
-    }
-
-    .btn-secondary{
-      background:transparent;
-      color:white !important;
-      border-color:white;
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,0.1);
     }
 
     .worker-list{
@@ -216,7 +229,8 @@
         <h1>👷 Gestión de Trabajadores</h1>
       </div>
 
-      <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
+      <!-- BOTÓN VOLVER CORREGIDO -->
+      <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
 
       <div class="card">
         <h2>Agregar Trabajador</h2>
