@@ -278,7 +278,6 @@
       </div>
 
       <div class="subtitulo" id="contadorTotal">🚘 Autos en espera: 0</div>
-      <div class="subtitulo" id="etaTexto" style="opacity:.7;font-size:1rem;margin-top:4px">⏱️ Espera estimada ~0 min</div>
 
       <div class="subtitulo">🔜 Próximos</div>
       <div id="proximos"></div>
@@ -335,9 +334,6 @@
 
         document.getElementById("contadorTotal").textContent =
           `🚘 Autos en espera: ${Math.max(0, lista.length-1)}`;
-
-        document.getElementById("etaTexto").textContent =
-          `⏱️ Espera estimada ~${(lista.length-1)*15} min`;
 
         const cont = document.getElementById("proximos");
         cont.innerHTML = "";
