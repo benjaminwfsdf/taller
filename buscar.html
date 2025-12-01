@@ -4,7 +4,6 @@
   <base target="_self">
 
   <link rel="manifest" href="/manifest.json">
-
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Taller">
@@ -127,11 +126,6 @@
       text-transform:uppercase;
     }
 
-    input:focus{
-      outline:none;
-      border-color:var(--brand);
-    }
-
     .btn{
       background:white;
       color:black;
@@ -140,41 +134,11 @@
       border-radius:14px;
       border:3px solid var(--brand);
       transition:.25s;
-      text-decoration:none;
-      font-size:clamp(1rem,3vw,1.1rem);
-      box-shadow:0 4px 10px rgba(0,0,0,.35);
-      cursor:pointer;
       width:100%;
       margin-top:18px;
       text-align:center;
-    }
-
-    .btn:hover{
-      background:var(--blue-dark);
-      color:white;
-      border-color:var(--brand-dark);
-      box-shadow:0 6px 14px rgba(0,0,0,.5);
-    }
-
-    /* Botón secundario EXACTO AL ORIGINAL */
-    .btn-secondary{
-      background:transparent;
-      color:white !important;
-      border:3px solid white !important;
-      display:inline-block;
-      width:auto !important;
-      padding:12px 24px;
-      border-radius:14px;
-      font-weight:900;
-      margin-top:20px;
-      text-align:center;
-      text-decoration:none;
+      cursor:pointer;
       box-shadow:0 4px 10px rgba(0,0,0,.35);
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,0.15);
-      color:white;
     }
 
     .result-block{
@@ -194,11 +158,24 @@
     }
 
     .item{ margin-bottom:6px; }
-
     .item strong{
       color:#a8f0a9;
       display:inline-block;
       min-width:140px;
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:white !important;
+      border:3px solid white !important;
+      padding:12px 24px;
+      border-radius:14px;
+      font-weight:900;
+      display:inline-block;
+      margin-top:20px;
+      text-align:center;
+      text-decoration:none;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
     }
 
     .footer{
@@ -234,10 +211,10 @@
     </div>
   </div>
 
-
 <script>
+
 const API_URL =
-"https://script.google.com/macros/s/AKfycbw2rxF6fCiwfSQ9JJeVIA94ppoCu5A1vtbyGNxCfyzLmOJO3_hNEDZM30U9cdOleKy9PA/exec";
+ "https://script.google.com/macros/s/AKfycbykLqYHshN0H9byTFBOa-fQmeWeGgkIOol7_GbUr9no7QJ6l0PQbeslQPKCkFFEKIa4MQ/exec";
 
 const norm = t => String(t||"").normalize("NFD").replace(/\p{Diacritic}/gu,"").toUpperCase().trim();
 const digits = t => String(t||"").replace(/\D/g,"");
@@ -245,10 +222,12 @@ const digits = t => String(t||"").replace(/\D/g,"");
 function formatearFecha(f){
   if(!f) return "-";
   const d = new Date(f);
-  const dia = String(d.getDate()).padStart(2,"0");
-  const mes = String(d.getMonth()+1).padStart(2,"0");
-  const año = d.getFullYear();
-  return `${dia}/${mes}/${año}`;
+  return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+}
+
+function formatearKM(val){
+  if(!val) return "-";
+  return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 async function buscar(){
@@ -286,12 +265,14 @@ async function buscar(){
 
     box.innerHTML = `
       <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
+      <div class="item"><strong>Orden de Trabajo:</strong> ${r["OrdenTrabajo"] || "-"}</div>
       <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
       <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"] || r["Telefono"]}</div>
       <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
       <div class="item"><strong>Marca:</strong> ${r["Marca"]}</div>
       <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
       <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
+      <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r["Kilometraje"])}</div>
       <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
       <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]}</div>
     `;
