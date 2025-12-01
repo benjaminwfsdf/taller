@@ -75,6 +75,7 @@
     }
 
     #telefono { text-transform:none; }
+    #kilometraje { text-transform:none; }
 
     .topbar{
       background:#1d3053;
@@ -227,6 +228,7 @@
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Patente</th>
+                <th>Kilometraje</th>
               </tr>
             </thead>
 
@@ -238,14 +240,15 @@
                 <td><input type="text" id="marca" placeholder="TOYOTA"></td>
                 <td><input type="text" id="modelo" placeholder="COROLLA"></td>
                 <td><input type="text" id="patente" placeholder="ABCD12"></td>
+                <td><input type="text" id="kilometraje" placeholder="150.000" oninput="formatearKilometraje(this)"></td>
               </tr>
 
               <tr>
-                <th colspan="6" style="text-align:center;">Motivo / Detalle</th>
+                <th colspan="7" style="text-align:center;">Motivo / Detalle</th>
               </tr>
 
               <tr>
-                <td colspan="6"><input type="text" id="detalle" placeholder="NO PARTE · REVISION · CAMBIO DE ACEITE"></td>
+                <td colspan="7"><input type="text" id="detalle" placeholder="NO PARTE · REVISION · CAMBIO DE ACEITE"></td>
               </tr>
 
             </tbody>
@@ -267,6 +270,16 @@ function formatearTelefono(input){
   input.value = "+56 9 " + resto;
 }
 
+function formatearKilometraje(input){
+  // solo números, luego agrega puntos de miles
+  let val = input.value.replace(/\D/g,'');
+  if(!val){
+    input.value = "";
+    return;
+  }
+  input.value = val.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 function guardarVehiculo(){
   const datos = {
     nombre: nombre.value.toUpperCase(),
@@ -275,6 +288,7 @@ function guardarVehiculo(){
     marca: marca.value.toUpperCase(),
     modelo: modelo.value.toUpperCase(),
     patente: patente.value.toUpperCase(),
+    kilometraje: kilometraje.value,            // se guarda con puntos
     detalle_estado: detalle.value.toUpperCase()
   };
 
@@ -282,7 +296,7 @@ function guardarVehiculo(){
     if(!datos[campo]) return alert("⚠️ Completa todos los campos.");
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbw2rxF6fCiwfSQ9JJeVIA94ppoCu5A1vtbyGNxCfyzLmOJO3_hNEDZM30U9cdOleKy9PA/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbykLqYHshN0H9byTFBOa-fQmeWeGgkIOol7_GbUr9no7QJ6l0PQbeslQPKCkFFEKIa4MQ/exec", {
     method:"POST",
     mode:"no-cors",
     headers:{ "Content-Type":"application/json" },
