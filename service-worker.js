@@ -1,4 +1,4 @@
-const VERSION = "v3.1.24";   // ← CAMBIA ESTO cuando quieras forzar update
+const VERSION = "v3.1.37";   // ← CAMBIA ESTO cuando quieras forzar update
 
 const PRECACHE = `precache-${VERSION}`;
 const RUNTIME  = `runtime-${VERSION}`;
