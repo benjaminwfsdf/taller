@@ -60,7 +60,6 @@
       pointer-events:none;
     }
 
-    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -122,7 +121,6 @@
       margin:8px 0 6px;
       font-weight:800;
       color:white;
-      font-size:clamp(1rem,3vw,1.1rem);
     }
 
     input{
@@ -132,7 +130,7 @@
       border-radius:12px;
       background:rgba(0,0,0,0.3);
       color:white !important;
-      font-size:clamp(1rem,3vw,1.1rem);
+      font-size:1.1rem;
       text-transform:uppercase;
     }
 
@@ -143,12 +141,9 @@
       font-weight:900;
       border-radius:14px;
       border:3px solid var(--brand);
-      transition:.25s;
       width:100%;
       margin-top:18px;
-      text-align:center;
       cursor:pointer;
-      box-shadow:0 4px 10px rgba(0,0,0,.35);
     }
 
     .result-block{
@@ -158,8 +153,7 @@
       border-radius:12px;
       padding:18px;
       color:white;
-      font-size:clamp(0.9rem,3vw,1rem);
-      box-shadow:0 4px 12px rgba(0,0,0,.4);
+      font-size:1rem;
     }
 
     .ultimo{
@@ -185,7 +179,6 @@
       margin-top:20px;
       text-align:center;
       text-decoration:none;
-      box-shadow:0 4px 10px rgba(0,0,0,.35);
     }
 
     .footer{
@@ -193,7 +186,6 @@
       color:white;
       font-size:13px;
       margin-top:22px;
-      text-shadow:0 2px 6px black;
     }
   </style>
 </head>
@@ -222,11 +214,13 @@
   </div>
 
 <script>
-
 const API_URL =
  "https://script.google.com/macros/s/AKfycbykLqYHshN0H9byTFBOa-fQmeWeGgkIOol7_GbUr9no7QJ6l0PQbeslQPKCkFFEKIa4MQ/exec";
 
-const norm = t => String(t||"").normalize("NFD").replace(/\p{Diacritic}/gu,"").toUpperCase().trim();
+const norm = t => String(t||"")
+  .normalize("NFD").replace(/\p{Diacritic}/gu,"")
+  .toUpperCase().trim();
+
 const digits = t => String(t||"").replace(/\D/g,"");
 
 function formatearFecha(f){
@@ -235,41 +229,54 @@ function formatearFecha(f){
   return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
 }
 
-function formatearKM(val){
-  if(!val) return "-";
-  return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function formatearKM(v){
+  if(!v) return "-";
+  return String(v).replace(/\B(?=(\d{3})+(?!\d))/g,".");
 }
 
 async function buscar(){
   const val = valor.value.trim();
-  if(!val){
-    alert("Ingresa un dato para buscar");
-    return;
-  }
+  if(!val){ alert("Ingresa un dato"); return; }
 
   const rows = await fetch(API_URL).then(r=>r.json());
-
-  const coincidencias = rows.filter(r=>{
-    const patente = norm(r["Patente"]);
-    const nombre  = norm(r["Nombre"]);
-    const fono    = digits(r["Teléfono"] || r["Telefono"]);
-
-    return patente.includes(norm(val)) ||
-           nombre.includes(norm(val)) ||
-           fono.endsWith(digits(val));
-  });
-
   const cont = document.getElementById("historial");
   cont.innerHTML = "";
 
-  if(!coincidencias.length){
+  const nv = norm(val);
+  const dv = digits(val);
+
+  /** ============================
+   * 1️⃣ BUSCAR PATENTE EXACTA
+   ============================ */
+  let patCoincide = rows.filter(r => norm(r["Patente"]) === nv);
+
+  /** ============================
+   * 2️⃣ BUSCAR POR NOMBRE (exacto)
+   ============================ */
+  let nombreCoincide = rows.filter(r => norm(r["Nombre"]) === nv);
+
+  /** ============================
+   * 3️⃣ BUSCAR POR TELÉFONO
+   ============================ */
+  let fonoCoincide = rows.filter(r => digits(r["Teléfono"]||r["Telefono"]).endsWith(dv));
+
+  /** ============================
+   * 4️⃣ SELECCIONAR PATRÓN CORRECTO
+   ============================ */
+  let listaFinal = patCoincide.length ? patCoincide :
+                   nombreCoincide.length ? nombreCoincide :
+                   fonoCoincide.length ? fonoCoincide : [];
+
+  if(listaFinal.length === 0){
     cont.innerHTML = `<div class="result-block">No se encontraron registros.</div>`;
     return;
   }
 
-  const patenteBase = norm(coincidencias[0]["Patente"]);
-  const historial = rows.filter(r => norm(r["Patente"]) === patenteBase);
+  /** TOMAR LA PATENTE CORRECTA */
+  const patenteBase = norm(listaFinal[0]["Patente"]);
 
+  /** OBTENER TODO EL HISTORIAL DEL MISMO AUTO */
+  const historial = rows.filter(r => norm(r["Patente"]) === patenteBase);
   historial.sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
 
   cont.innerHTML = `
@@ -279,26 +286,24 @@ async function buscar(){
 
   historial.forEach((r,i)=>{
     const box = document.createElement("div");
-    box.className = "result-block " + (i==0 ? "ultimo" : "");
+    box.className = "result-block " + (i==0?"ultimo":"");
 
     box.innerHTML = `
       <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
-      <div class="item"><strong>Orden de Trabajo:</strong> ${r["OrdenTrabajo"] || "-"}</div>
+      <div class="item"><strong>Orden de Trabajo:</strong> ${r["OrdenTrabajo"]||"-"}</div>
       <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
-      <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"] || r["Telefono"]}</div>
+      <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
       <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
       <div class="item"><strong>Marca:</strong> ${r["Marca"]}</div>
       <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
       <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
       <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r["Kilometraje"])}</div>
       <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
-      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"] || r["Detalle"]}</div>
+      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
     `;
-
     cont.appendChild(box);
   });
 }
-
 </script>
 
 </body>
