@@ -237,8 +237,10 @@ async function buscar(){
     return;
   }
 
+  // 1. Obtener todas las visitas
   const rows = await fetch(API_URL).then(r=>r.json());
 
+  // 2. Buscar coincidencias por patente, nombre o teléfono
   const coincidencias = rows.filter(r=>{
     const patente = norm(r["Patente"]);
     const nombre  = norm(r["Nombre"]);
@@ -257,9 +259,21 @@ async function buscar(){
     return;
   }
 
-  coincidencias.sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
+  // 3. Tomar la patente base de la PRIMERA coincidencia
+  const patenteBase = norm(coincidencias[0]["Patente"]);
 
-  coincidencias.forEach((r,i)=>{
+  // 4. Obtener TODAS las visitas históricas de ese vehículo
+  const historial = rows.filter(r => norm(r["Patente"]) === patenteBase);
+
+  // 5. Ordenar historial por fecha descendente
+  historial.sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
+
+  // 6. Mostrar historial completo
+  cont.innerHTML = `<h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
+    Historial completo de ${patenteBase}
+  </h3>`;
+
+  historial.forEach((r,i)=>{
     const box = document.createElement("div");
     box.className = "result-block " + (i==0 ? "ultimo" : "");
 
@@ -274,12 +288,13 @@ async function buscar(){
       <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
       <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r["Kilometraje"])}</div>
       <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
-      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]}</div>
+      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"] || r["Detalle"]}</div>
     `;
 
     cont.appendChild(box);
   });
 }
+
 </script>
 
 </body>
