@@ -29,9 +29,6 @@
 
     *{ box-sizing:border-box; }
 
-    /* ===============================
-       🔥 FONDO FIJO VERSION A
-       =============================== */
     body{
       margin:0;
       min-height:100dvh;
@@ -161,7 +158,6 @@
       box-shadow:0 0 14px #00ff8c !important;
     }
 
-    .item{ margin-bottom:6px; }
     .item strong{
       color:#a8f0a9;
       display:inline-block;
@@ -199,8 +195,8 @@
       <div class="header"><h1>Buscar Vehículo</h1></div>
 
       <div class="card">
-        <label>Buscar por patente, nombre o teléfono:</label>
-        <input type="text" id="valor" placeholder="EJ: ABCD12">
+        <label id="labelTipo">Buscar vehículo:</label>
+        <input type="text" id="valor" placeholder="INGRESA EL DATO">
 
         <button class="btn" onclick="buscar()">🔍 Buscar</button>
 
@@ -235,6 +231,9 @@ function formatearKM(v){
 }
 
 async function buscar(){
+  const params = new URLSearchParams(location.search);
+  const tipo = params.get("tipo") || ""; // patente | nombre | telefono
+
   const val = valor.value.trim();
   if(!val){ alert("Ingresa un dato"); return; }
 
@@ -245,118 +244,116 @@ async function buscar(){
   const nv = norm(val);
   const dv = digits(val);
 
-  /** ============================
-   * 1️⃣ BUSCAR PATENTE EXACTA
-   ============================ */
-  let patCoincide = rows.filter(r => norm(r["Patente"]) === nv);
+  let resultados = [];
 
-  /** ============================
-   * 2️⃣ BUSCAR POR NOMBRE EXACTO
-   ============================ */
-  let nombreCoincide = rows.filter(r => norm(r["Nombre"]) === nv);
+  /* ===========================
+     🔥 FILTROS SEGÚN TIPO EXACTO
+     =========================== */
+  if(tipo === "patente"){
+    resultados = rows.filter(r => norm(r["Patente"]) === nv);
+  }
 
-  /** ============================
-   * 3️⃣ BUSCAR POR TELÉFONO
-   ============================ */
-  let fonoCoincide = rows.filter(r => digits(r["Teléfono"]||r["Telefono"]).endsWith(dv));
+  else if(tipo === "nombre"){
+    resultados = rows.filter(r => norm(r["Nombre"]) === nv);
+  }
 
-  /** ============================
-   * 4️⃣ SELECCIONAR RESULTADO CORRECTO
-   ============================ */
-  let listaFinal = patCoincide.length ? patCoincide :
-                   nombreCoincide.length ? nombreCoincide :
-                   fonoCoincide.length ? fonoCoincide : [];
+  else if(tipo === "telefono"){
+    resultados = rows.filter(r => digits(r["Teléfono"]||r["Telefono"]).endsWith(dv));
+  }
 
-  if(listaFinal.length === 0){
+  if(resultados.length === 0){
     cont.innerHTML = `<div class="result-block">No se encontraron registros.</div>`;
     return;
   }
 
-  /** 🔥 SI ES BÚSQUEDA POR NOMBRE → MOSTRAR SOLO VISITAS DE ESA PERSONA */
-  if(nombreCoincide.length){
-    cont.innerHTML = `
-      <h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
-        Resultados para ${nv}
-      </h3>`;
+  /* ===========================
+     🔥 MODO PATENTE → HISTORIAL COMPLETO DEL AUTO
+     =========================== */
+  if(tipo === "patente"){
+    const base = norm(resultados[0]["Patente"]);
+    const hist = rows.filter(r => norm(r["Patente"]) === base)
+                     .sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
 
-    nombreCoincide.forEach((r,i)=>{
-      const box = document.createElement("div");
-      box.className = "result-block";
-
-      box.innerHTML = `
-        <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
-        <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
-        <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
-        <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
-        <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
-        <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
-        <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
-        <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
-        <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
-      `;
-      cont.appendChild(box);
-    });
-
-    return;
-  }
-
-  /** 🔥 SI ES BÚSQUEDA POR TELÉFONO → SOLO MOSTRAR ESE TELÉFONO */
-  if(fonoCoincide.length && !patCoincide.length){
-    cont.innerHTML = `
-      <h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
-        Resultados del teléfono ${dv}
-      </h3>`;
-
-    fonoCoincide.forEach(r=>{
-      const box = document.createElement("div");
-      box.className = "result-block";
-
-      box.innerHTML = `
-        <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
-        <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
-        <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
-        <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
-        <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
-        <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
-        <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
-        <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
-        <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
-      `;
-      cont.appendChild(box);
-    });
-
-    return;
-  }
-
-  /** 🔥 SI ES BÚSQUEDA POR PATENTE → MOSTRAR SOLO EL HISTORIAL DE ESA PATENTE */
-  const patenteBase = norm(listaFinal[0]["Patente"]);
-  const historial = rows.filter(r => norm(r["Patente"]) === patenteBase)
-                        .sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
-
-  cont.innerHTML = `
-    <h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
-      Historial completo de ${patenteBase}
+    cont.innerHTML = `<h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
+      Historial completo de ${base}
     </h3>`;
 
-  historial.forEach((r,i)=>{
-    const box = document.createElement("div");
-    box.className = "result-block " + (i==0?"ultimo":"");
+    hist.forEach((r,i)=>{
+      const box = document.createElement("div");
+      box.className = "result-block " + (i===0 ? "ultimo" : "");
+      box.innerHTML = `
+        <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
+        <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
+        <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
+        <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
+        <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
+        <div class="item"><strong>Marca:</strong> ${r["Marca"]}</div>
+        <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
+        <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
+        <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r["Kilometraje"])}</div>
+        <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
+        <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
+      `;
+      cont.appendChild(box);
+    });
 
-    box.innerHTML = `
-      <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
-      <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
-      <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
-      <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
-      <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
-      <div class="item"><strong>Marca:</strong> ${r["Marca"]}</div>
-      <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
-      <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
-      <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r["Kilometraje"])}</div>
-      <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
-      <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
-    `;
-    cont.appendChild(box);
-  });
+    return;
+  }
+
+  /* ===========================
+     🔥 MODO NOMBRE
+     =========================== */
+  if(tipo === "nombre"){
+    cont.innerHTML = `<h3 style="color:white;margin-bottom:12px;">Resultados de ${nv}</h3>`;
+
+    resultados.forEach(r=>{
+      const box = document.createElement("div");
+      box.className = "result-block";
+
+      box.innerHTML = `
+        <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
+        <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
+        <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
+        <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
+        <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
+        <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
+        <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
+        <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
+        <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
+      `;
+      cont.appendChild(box);
+    });
+
+    return;
+  }
+
+  /* ===========================
+     🔥 MODO TELÉFONO
+     =========================== */
+  if(tipo === "telefono"){
+    cont.innerHTML = `<h3 style="color:white;margin-bottom:12px;">Resultados del teléfono ${dv}</h3>`;
+
+    resultados.forEach(r=>{
+      const box = document.createElement("div");
+      box.className = "result-block";
+
+      box.innerHTML = `
+        <div class="item"><strong>Fecha:</strong> ${formatearFecha(r["Fecha"])}</div>
+        <div class="item"><strong>OT:</strong> ${r["OrdenTrabajo"]||"-"}</div>
+        <div class="item"><strong>Nombre:</strong> ${r["Nombre"]}</div>
+        <div class="item"><strong>Teléfono:</strong> ${r["Teléfono"]||r["Telefono"]}</div>
+        <div class="item"><strong>Dirección:</strong> ${r["Dirección"]}</div>
+        <div class="item"><strong>Patente:</strong> ${r["Patente"]}</div>
+        <div class="item"><strong>Modelo:</strong> ${r["Modelo"]}</div>
+        <div class="item"><strong>Estado:</strong> ${r["Estado"]}</div>
+        <div class="item"><strong>Detalle:</strong> ${r["Detalle Estado"]||r["Detalle"]}</div>
+      `;
+      cont.appendChild(box);
+    });
+
+    return;
+  }
+
 }
 </script>
 
