@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>✏️ Editar Visitas · Vehículos | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    :root{
+      --brand:#d40000;
+      --brand-dark:#9b0000;
+      --blue:#1d3053;
+      --ink:#ffffff;
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    *{box-sizing:border-box;}
+
+    /* ==============================
+       🔥 Fondo adaptativo
+       ============================== */
+    body{
+      margin:0;
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      min-height:100vh;
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:white;
+      background-image:url("img/portada_celular.png");
+    }
+
+    /* PC / Tablet grande */
+    @media (min-width: 768px){
+      body{
+        background-image:url("img/portada_pc.png");
+      }
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+      filter:brightness(0.95);
+    }
+
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin:30px auto 40px;
+      padding:0 18px;
+    }
+
+    .frame{
+      background:rgba(135,206,250,0.35);
+      border-radius:var(--radius);
+      padding:22px;
+      border:3px solid var(--brand);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+    }
+
+    .header{
+      background:#1d3053;
+      border-radius:16px;
+      border:3px solid var(--brand);
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(1.5rem,5vw,2.2rem);
+    }
+
+    .card{
+      background:#1d3053;
+      border-radius:16px;
+      border:3px solid var(--brand);
+      padding:16px;
+      margin-bottom:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .title{
+      margin:0 0 12px;
+      font-size:clamp(1.2rem,4vw,1.6rem);
+      font-weight:900;
+      text-align:center;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:2px solid rgba(255,255,255,0.25);
+      background:rgba(0,0,0,0.35);
+      color:white;
+      font-size:15px;
+      margin-bottom:10px;
+      font-family:inherit;
+      text-transform:uppercase;
+    }
+
+    textarea{
+      resize:vertical;
+      min-height:60px;
+    }
+
+    input:focus, textarea:focus{
+      border-color:var(--brand);
+      outline:none;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+
+    th,td{
+      padding:8px;
+      text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.2);
+    }
+
+    th{
+      background:rgba(0,0,0,0.3);
+      font-weight:800;
+    }
+
+    tr.clickable:hover{
+      background:rgba(255,255,255,0.08);
+      cursor:pointer;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:12px 18px;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      font-weight:900;
+      font-size:15px;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor:pointer;
+      width:100%;
+      margin-top:10px;
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:white;
+      border-color:white;
+      width:auto;
+      display:inline-block;
+      margin-top:10px;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:18px;
+      font-size:13px;
+      text-shadow:0 2px 6px black;
+    }
+  </style>
+</head>
+
+<body>
+<div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+<div class="wrapper">
+  <div class="frame">
+
+    <div class="header"><h1>✏️ Editar Visitas de Vehículos</h1></div>
+
+    <!-- Buscar historial -->
+    <div class="card">
+      <h2 class="title">1. Buscar historial por patente</h2>
+
+      <input id="patente_buscar" placeholder="INGRESA PATENTE (EJ: JJSJ31)" />
+
+      <button class="btn" onclick="filtrarHistorial()">Buscar historial</button>
+
+      <div style="margin-top:12px; max-height:260px; overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Fila</th>
+              <th>Fecha</th>
+              <th>OT</th>
+              <th>Nombre</th>
+              <th>Patente</th>
+              <th>Estado</th>
+              <th>Detalle</th>
+              <th>KM</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyHistorial"></tbody>
+        </table>
+      </div>
+
+      <p style="font-size:13px; opacity:.85; text-align:center; margin-top:8px;">
+        Toca una fila para cargarla y editar.
+      </p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="card" id="cardEdicion" style="display:none;">
+      <h2 class="title">2. Editar visita seleccionada</h2>
+
+      <input id="fila" type="hidden">
+
+      <input id="fecha" readonly placeholder="Fecha">
+      <input id="ot" readonly placeholder="Orden de Trabajo">
+
+      <input id="nombre"  placeholder="Nombre del dueño">
+      <input id="telefono" placeholder="Teléfono">
+      <input id="direccion" placeholder="Dirección">
+      <input id="marca" placeholder="Marca">
+      <input id="modelo" placeholder="Modelo">
+      <input id="patente" placeholder="Patente">
+      <input id="estado" placeholder="Estado (REPARACIÓN / LISTO)">
+      <textarea id="detalle_estado" placeholder="Detalle Estado"></textarea>
+
+      <input id="kilometraje" placeholder="Kilometraje">
+
+      <button class="btn" onclick="guardarCambios()">💾 Guardar cambios</button>
+    </div>
+
+    <a href="gestion_autos.html" class="btn btn-secondary">← Volver al Menú Principal</a>
+
+  </div>
+
+  <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
+
+let VISITAS = [];
+let visitaSeleccionada = null;
+
+/* Cargar visitas */
+async function cargarDatos() {
+  try{
+    const res = await fetch(API_URL);
+    VISITAS = await res.json();
+  }catch(e){
+    alert("Error cargando datos.");
+  }
+}
+cargarDatos();
+
+/* Formatear fecha */
+function formatearFecha(f){
+  if(!f) return "-";
+  const d = new Date(f);
+  if(isNaN(d)) return f;
+  return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+}
+
+/* Buscar historial */
+function filtrarHistorial(){
+  const pat = patente_buscar.value.trim().toUpperCase();
+  const tbody = document.getElementById("tbodyHistorial");
+  tbody.innerHTML = "";
+
+  if(!pat){ alert("Ingresa patente."); return; }
+
+  const lista = VISITAS.filter(v =>
+    String(v["Patente"] || "").toUpperCase().includes(pat)
+  );
+
+  if(!lista.length){
+    tbody.innerHTML = `<tr><td colspan="8">No existen registros.</td></tr>`;
+    cardEdicion.style.display = "none";
+    return;
+  }
+
+  lista.forEach(v => {
+    const tr = document.createElement("tr");
+    tr.className = "clickable";
+
+    tr.innerHTML = `
+      <td>${v._fila}</td>
+      <td>${formatearFecha(v["Fecha"])}</td>
+      <td>${v["OrdenTrabajo"]||""}</td>
+      <td>${v["Nombre"]||""}</td>
+      <td>${v["Patente"]||""}</td>
+      <td>${v["Estado"]||""}</td>
+      <td>${v["Detalle Estado"]||""}</td>
+      <td>${v["Kilometraje"]||""}</td>
+    `;
+    tr.addEventListener("click", ()=> cargarEnFormulario(v));
+
+    tbody.appendChild(tr);
+  });
+}
+
+/* Cargar formulario */
+function cargarEnFormulario(v){
+  visitaSeleccionada = v;
+  cardEdicion.style.display = "block";
+
+  fila.value      = v._fila;
+  fecha.value     = formatearFecha(v["Fecha"]);
+  ot.value        = v["OrdenTrabajo"] || "";
+
+  nombre.value         = v["Nombre"] || "";
+  telefono.value       = v["Teléfono"] || v["Telefono"] || "";
+  direccion.value      = v["Dirección"] || "";
+  marca.value          = v["Marca"] || "";
+  modelo.value         = v["Modelo"] || "";
+  patente.value        = v["Patente"] || "";
+  estado.value         = v["Estado"] || "";
+  detalle_estado.value = v["Detalle Estado"] || "";
+  kilometraje.value    = v["Kilometraje"] || "";
+}
+
+/* Guardar cambios */
+async function guardarCambios(){
+  if(!visitaSeleccionada){ alert("Selecciona una visita."); return; }
+
+  const payload = {
+    funcion:"editarvisita",
+    fila: fila.value,
+    nombre: nombre.value.toUpperCase(),
+    telefono: telefono.value,
+    direccion: direccion.value.toUpperCase(),
+    marca: marca.value.toUpperCase(),
+    modelo: modelo.value.toUpperCase(),
+    patente: patente.value.toUpperCase(),
+    estado: estado.value.toUpperCase(),
+    detalle_estado: detalle_estado.value.toUpperCase(),
+    kilometraje: kilometraje.value
+  };
+
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if(data.estado === "OK"){
+      alert("✔ Cambios guardados.");
+      cargarDatos();
+      filtrarHistorial();
+    }else{
+      alert("Error: "+data.mensaje);
+    }
+
+  }catch(e){
+    console.error(e);
+    alert("No se pudo guardar.");
+  }
+}
+</script>
+</body>
+</html>
