@@ -29,15 +29,23 @@
 
     *{ box-sizing:border-box; }
 
+    /* ===============================
+       🔥 FONDO FIJO VERSION A
+       =============================== */
     body{
       margin:0;
-      background-image:url("img/portada_celular.png");
-      background-repeat:no-repeat;
-      background-size:cover;
-      background-position:center;
-      min-height:100vh;
+      min-height:100dvh;
       overflow-x:hidden;
       font-family:system-ui,Segoe UI,Roboto,Arial;
+
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      background-color:#000;
+    }
+
+    @media(min-width:768px){
+      body{
+        background:url("img/portada_pc.png") no-repeat center/cover fixed;
+      }
     }
 
     body::before{
@@ -49,8 +57,10 @@
       background-position:center;
       background-repeat:no-repeat;
       z-index:-1;
+      pointer-events:none;
     }
 
+    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -237,10 +247,8 @@ async function buscar(){
     return;
   }
 
-  // 1. Obtener todas las visitas
   const rows = await fetch(API_URL).then(r=>r.json());
 
-  // 2. Buscar coincidencias por patente, nombre o teléfono
   const coincidencias = rows.filter(r=>{
     const patente = norm(r["Patente"]);
     const nombre  = norm(r["Nombre"]);
@@ -259,19 +267,15 @@ async function buscar(){
     return;
   }
 
-  // 3. Tomar la patente base de la PRIMERA coincidencia
   const patenteBase = norm(coincidencias[0]["Patente"]);
-
-  // 4. Obtener TODAS las visitas históricas de ese vehículo
   const historial = rows.filter(r => norm(r["Patente"]) === patenteBase);
 
-  // 5. Ordenar historial por fecha descendente
   historial.sort((a,b)=> new Date(b["Fecha"]) - new Date(a["Fecha"]));
 
-  // 6. Mostrar historial completo
-  cont.innerHTML = `<h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
-    Historial completo de ${patenteBase}
-  </h3>`;
+  cont.innerHTML = `
+    <h3 style="color:white;text-shadow:0 3px 8px black;margin-bottom:12px;">
+      Historial completo de ${patenteBase}
+    </h3>`;
 
   historial.forEach((r,i)=>{
     const box = document.createElement("div");
