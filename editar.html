@@ -19,9 +19,6 @@
 
     *{ box-sizing:border-box; }
 
-    /* ==============================
-       🔥 FONDO FIJO VERSIÓN A
-       ============================== */
     body{
       margin:0;
       font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
@@ -29,19 +26,16 @@
       min-height:100dvh;
       overflow-x:hidden;
 
-      /* Fondo por defecto (celular) */
       background:url("img/portada_celular.png") no-repeat center/cover fixed;
       background-color:#000;
     }
 
-    /* Fondo para PC / pantallas grandes */
     @media(min-width:768px){
       body{
         background:url("img/portada_pc.png") no-repeat center/cover fixed;
       }
     }
 
-    /* Capa virtual fija: evita fondos blancos en iPhone */
     body::before{
       content:"";
       position:fixed;
@@ -54,7 +48,6 @@
       pointer-events:none;
     }
 
-    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -263,17 +256,27 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
+const API_URL =
+ "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
 
 let VISITAS = [];
 let visitaSeleccionada = null;
 
-/* Cargar visitas */
+/* ================================
+   🔥 CARGAR DATOS (CORREGIDO)
+   AGREGA _fila AUTOMÁTICAMENTE
+================================ */
 async function cargarDatos() {
-  try{
+  try {
     const res = await fetch(API_URL);
-    VISITAS = await res.json();
-  }catch(e){
+    const data = await res.json();
+
+    VISITAS = data.map((v, i) => ({
+      ...v,
+      _fila: i + 2   // fila real en Sheets (empieza en 2)
+    }));
+
+  } catch (e) {
     alert("Error cargando datos.");
   }
 }
@@ -387,5 +390,6 @@ async function guardarCambios(){
   }
 }
 </script>
+
 </body>
 </html>
