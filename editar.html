@@ -17,29 +17,31 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    *{box-sizing:border-box;}
+    *{ box-sizing:border-box; }
 
     /* ==============================
-       🔥 Fondo adaptativo
+       🔥 FONDO FIJO VERSIÓN A
        ============================== */
     body{
       margin:0;
-      background-repeat:no-repeat;
-      background-size:cover;
-      background-position:center;
-      min-height:100vh;
       font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
       color:white;
-      background-image:url("img/portada_celular.png");
+      min-height:100dvh;
+      overflow-x:hidden;
+
+      /* Fondo por defecto (celular) */
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      background-color:#000;
     }
 
-    /* PC / Tablet grande */
-    @media (min-width: 768px){
+    /* Fondo para PC / pantallas grandes */
+    @media(min-width:768px){
       body{
-        background-image:url("img/portada_pc.png");
+        background:url("img/portada_pc.png") no-repeat center/cover fixed;
       }
     }
 
+    /* Capa virtual fija: evita fondos blancos en iPhone */
     body::before{
       content:"";
       position:fixed;
@@ -49,9 +51,10 @@
       background-position:center;
       background-repeat:no-repeat;
       z-index:-1;
-      filter:brightness(0.95);
+      pointer-events:none;
     }
 
+    /* TOPBAR */
     .topbar{
       background:#1d3053;
       color:white;
@@ -60,6 +63,9 @@
       font-weight:700;
       border-bottom:5px solid var(--brand);
       box-shadow:var(--shadow-soft);
+      position:sticky;
+      top:0;
+      z-index:10;
     }
 
     .wrapper{
@@ -117,7 +123,6 @@
       color:white;
       font-size:15px;
       margin-bottom:10px;
-      font-family:inherit;
       text-transform:uppercase;
     }
 
@@ -170,8 +175,10 @@
     .btn-secondary{
       background:transparent;
       color:white;
-      border-color:white;
-      width:auto;
+      border:3px solid white;
+      border-radius:14px;
+      padding:10px 18px;
+      font-weight:900;
       display:inline-block;
       margin-top:10px;
     }
@@ -186,6 +193,7 @@
 </head>
 
 <body>
+
 <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
 <div class="wrapper">
@@ -233,7 +241,7 @@
       <input id="fecha" readonly placeholder="Fecha">
       <input id="ot" readonly placeholder="Orden de Trabajo">
 
-      <input id="nombre"  placeholder="Nombre del dueño">
+      <input id="nombre" placeholder="Nombre del dueño">
       <input id="telefono" placeholder="Teléfono">
       <input id="direccion" placeholder="Dirección">
       <input id="marca" placeholder="Marca">
@@ -247,7 +255,7 @@
       <button class="btn" onclick="guardarCambios()">💾 Guardar cambios</button>
     </div>
 
-    <a href="gestion_autos.html" class="btn btn-secondary">← Volver al Menú Principal</a>
+    <a href="gestion_autos.html" class="btn-secondary">← Volver al Menú Principal</a>
 
   </div>
 
@@ -312,7 +320,6 @@ function filtrarHistorial(){
       <td>${v["Kilometraje"]||""}</td>
     `;
     tr.addEventListener("click", ()=> cargarEnFormulario(v));
-
     tbody.appendChild(tr);
   });
 }
@@ -322,24 +329,27 @@ function cargarEnFormulario(v){
   visitaSeleccionada = v;
   cardEdicion.style.display = "block";
 
-  fila.value      = v._fila;
-  fecha.value     = formatearFecha(v["Fecha"]);
-  ot.value        = v["OrdenTrabajo"] || "";
+  fila.value = v._fila;
+  fecha.value = formatearFecha(v["Fecha"]);
+  ot.value = v["OrdenTrabajo"] || "";
 
-  nombre.value         = v["Nombre"] || "";
-  telefono.value       = v["Teléfono"] || v["Telefono"] || "";
-  direccion.value      = v["Dirección"] || "";
-  marca.value          = v["Marca"] || "";
-  modelo.value         = v["Modelo"] || "";
-  patente.value        = v["Patente"] || "";
-  estado.value         = v["Estado"] || "";
+  nombre.value = v["Nombre"] || "";
+  telefono.value = v["Teléfono"] || v["Telefono"] || "";
+  direccion.value = v["Dirección"] || "";
+  marca.value = v["Marca"] || "";
+  modelo.value = v["Modelo"] || "";
+  patente.value = v["Patente"] || "";
+  estado.value = v["Estado"] || "";
   detalle_estado.value = v["Detalle Estado"] || "";
-  kilometraje.value    = v["Kilometraje"] || "";
+  kilometraje.value = v["Kilometraje"] || "";
 }
 
 /* Guardar cambios */
 async function guardarCambios(){
-  if(!visitaSeleccionada){ alert("Selecciona una visita."); return; }
+  if(!visitaSeleccionada){
+    alert("Selecciona una visita.");
+    return;
+  }
 
   const payload = {
     funcion:"editarvisita",
