@@ -256,54 +256,33 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
+const API_URL =
+ "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
 
 let VISITAS = [];
 let visitaSeleccionada = null;
 
-/* ============================
-   CARGAR DATOS SEGURO
-============================ */
+/* ================================
+   🔥 CARGAR DATOS (CORREGIDO)
+   AGREGA _fila AUTOMÁTICAMENTE
+================================ */
 async function cargarDatos() {
   try {
-    console.log("Intentando cargar datos…");
-    const res = await fetch(API_URL, { cache: "no-store" });
-
-    if (!res.ok) {
-      console.error("Respuesta no OK:", res.status);
-      alert("No se pudo cargar datos del servidor.");
-      return;
-    }
-
+    const res = await fetch(API_URL);
     const data = await res.json();
 
-    if (!Array.isArray(data)) {
-      console.error("Respuesta inesperada:", data);
-      alert("Error al recibir información. Vuelve a intentar.");
-      return;
-    }
-
-    VISITAS = data;
-    console.log("Datos cargados correctamente:", VISITAS.length);
+    VISITAS = data.map((v, i) => ({
+      ...v,
+      _fila: i + 2   // fila real en Sheets (empieza en 2)
+    }));
 
   } catch (e) {
-    console.error("Fallo en la carga:", e);
-    alert("Error cargando datos. Revisa tu conexión.");
+    alert("Error cargando datos.");
   }
 }
-
-/* Evitar carga doble por el cache del navegador */
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    cargarDatos();
-  }
-});
-
 cargarDatos();
 
-/* ============================
-   FORMATEAR FECHA
-============================ */
+/* Formatear fecha */
 function formatearFecha(f){
   if(!f) return "-";
   const d = new Date(f);
@@ -311,23 +290,13 @@ function formatearFecha(f){
   return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
 }
 
-/* ============================
-   FILTRAR HISTORIAL
-============================ */
+/* Buscar historial */
 function filtrarHistorial(){
-  if(!VISITAS.length){
-    alert("Los datos no han cargado aún. Espera 1 segundo.");
-    return;
-  }
-
   const pat = patente_buscar.value.trim().toUpperCase();
   const tbody = document.getElementById("tbodyHistorial");
   tbody.innerHTML = "";
 
-  if(!pat){
-    alert("Ingresa patente.");
-    return;
-  }
+  if(!pat){ alert("Ingresa patente."); return; }
 
   const lista = VISITAS.filter(v =>
     String(v["Patente"] || "").toUpperCase().includes(pat)
@@ -354,14 +323,11 @@ function filtrarHistorial(){
       <td>${v["Kilometraje"]||""}</td>
     `;
     tr.addEventListener("click", ()=> cargarEnFormulario(v));
-
     tbody.appendChild(tr);
   });
 }
 
-/* ============================
-   CARGAR FORMULARIO
-============================ */
+/* Cargar formulario */
 function cargarEnFormulario(v){
   visitaSeleccionada = v;
   cardEdicion.style.display = "block";
@@ -381,9 +347,7 @@ function cargarEnFormulario(v){
   kilometraje.value = v["Kilometraje"] || "";
 }
 
-/* ============================
-   GUARDAR CAMBIOS
-============================ */
+/* Guardar cambios */
 async function guardarCambios(){
   if(!visitaSeleccionada){
     alert("Selecciona una visita.");
@@ -405,28 +369,24 @@ async function guardarCambios(){
   };
 
   try{
-    console.log("Enviando cambios:", payload);
-
     const res = await fetch(API_URL,{
       method:"POST",
-      cache:"no-store",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
-
     const data = await res.json();
 
     if(data.estado === "OK"){
       alert("✔ Cambios guardados.");
-      await cargarDatos(); // recargar VISITAS
+      cargarDatos();
       filtrarHistorial();
     }else{
-      alert("Error del servidor: "+data.mensaje);
+      alert("Error: "+data.mensaje);
     }
 
   }catch(e){
-    console.error("Error enviando cambios:", e);
-    alert("No se pudo guardar. Revisa tu conexión.");
+    console.error(e);
+    alert("No se pudo guardar.");
   }
 }
 </script>
