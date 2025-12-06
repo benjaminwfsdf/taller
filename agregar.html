@@ -75,6 +75,26 @@
 
     #telefono{ text-transform:none; }
     #kilometraje{ text-transform:none; }
+    
+    /* Estilo para campo OT (solo lectura) */
+    .ot-field {
+      background: rgba(0,0,0,0.6) !important;
+      border: 2px solid var(--brand) !important;
+      color: #ffcc00 !important;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-align: center;
+      cursor: not-allowed;
+    }
+
+    .ot-label {
+      color: #ffcc00;
+      font-weight: 800;
+      text-align: center;
+      margin: 16px 0 8px;
+      font-size: 18px;
+    }
 
     .topbar{
       background:#1d3053;
@@ -185,6 +205,33 @@
       margin-top:22px;
       text-shadow:0 2px 6px black;
     }
+    
+    /* Mensaje OT */
+    .ot-message {
+      text-align: center;
+      color: #ffcc00;
+      font-weight: 700;
+      margin: 8px 0;
+      font-size: 14px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    
+    /* Caché status */
+    .cache-status {
+      font-size: 12px;
+      color: #90ee90;
+      text-align: center;
+      margin-top: 5px;
+    }
+    
+    /* Mensaje autocompletado */
+    .auto-complete-msg {
+      font-size: 12px;
+      color: #ffcc00;
+      text-align: center;
+      margin: 5px 0;
+      font-style: italic;
+    }
   </style>
 </head>
 
@@ -234,6 +281,15 @@
         </tbody>
       </table>
     </div>
+    
+    <!-- Mensaje autocompletado -->
+    <div id="autoCompleteMsg" class="auto-complete-msg"></div>
+    
+    <!-- Sección OT (solo lectura) -->
+    <div class="ot-label">Orden de Trabajo asignada:</div>
+    <input type="text" id="ot_asignada" class="ot-field" readonly>
+    <div id="cacheStatus" class="cache-status"></div>
+    <div class="ot-message">Esta OT se asignará automáticamente al guardar</div>
 
     <!-- Botón Guardar -->
     <button class="btn" onclick="guardarVehiculo()">Guardar Vehículo</button>
@@ -249,6 +305,14 @@
 </div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyWbgK5VnKJvHqtfXLuhoarlEQJkBOgmm1-7Xku8yz-3T8U85WHeCNYQH5SGvLKS09yxA/exec";
+const CACHE_KEY = 'ultima_ot_cache';
+const CACHE_TIMEOUT = 5 * 60 * 1000; // 5 minutos
+
+let siguienteOT = "";
+let otCache = null;
+let VISITAS = [];
+
 /* ============================
    FORMATEOS
 ============================ */
@@ -265,63 +329,271 @@ function formatearKilometraje(input){
 }
 
 /* ============================
-   AUTOCOMPLETAR POR PATENTE
+   SISTEMA DE CACHÉ LOCAL CORREGIDO
 ============================ */
-let VISITAS = [];
-
-async function cargarDatos() {
+function cargarCacheOT() {
   try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbykLqYHshN0H9byTFBOa-fQmeWeGgkIOol7_GbUr9no7QJ6l0PQbeslQPKCkFFEKIa4MQ/exec");
-    VISITAS = await res.json();
-  } catch(e){ console.error(e); }
+    const cacheData = localStorage.getItem(CACHE_KEY);
+    if (cacheData) {
+      const cache = JSON.parse(cacheData);
+      const ahora = Date.now();
+      
+      // Si la caché es reciente (menos de 5 minutos)
+      if (ahora - cache.timestamp < CACHE_TIMEOUT) {
+        otCache = cache;
+        return cache.nextOT;
+      }
+    }
+  } catch (e) {
+    console.log('Error cargando caché:', e);
+  }
+  return null;
 }
 
-cargarDatos();
+function guardarCacheOT(ultimaOTReal) {
+  // IMPORTANTE: Guardar la OT REAL del servidor, no incrementarla
+  const nextOT = String(ultimaOTReal).padStart(6, "0");
+  otCache = {
+    lastOT: ultimaOTReal,
+    timestamp: Date.now(),
+    nextOT: nextOT
+  };
+  localStorage.setItem(CACHE_KEY, JSON.stringify(otCache));
+  return nextOT;
+}
 
-document.getElementById("patente").addEventListener("input", () => {
-  const pat = patente.value.trim().toUpperCase();
-  if(pat.length < 4) return;
-
-  const match = VISITAS.find(r => String(r["Patente"]).toUpperCase() === pat);
-
-  if(match){
-    nombre.value    = (match["Nombre"]    || "").toUpperCase();
-    telefono.value  = (match["Teléfono"]  || match["Telefono"] || "+56 9 ");
-    direccion.value = (match["Dirección"] || "").toUpperCase();
-    marca.value     = (match["Marca"]     || "").toUpperCase();
-    modelo.value    = (match["Modelo"]    || "").toUpperCase();
+function obtenerOTParaMostrar() {
+  // Si tenemos caché, usarla
+  if (otCache) {
+    return otCache.nextOT;
   }
-});
+  return "000001";
+}
 
 /* ============================
-   GUARDAR VEHÍCULO
+   OBTENER OT - CORREGIDO
 ============================ */
-function guardarVehiculo(){
-  const datos = {
-    nombre: nombre.value.toUpperCase(),
-    telefono: "'" + telefono.value,
-    direccion: direccion.value.toUpperCase(),
-    marca: marca.value.toUpperCase(),
-    modelo: modelo.value.toUpperCase(),
-    patente: patente.value.toUpperCase(),
-    kilometraje: kilometraje.value,
-    detalle_estado: detalle.value.toUpperCase()
-  };
+async function obtenerSiguienteOT() {
+  // Mostrar mensaje temporal
+  document.getElementById('cacheStatus').textContent = "⏳ Obteniendo OT...";
+  
+  try {
+    // Obtener OT DIRECTAMENTE del servidor
+    const response = await fetch(`${API_URL}?action=obtenerSiguienteOT_Hoja1&_=${Date.now()}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.nextOT) {
+        // Usar la OT que devuelve el servidor
+        siguienteOT = data.nextOT;
+        document.getElementById('ot_asignada').value = siguienteOT;
+        
+        // Guardar en caché SIN MODIFICAR
+        const otNumber = parseInt(siguienteOT.replace(/\D/g, ''), 10);
+        guardarCacheOT(otNumber);
+        
+        document.getElementById('cacheStatus').textContent = "✓ OT obtenida del servidor";
+        setTimeout(() => {
+          document.getElementById('cacheStatus').textContent = "";
+        }, 3000);
+      }
+    } else {
+      throw new Error('Respuesta no OK');
+    }
+  } catch (error) {
+    console.log('Error obteniendo OT del servidor:', error);
+    
+    // Intento con caché local
+    const cacheOT = cargarCacheOT();
+    if (cacheOT) {
+      siguienteOT = cacheOT;
+      document.getElementById('ot_asignada').value = siguienteOT;
+      document.getElementById('cacheStatus').textContent = "⚠️ Usando OT local (sin conexión)";
+    } else {
+      siguienteOT = "000001";
+      document.getElementById('ot_asignada').value = siguienteOT;
+      document.getElementById('cacheStatus').textContent = "⚠️ Error, usando OT por defecto";
+    }
+  }
+}
 
-  for(const c in datos){
-    if(!datos[c]) return alert("⚠️ Completa todos los campos.");
+/* ============================
+   AUTOCOMPLETAR POR PATENTE
+============================ */
+async function cargarDatos() {
+  try {
+    const response = await fetch(API_URL);
+    if (response.ok) {
+      VISITAS = await response.json();
+      console.log(`✅ Datos cargados: ${VISITAS.length} registros`);
+    }
+  } catch(e) { 
+    console.log('⚠️ Error cargando datos:', e);
+  }
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+document.getElementById("patente").addEventListener("input", debounce(() => {
+  const pat = document.getElementById("patente").value.trim().toUpperCase();
+  const msgDiv = document.getElementById("autoCompleteMsg");
+  
+  if (pat.length < 4) {
+    msgDiv.textContent = "";
+    return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbykLqYHshN0H9byTFBOa-fQmeWeGgkIOol7_GbUr9no7QJ6l0PQbeslQPKCkFFEKIa4MQ/exec",{
-    method:"POST",
-    mode:"no-cors",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify(datos)
-  }).then(()=>{
-    alert("✔ Vehículo guardado");
-    location.reload();
+  const match = VISITAS.find(r => {
+    const patenteRegistro = String(r["Patente"] || r["patente"] || "").toUpperCase();
+    return patenteRegistro === pat;
   });
+
+  if (match) {
+    document.getElementById('nombre').value = (match["Nombre"] || "").toUpperCase();
+    
+    const telefonoOriginal = match["Teléfono"] || match["Telefono"] || "";
+    let telefonoFormateado = "+56 9 ";
+    if (telefonoOriginal) {
+      const numeros = telefonoOriginal.replace(/\D/g, '');
+      if (numeros.length >= 8) {
+        telefonoFormateado += numeros.slice(-8);
+      }
+    }
+    document.getElementById('telefono').value = telefonoFormateado;
+    
+    document.getElementById('direccion').value = (match["Dirección"] || match["Direccion"] || "").toUpperCase();
+    document.getElementById('marca').value = (match["Marca"] || "").toUpperCase();
+    document.getElementById('modelo').value = (match["Modelo"] || "").toUpperCase();
+    
+    msgDiv.textContent = `✓ Vehículo encontrado. Puedes editar los datos si es necesario.`;
+    msgDiv.style.color = "#90ee90";
+    
+  } else {
+    msgDiv.textContent = "No se encontraron registros para esta patente";
+    msgDiv.style.color = "#ffcc00";
+  }
+}, 500));
+
+/* ============================
+   GUARDAR VEHÍCULO - CORREGIDO
+============================ */
+async function guardarVehiculo(){
+  const patente = document.getElementById('patente').value.trim();
+  const nombre = document.getElementById('nombre').value.trim();
+  const telefono = document.getElementById('telefono').value;
+  const direccion = document.getElementById('direccion').value.trim();
+  const marca = document.getElementById('marca').value.trim();
+  const modelo = document.getElementById('modelo').value.trim();
+  const kilometraje = document.getElementById('kilometraje').value.trim();
+  const detalle = document.getElementById('detalle').value.trim();
+
+  if (!patente) return alert("⚠️ Ingresa la patente");
+  if (!nombre) return alert("⚠️ Ingresa el nombre del dueño");
+  if (!telefono) return alert("⚠️ Ingresa el teléfono");
+  if (!direccion) return alert("⚠️ Ingresa la dirección");
+  if (!marca) return alert("⚠️ Ingresa la marca");
+  if (!modelo) return alert("⚠️ Ingresa el modelo");
+  if (!kilometraje) return alert("⚠️ Ingresa el kilometraje");
+  if (!detalle) return alert("⚠️ Ingresa el motivo/detalle");
+
+  // Usar la OT que ya tenemos (siguienteOT)
+  const otParaGuardar = siguienteOT || "000001";
+  
+  const telefonoParaGuardar = telefono.replace(/\D/g, '');
+  
+  const datos = {
+    nombre: nombre.toUpperCase(),
+    telefono: telefonoParaGuardar,
+    direccion: direccion.toUpperCase(),
+    marca: marca.toUpperCase(),
+    modelo: modelo.toUpperCase(),
+    patente: patente.toUpperCase(),
+    kilometraje: kilometraje,
+    detalle_estado: detalle.toUpperCase()
+  };
+
+  const confirmar = confirm(`¿Guardar vehículo con OT ${otParaGuardar}?\n\nPatente: ${datos.patente}\nNombre: ${datos.nombre}\nTeléfono: ${telefono}\nOT: ${otParaGuardar}`);
+  
+  if (!confirmar) return;
+
+  try {
+    const formData = new FormData();
+    for (const key in datos) {
+      formData.append(key, datos[key]);
+    }
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: formData,
+      mode: 'no-cors'
+    });
+
+    // IMPORTANTE: NO incrementar la caché aquí
+    // Solo invalidar la caché para que se actualice en el próximo uso
+    localStorage.removeItem(CACHE_KEY);
+    
+    alert(`✔ Vehículo guardado exitosamente\nOT asignada: ${otParaGuardar}`);
+    
+    // Limpiar formulario
+    setTimeout(() => {
+      document.getElementById('patente').value = "";
+      document.getElementById('nombre').value = "";
+      document.getElementById('telefono').value = "+56 9 ";
+      document.getElementById('direccion').value = "";
+      document.getElementById('marca').value = "";
+      document.getElementById('modelo').value = "";
+      document.getElementById('kilometraje').value = "";
+      document.getElementById('detalle').value = "";
+      document.getElementById('autoCompleteMsg').textContent = "";
+      
+      // Obtener NUEVA OT para el próximo registro
+      obtenerSiguienteOT();
+    }, 500);
+
+  } catch (error) {
+    console.error('Error guardando vehículo:', error);
+    
+    alert(`⚠️ Error de conexión\n\nVehículo listo para guardar:\nOT: ${otParaGuardar}\nPatente: ${datos.patente}\n\nPor favor, inténtalo nuevamente.`);
+    
+    // Guardar pendiente pero NO incrementar OT localmente
+    const pendientes = JSON.parse(localStorage.getItem('pendientes_guardar') || '[]');
+    pendientes.push({
+      datos: datos,
+      ot: otParaGuardar,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('pendientes_guardar', JSON.stringify(pendientes));
+  }
 }
+
+/* ============================
+   INICIALIZACIÓN
+============================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Cargar OT del servidor (siempre fresco)
+  obtenerSiguienteOT();
+  
+  // 2. Cargar datos para autocompletar
+  cargarDatos();
+  
+  // 3. Intentar reenviar pendientes si los hay
+  setTimeout(() => {
+    const pendientes = JSON.parse(localStorage.getItem('pendientes_guardar') || '[]');
+    if (pendientes.length > 0) {
+      console.log(`Hay ${pendientes.length} registros pendientes de guardar`);
+    }
+  }, 2000);
+});
+
 </script>
 
 </body>
