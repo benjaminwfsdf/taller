@@ -182,6 +182,77 @@
       font-size:13px;
       text-shadow:0 2px 6px black;
     }
+
+    /* Nuevos estilos para búsqueda múltiple */
+    .search-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .search-tab{
+      padding:8px 16px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.35);
+      border:2px solid rgba(255,255,255,0.25);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      transition:all 0.2s;
+      font-size:14px;
+    }
+
+    .search-tab:hover{
+      background:rgba(255,255,255,0.1);
+    }
+
+    .search-tab.active{
+      background:var(--brand);
+      border-color:var(--brand);
+    }
+
+    .search-container{
+      display:none;
+    }
+
+    .search-container.active{
+      display:block;
+    }
+
+    .help-box{
+      background:rgba(0,0,0,0.35);
+      border:2px solid rgba(255,255,255,0.15);
+      border-radius:10px;
+      padding:12px;
+      margin:12px 0;
+      font-size:13px;
+    }
+
+    .help-box ul{
+      margin:8px 0;
+      padding-left:20px;
+    }
+
+    .help-box li{
+      margin:4px 0;
+    }
+
+    .no-results{
+      text-align:center;
+      padding:20px;
+      color:rgba(255,255,255,0.7);
+      font-style:italic;
+    }
+
+    .search-hint{
+      font-size:13px;
+      opacity:.85;
+      text-align:center;
+      margin-top:8px;
+      color:rgba(255,255,255,0.8);
+    }
   </style>
 </head>
 
@@ -194,13 +265,44 @@
 
     <div class="header"><h1>✏️ Editar Visitas de Vehículos</h1></div>
 
-    <!-- Buscar historial -->
+    <!-- Buscar historial MEJORADO -->
     <div class="card">
-      <h2 class="title">1. Buscar historial por patente</h2>
-
-      <input id="patente_buscar" placeholder="INGRESA PATENTE (EJ: JJSJ31)" />
-
+      <h2 class="title">1. Buscar visitas</h2>
+      
+      <!-- Pestañas de búsqueda -->
+      <div class="search-tabs">
+        <div class="search-tab active" data-tab="patente">🔍 Patente</div>
+        <div class="search-tab" data-tab="nombre">🧑 Nombre</div>
+        <div class="search-tab" data-tab="telefono">📞 Teléfono</div>
+      </div>
+      
+      <!-- Búsqueda por patente -->
+      <div class="search-container active" id="search-patente">
+        <input id="patente_buscar" placeholder="INGRESA PATENTE (EJ: JJSJ31)" />
+      </div>
+      
+      <!-- Búsqueda por nombre -->
+      <div class="search-container" id="search-nombre">
+        <input id="nombre_buscar" placeholder="NOMBRE DEL DUEÑO (EJ: JUAN PÉREZ)" />
+      </div>
+      
+      <!-- Búsqueda por teléfono -->
+      <div class="search-container" id="search-telefono">
+        <input id="telefono_buscar" placeholder="TELÉFONO (EJ: 956123456)" />
+      </div>
+      
       <button class="btn" onclick="filtrarHistorial()">Buscar historial</button>
+      
+      <!-- Ayuda -->
+      <div class="help-box">
+        <strong>Consejos de búsqueda:</strong>
+        <ul>
+          <li>Si no recuerdas la patente exacta, usa solo parte de ella</li>
+          <li>Puedes buscar por nombre si no tienes la patente</li>
+          <li>La búsqueda no distingue mayúsculas/minúsculas</li>
+          <li>Para teléfono: usa solo números, sin código de país</li>
+        </ul>
+      </div>
 
       <div style="margin-top:12px; max-height:260px; overflow:auto;">
         <table>
@@ -220,7 +322,7 @@
         </table>
       </div>
 
-      <p style="font-size:13px; opacity:.85; text-align:center; margin-top:8px;">
+      <p class="search-hint">
         Toca una fila para cargarla y editar.
       </p>
     </div>
@@ -256,11 +358,11 @@
 </div>
 
 <script>
-const API_URL =
- "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzmbxQ0uE-w4jof9OqWGc0SREzZOjoAlGdDPYEecHd_ASYSu4d-vCeP1NAWXMM_6AKJiw/exec";
 
 let VISITAS = [];
 let visitaSeleccionada = null;
+let modoBusqueda = 'patente'; // 'patente', 'nombre', 'telefono'
 
 /* ================================
    🔥 CARGAR DATOS (CORREGIDO)
@@ -276,6 +378,7 @@ async function cargarDatos() {
       _fila: i + 2   // fila real en Sheets (empieza en 2)
     }));
 
+    console.log(`Datos cargados: ${VISITAS.length} registros`);
   } catch (e) {
     alert("Error cargando datos.");
   }
@@ -290,23 +393,117 @@ function formatearFecha(f){
   return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
 }
 
-/* Buscar historial */
+/* Inicializar pestañas de búsqueda */
+function inicializarTabs() {
+  const tabs = document.querySelectorAll('.search-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remover clase active de todas las pestañas
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Ocultar todos los contenedores
+      document.querySelectorAll('.search-container').forEach(container => {
+        container.classList.remove('active');
+      });
+      
+      // Mostrar el contenedor correspondiente
+      modoBusqueda = tab.dataset.tab;
+      document.getElementById(`search-${modoBusqueda}`).classList.add('active');
+      
+      // Limpiar resultados anteriores
+      document.getElementById('tbodyHistorial').innerHTML = '';
+      document.getElementById('cardEdicion').style.display = 'none';
+      
+      // Enfocar el campo correspondiente
+      setTimeout(() => {
+        const input = document.getElementById(`${modoBusqueda}_buscar`);
+        if (input) input.focus();
+      }, 100);
+    });
+  });
+}
+
+/* Inicializar eventos Enter */
+function inicializarEventosEnter() {
+  ['patente_buscar', 'nombre_buscar', 'telefono_buscar'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          filtrarHistorial();
+        }
+      });
+    }
+  });
+}
+
+/* Buscar historial - MEJORADO con múltiples criterios */
 function filtrarHistorial(){
-  const pat = patente_buscar.value.trim().toUpperCase();
+  let termino = '';
   const tbody = document.getElementById("tbodyHistorial");
   tbody.innerHTML = "";
 
-  if(!pat){ alert("Ingresa patente."); return; }
+  // Obtener término según modo de búsqueda
+  switch(modoBusqueda) {
+    case 'patente':
+      termino = document.getElementById('patente_buscar').value.trim().toUpperCase();
+      break;
+    case 'nombre':
+      termino = document.getElementById('nombre_buscar').value.trim().toUpperCase();
+      break;
+    case 'telefono':
+      termino = document.getElementById('telefono_buscar').value.trim();
+      break;
+  }
 
-  const lista = VISITAS.filter(v =>
-    String(v["Patente"] || "").toUpperCase().includes(pat)
-  );
+  if(!termino){ 
+    alert(`Ingresa ${modoBusqueda === 'patente' ? 'una patente' : modoBusqueda === 'nombre' ? 'un nombre' : 'un teléfono'}.`); 
+    return; 
+  }
+
+  let lista = [];
+  
+  // Filtrar según el modo de búsqueda
+  if (modoBusqueda === 'patente') {
+    lista = VISITAS.filter(v =>
+      String(v["Patente"] || "").toUpperCase().includes(termino)
+    );
+  } else if (modoBusqueda === 'nombre') {
+    lista = VISITAS.filter(v =>
+      String(v["Nombre"] || "").toUpperCase().includes(termino)
+    );
+  } else if (modoBusqueda === 'telefono') {
+    // Buscar por teléfono (limpia espacios y caracteres especiales)
+    const telefonoLimpio = termino.replace(/\D/g, '');
+    lista = VISITAS.filter(v => {
+      const telVisita = String(v["Teléfono"] || v["Telefono"] || "").replace(/\D/g, '');
+      return telVisita.includes(telefonoLimpio);
+    });
+  }
 
   if(!lista.length){
-    tbody.innerHTML = `<tr><td colspan="8">No existen registros.</td></tr>`;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" class="no-results">
+          No se encontraron registros.<br>
+          <small>
+            ${modoBusqueda === 'patente' ? 'Intenta con: • Búsqueda parcial (ej: "JJ") • Cambiar a búsqueda por nombre' : ''}
+            ${modoBusqueda === 'nombre' ? 'Intenta con: • Primeros apellidos • Nombre completo' : ''}
+            ${modoBusqueda === 'telefono' ? 'Intenta con: • Últimos 4 dígitos • Sin código de país' : ''}
+          </small>
+        </td>
+      </tr>`;
     cardEdicion.style.display = "none";
     return;
   }
+
+  // Ordenar por fecha más reciente primero
+  lista.sort((a, b) => {
+    const fechaA = new Date(a["Fecha"] || 0);
+    const fechaB = new Date(b["Fecha"] || 0);
+    return fechaB - fechaA;
+  });
 
   lista.forEach(v => {
     const tr = document.createElement("tr");
@@ -345,6 +542,9 @@ function cargarEnFormulario(v){
   estado.value = v["Estado"] || "";
   detalle_estado.value = v["Detalle Estado"] || "";
   kilometraje.value = v["Kilometraje"] || "";
+  
+  // Scroll suave al formulario
+  cardEdicion.scrollIntoView({ behavior: 'smooth' });
 }
 
 /* Guardar cambios */
@@ -379,7 +579,9 @@ async function guardarCambios(){
     if(data.estado === "OK"){
       alert("✔ Cambios guardados.");
       cargarDatos();
-      filtrarHistorial();
+      // Volver a filtrar con el término actual
+      const termino = document.getElementById(`${modoBusqueda}_buscar`).value;
+      if (termino) filtrarHistorial();
     }else{
       alert("Error: "+data.mensaje);
     }
@@ -389,6 +591,24 @@ async function guardarCambios(){
     alert("No se pudo guardar.");
   }
 }
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  inicializarTabs();
+  inicializarEventosEnter();
+  // Enfocar campo de patente por defecto
+  document.getElementById('patente_buscar').focus();
+});
+
+// Función para búsqueda rápida (desde otras páginas)
+window.buscarPorPatente = function(patente) {
+  if (!patente) return;
+  
+  // Cambiar a pestaña de patente
+  document.querySelector('.search-tab[data-tab="patente"]').click();
+  document.getElementById('patente_buscar').value = patente.toUpperCase();
+  setTimeout(() => filtrarHistorial(), 100);
+};
 </script>
 
 </body>
