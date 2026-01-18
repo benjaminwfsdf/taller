@@ -113,6 +113,7 @@
       width:100%;
       text-align:center;
       margin-bottom:10px;
+      text-decoration:none;
     }
 
     .btn:hover{
@@ -136,7 +137,7 @@
       border-radius:10px;
       border:2px solid rgba(255,255,255,0.2);
       background:rgba(0,0,0,0.3);
-      color:white !important;     /* ✔ AHORA TEXTO BLANCO */
+      color:white !important;
       margin-bottom:15px;
       font-size:clamp(1rem,3vw,1.1rem);
       box-sizing:border-box;
@@ -144,7 +145,7 @@
 
     input::placeholder,
     select::placeholder{
-      color:#ddd !important;      /* ✔ placeholder gris claro */
+      color:#ddd !important;
     }
 
     input:focus,
@@ -181,8 +182,36 @@
       margin-bottom:8px;
     }
 
+    /* ✅ NUEVO: estilos para que quede igual al segundo */
+    .precio-tag{
+      display:inline-block;
+      padding:8px 14px;
+      background:var(--brand);
+      color:white;
+      border-radius:10px;
+      font-weight:900;
+      font-size:clamp(1.05rem,3vw,1.2rem);
+      margin-top:8px;
+      box-shadow:0 6px 16px rgba(0,0,0,.35);
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin:12px 0;
+    }
+
+    .info-item{
+      background:rgba(255,255,255,0.08);
+      padding:10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.18);
+    }
+
     ul.autos-list{
       padding-left:20px;
+      margin:6px 0;
     }
 
     ul.autos-list li{
@@ -241,6 +270,9 @@
       font-weight:700 !important;
     }
 
+    @media (max-width:520px){
+      .info-grid{ grid-template-columns:1fr; }
+    }
   </style>
 </head>
 
@@ -296,7 +328,7 @@ const $=id=>document.getElementById(id);
 
 async function cargar(){
   const r=await api("listInventory");
-  if(!r.ok)return alert("Error al cargar inventario.");
+  if(!r.ok) return alert("Error al cargar inventario.");
 
   productos=(r.data||[]).filter(p=>p.activo);
 
@@ -322,6 +354,7 @@ function render(list){
 
   list.forEach(p=>{
 
+    // Autos compatibles (igual que el segundo)
     let autos=(p.aplicacion||"")
       .split(/[,;\n]/g)
       .map(x=>x.trim())
@@ -331,17 +364,38 @@ function render(list){
       ? `<ul class="autos-list">` + autos.map(a=>`<li>${a}</li>`).join("") + `</ul>`
       : `<i style="opacity:.6">Sin información</i>`;
 
+    // ✅ PRECIO (igual que el segundo): usa precio_unit
+    let precioHTML = "";
+    if (p.precio_unit !== undefined && p.precio_unit !== null && String(p.precio_unit).trim() !== "") {
+      const precioNum = parseFloat(String(p.precio_unit).replace(/[^\d.,-]/g,"").replace(/\./g,"").replace(",","."));
+      if (!isNaN(precioNum)) {
+        precioHTML = `<div class="precio-tag">$${precioNum.toLocaleString('es-CL')}</div>`;
+      }
+    }
+
     cont.innerHTML += `
       <div class="result">
-        <h3>${p.nombre}</h3>
-        <small>Categoría:</small><br>
-        <span class="tag">${p.categoria||"-"}</span><br><br>
+        <h3>${p.nombre || "-"}</h3>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <small>Categoría:</small>
+            <div><span class="tag">${p.categoria || "-"}</span></div>
+          </div>
+
+          <div class="info-item">
+            <small>Stock:</small>
+            <div style="font-weight:900;color:#4CAF50;">${p.stock || 0} unidades</div>
+          </div>
+        </div>
+
+        <div style="margin:12px 0;">
+          <small>Precio unitario:</small><br>
+          ${precioHTML || '<span style="opacity:0.6">No especificado</span>'}
+        </div>
 
         <small>Autos compatibles:</small>
         ${autosHTML}
-
-        <small>Stock disponible:</small>
-        <p>${p.stock}</p>
       </div>
     `;
   });
@@ -368,3 +422,4 @@ cargar();
 
 </body>
 </html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
