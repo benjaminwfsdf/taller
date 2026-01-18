@@ -245,11 +245,107 @@
     .btn-back:hover{ background: rgba(255,255,255,0.12); }
 
     .btn-options{ min-width: 120px; text-align:center; }
+
+    /* ================================
+       🔒 BLOQUEO POR CLAVE (NUEVO)
+       ================================ */
+    #authGate{
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      display:none; /* se activa por JS */
+      place-items:center;
+      padding:18px;
+      background:rgba(0,0,0,.72);
+      backdrop-filter: blur(10px);
+    }
+    #authCard{
+      width:min(520px, 100%);
+      background:rgba(29,48,83,0.92);
+      border:3px solid var(--brand);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    #authTitle{
+      margin:0 0 10px 0;
+      font-weight:900;
+      font-size:clamp(1.2rem, 4vw, 1.6rem);
+      text-align:center;
+      color:#fff;
+      text-shadow:0 3px 8px rgba(0,0,0,.55);
+    }
+    #authDesc{
+      margin:0 0 14px 0;
+      text-align:center;
+      color:rgba(255,255,255,0.9);
+      font-weight:700;
+      font-size:14px;
+      line-height:1.35;
+    }
+    #authInput{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:2px solid rgba(255,255,255,0.25);
+      background:rgba(0,0,0,0.30);
+      color:#fff;
+      font-weight:800;
+      font-size:16px;
+      outline:none;
+    }
+    #authInput:focus{ border-color: var(--brand); }
+    #authRow{
+      display:flex;
+      gap:12px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    #authBtn{
+      flex:1 1 180px;
+      background:#fff;
+      color:#000;
+      border:3px solid var(--brand);
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      transition:.2s;
+    }
+    #authBtn:hover{
+      background:var(--blue-dark);
+      color:#fff;
+      border-color:var(--brand-dark);
+    }
+    #authMsg{
+      margin:10px 0 0 0;
+      text-align:center;
+      font-weight:800;
+      color:#ffd1d1;
+      min-height: 18px;
+    }
   </style>
 </head>
 
 <body>
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <!-- 🔒 Gate -->
+  <div id="authGate" aria-hidden="true">
+    <div id="authCard" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <h2 id="authTitle">Acceso restringido</h2>
+      <p id="authDesc">Ingresa la clave para entrar al panel.</p>
+
+      <input id="authInput" type="password" inputmode="text" autocomplete="off" placeholder="Clave de acceso" />
+
+      <div id="authRow">
+        <button id="authBtn" type="button">Ingresar</button>
+      </div>
+
+      <p id="authMsg"></p>
+    </div>
+  </div>
 
   <div class="wrapper">
 
@@ -402,8 +498,97 @@
     })();
   </script>
 
+  <!-- 🔒 CLAVE (NUEVO): si falla, redirige -->
+  <script>
+    (function(){
+      const REDIRECT_URL = "http://www.mecanicawalteruriol.cl/";
+      const KEY_FLAG = "WU_PANEL_OK_V1";
+
+      // Hash SHA-256 de "walter_uriol123456" (no está la clave en texto plano)
+      const PASS_HASH_HEX = "b43bb69a8a74b7b7b83d8891a7fe67a35db05f5b4e14b14c6a7c05ea731dbeae";
+
+      const gate = document.getElementById("authGate");
+      const input = document.getElementById("authInput");
+      const btn = document.getElementById("authBtn");
+      const msg = document.getElementById("authMsg");
+
+      const hasAccess = () => sessionStorage.getItem(KEY_FLAG) === "1";
+
+      function showGate(){
+        gate.style.display = "grid";
+        gate.setAttribute("aria-hidden", "false");
+        // Evita que toquen el contenido detrás
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        setTimeout(()=>input.focus(), 50);
+      }
+
+      function hideGate(){
+        gate.style.display = "none";
+        gate.setAttribute("aria-hidden", "true");
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+
+      function hex(buffer){
+        const bytes = new Uint8Array(buffer);
+        let out = "";
+        for(const b of bytes) out += b.toString(16).padStart(2,"0");
+        return out;
+      }
+
+      async function sha256Hex(text){
+        const enc = new TextEncoder().encode(text);
+        const digest = await crypto.subtle.digest("SHA-256", enc);
+        return hex(digest);
+      }
+
+      async function check(){
+        msg.textContent = "";
+        const value = (input.value || "").trim();
+
+        if(!value){
+          msg.textContent = "Ingresa la clave.";
+          return;
+        }
+
+        try{
+          const h = await sha256Hex(value);
+          if(h === PASS_HASH_HEX){
+            sessionStorage.setItem(KEY_FLAG, "1");
+            hideGate();
+            return;
+          }
+        }catch(e){
+          // si falla crypto, igual bloqueamos
+        }
+
+        // clave incorrecta => redirige
+        location.href = REDIRECT_URL;
+      }
+
+      // Arranque
+      if(!hasAccess()){
+        showGate();
+      } else {
+        hideGate();
+      }
+
+      btn.addEventListener("click", check);
+      input.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter") check();
+      });
+
+      // Si intentan recargar directo sin clave, igual bloquea
+      window.addEventListener("pageshow", ()=>{
+        if(!hasAccess()) showGate();
+      });
+    })();
+  </script>
+
   <!-- Script de Vercel (mantenido del código original) -->
   <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>
 <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_6MER65mvkiNAdaheD2vpYzcgkzRf" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8HqVDjJSvfoyPDN1wVXCoCqkxtAp" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
